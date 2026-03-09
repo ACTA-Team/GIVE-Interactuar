@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "format": "cd project && npm run format",
+    "lint": "cd project && npm run lint",
+    "build": "cd project && npm run build"
   },
   "devDependencies": {
     "husky": "^9.1.7"

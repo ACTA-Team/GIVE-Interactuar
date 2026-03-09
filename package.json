@@ -2,11 +2,12 @@
   "name": "give",
   "version": "1.0.0",
   "private": true,
+  "workspaces": ["frontend"],
   "scripts": {
-    "prepare": "husky",
-    "format": "cd project && npm run format",
-    "lint": "cd project && npm run lint",
-    "build": "cd project && npm run build"
+    "prepare": "husky || true",
+    "format": "npm run format --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present"
   },
   "devDependencies": {
     "husky": "^9.1.7"

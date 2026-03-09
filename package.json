@@ -4,7 +4,7 @@
   "private": true,
   "workspaces": ["frontend"],
   "scripts": {
-    "prepare": "husky",
+    "prepare": "husky || true",
     "format": "npm run format --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "build": "npm run build --workspaces --if-present"

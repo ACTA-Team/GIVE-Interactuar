@@ -5,6 +5,7 @@
   "workspaces": ["frontend"],
   "scripts": {
     "prepare": "husky || true",
+    "dev": "npm run dev --workspace=frontend",
     "format": "npm run format --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "build": "npm run build --workspaces --if-present"

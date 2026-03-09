@@ -1,6 +1,6 @@
-import type { GoogleFormsClient } from '@/lib/services/googleFormsClient'
-import { mapGoogleResponseToRawSubmission } from '../mappers/formsResponseMapper'
-import type { FormsSyncRepository } from '../repositories/formsSyncRepository'
+import type { GoogleFormsClient } from '@/lib/services/googleFormsClient';
+import { mapGoogleResponseToRawSubmission } from '../mappers/formsResponseMapper';
+import type { FormsSyncRepository } from '../repositories/formsSyncRepository';
 
 export function createFormsSyncService(
   repo: FormsSyncRepository,
@@ -8,23 +8,29 @@ export function createFormsSyncService(
 ) {
   return {
     async syncForm(formSourceId: string): Promise<void> {
-      const runId = await repo.createSyncRun(formSourceId)
-      let totalFetched = 0
-      let totalInserted = 0
-      const errorLog: unknown[] = []
+      const runId = await repo.createSyncRun(formSourceId);
+      let totalFetched = 0;
+      let totalInserted = 0;
+      const errorLog: unknown[] = [];
 
       try {
         // TODO: handle pagination (nextPageToken loop)
-        const responses = await formsClient.listResponses()
-        totalFetched = responses.length
+        const responses = await formsClient.listResponses();
+        totalFetched = responses.length;
 
         for (const response of responses) {
           try {
-            const submission = mapGoogleResponseToRawSubmission(formSourceId, response)
-            await repo.upsertSubmission(submission)
-            totalInserted++
+            const submission = mapGoogleResponseToRawSubmission(
+              formSourceId,
+              response,
+            );
+            await repo.upsertSubmission(submission);
+            totalInserted++;
           } catch (err) {
-            errorLog.push({ responseId: response.responseId, error: String(err) })
+            errorLog.push({
+              responseId: response.responseId,
+              error: String(err),
+            });
           }
         }
 
@@ -36,7 +42,7 @@ export function createFormsSyncService(
           totalUpdated: 0,
           totalFailed: errorLog.length,
           errorLog,
-        })
+        });
       } catch (err) {
         await repo.updateSyncRun(runId, {
           status: 'failed',
@@ -45,11 +51,11 @@ export function createFormsSyncService(
           totalInserted,
           totalFailed: 1,
           errorLog: [{ error: String(err) }],
-        })
-        throw err
+        });
+        throw err;
       }
     },
-  }
+  };
 }
 
-export type FormsSyncService = ReturnType<typeof createFormsSyncService>
+export type FormsSyncService = ReturnType<typeof createFormsSyncService>;

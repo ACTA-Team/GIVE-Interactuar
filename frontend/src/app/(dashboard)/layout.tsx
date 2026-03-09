@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
-import { DashboardLayout } from '@/components/layout/DashboardLayout'
+import type { ReactNode } from 'react';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 
 // TODO: add auth guard here — redirect to /login if no session
 // Example:
@@ -8,5 +8,5 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout'
 //   if (!user) redirect('/login')
 
 export default function Layout({ children }: { children: ReactNode }) {
-  return <DashboardLayout>{children}</DashboardLayout>
+  return <DashboardLayout>{children}</DashboardLayout>;
 }

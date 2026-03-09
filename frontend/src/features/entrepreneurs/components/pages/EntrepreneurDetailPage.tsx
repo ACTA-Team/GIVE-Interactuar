@@ -1,8 +1,8 @@
-import type { Entrepreneur } from '../../types'
-import { formatDate } from '@/lib/helpers/date'
+import type { Entrepreneur } from '../../types';
+import { formatDate } from '@/lib/helpers/date';
 
 interface EntrepreneurDetailPageProps {
-  entrepreneur: Entrepreneur
+  entrepreneur: Entrepreneur;
 }
 
 // Data is fetched server-side in app/(dashboard)/dashboard/entrepreneurs/[id]/page.tsx
@@ -10,11 +10,15 @@ interface EntrepreneurDetailPageProps {
 // TODO: render latest snapshot data
 // TODO: render associated credentials list
 // TODO: render wallet + vault info
-export function EntrepreneurDetailPage({ entrepreneur }: EntrepreneurDetailPageProps) {
+export function EntrepreneurDetailPage({
+  entrepreneur,
+}: EntrepreneurDetailPageProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">{entrepreneur.fullName}</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">
+          {entrepreneur.fullName}
+        </h1>
         <p className="mt-1 text-sm text-gray-500">
           Registrado el {formatDate(entrepreneur.createdAt)}
         </p>
@@ -22,7 +26,9 @@ export function EntrepreneurDetailPage({ entrepreneur }: EntrepreneurDetailPageP
 
       {/* Personal info */}
       <section className="rounded-lg border border-gray-200 bg-white p-6">
-        <h2 className="mb-4 text-lg font-medium text-gray-900">Información personal</h2>
+        <h2 className="mb-4 text-lg font-medium text-gray-900">
+          Información personal
+        </h2>
         <dl className="grid gap-3 sm:grid-cols-2">
           <div>
             <dt className="text-xs text-gray-500">Documento</dt>
@@ -32,11 +38,15 @@ export function EntrepreneurDetailPage({ entrepreneur }: EntrepreneurDetailPageP
           </div>
           <div>
             <dt className="text-xs text-gray-500">Email</dt>
-            <dd className="text-sm text-gray-900">{entrepreneur.email ?? '—'}</dd>
+            <dd className="text-sm text-gray-900">
+              {entrepreneur.email ?? '—'}
+            </dd>
           </div>
           <div>
             <dt className="text-xs text-gray-500">Teléfono</dt>
-            <dd className="text-sm text-gray-900">{entrepreneur.phone ?? '—'}</dd>
+            <dd className="text-sm text-gray-900">
+              {entrepreneur.phone ?? '—'}
+            </dd>
           </div>
           <div>
             <dt className="text-xs text-gray-500">Municipio</dt>
@@ -52,5 +62,5 @@ export function EntrepreneurDetailPage({ entrepreneur }: EntrepreneurDetailPageP
       {/* TODO: Credentials section */}
       {/* TODO: Wallets section */}
     </div>
-  )
+  );
 }

@@ -5,7 +5,7 @@ export function formatDate(date: string | Date, locale = 'es-AR'): string {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
-  }).format(new Date(date))
+  }).format(new Date(date));
 }
 
 export function formatDateTime(date: string | Date, locale = 'es-AR'): string {
@@ -15,9 +15,9 @@ export function formatDateTime(date: string | Date, locale = 'es-AR'): string {
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  }).format(new Date(date))
+  }).format(new Date(date));
 }
 
 export function toISOString(date: Date): string {
-  return date.toISOString()
+  return date.toISOString();
 }

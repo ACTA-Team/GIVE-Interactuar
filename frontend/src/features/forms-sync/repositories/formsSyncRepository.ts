@@ -1,5 +1,5 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { FormSubmissionRaw, FormSyncRun, SyncStatus } from '../types'
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { FormSubmissionRaw, FormSyncRun, SyncStatus } from '../types';
 
 // TODO: switch to SupabaseClient<Database> once database.types.ts is generated
 export function createFormsSyncRepository(client: SupabaseClient) {
@@ -22,24 +22,38 @@ export function createFormsSyncRepository(client: SupabaseClient) {
             checksum: submission.checksum,
           },
           { onConflict: 'form_source_id,external_response_id' },
-        )
-      if (error) throw error
+        );
+      if (error) throw error;
     },
 
     async createSyncRun(formSourceId: string): Promise<string> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (client as any)
         .from('form_sync_runs')
-        .insert({ form_source_id: formSourceId, status: 'running' as SyncStatus })
+        .insert({
+          form_source_id: formSourceId,
+          status: 'running' as SyncStatus,
+        })
         .select('id')
-        .single()
-      if (error) throw error
-      return data.id as string
+        .single();
+      if (error) throw error;
+      return data.id as string;
     },
 
     async updateSyncRun(
       id: string,
-      update: Partial<Pick<FormSyncRun, 'status' | 'finishedAt' | 'totalFetched' | 'totalInserted' | 'totalUpdated' | 'totalFailed' | 'errorLog'>>,
+      update: Partial<
+        Pick<
+          FormSyncRun,
+          | 'status'
+          | 'finishedAt'
+          | 'totalFetched'
+          | 'totalInserted'
+          | 'totalUpdated'
+          | 'totalFailed'
+          | 'errorLog'
+        >
+      >,
     ): Promise<void> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (client as any)
@@ -53,10 +67,10 @@ export function createFormsSyncRepository(client: SupabaseClient) {
           total_failed: update.totalFailed,
           error_log: update.errorLog,
         })
-        .eq('id', id)
-      if (error) throw error
+        .eq('id', id);
+      if (error) throw error;
     },
-  }
+  };
 }
 
-export type FormsSyncRepository = ReturnType<typeof createFormsSyncRepository>
+export type FormsSyncRepository = ReturnType<typeof createFormsSyncRepository>;

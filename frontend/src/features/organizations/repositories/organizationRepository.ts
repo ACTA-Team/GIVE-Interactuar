@@ -1,7 +1,7 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Organization, InternalUser } from '../types'
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Organization, InternalUser } from '../types';
 
-type RawRow = Record<string, unknown>
+type RawRow = Record<string, unknown>;
 
 function mapOrganization(row: RawRow): Organization {
   return {
@@ -16,7 +16,7 @@ function mapOrganization(row: RawRow): Organization {
     active: row.active as boolean,
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
-  }
+  };
 }
 
 function mapInternalUser(row: RawRow): InternalUser {
@@ -30,7 +30,7 @@ function mapInternalUser(row: RawRow): InternalUser {
     active: row.active as boolean,
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
-  }
+  };
 }
 
 // TODO: switch to SupabaseClient<Database> once database.types.ts is generated
@@ -42,12 +42,12 @@ export function createOrganizationRepository(client: SupabaseClient) {
         .from('organizations')
         .select('*')
         .eq('id', id)
-        .single()
+        .single();
       if (error) {
-        if (error.code === 'PGRST116') return null
-        throw error
+        if (error.code === 'PGRST116') return null;
+        throw error;
       }
-      return mapOrganization(data)
+      return mapOrganization(data);
     },
 
     async findUserByAuthId(authUserId: string): Promise<InternalUser | null> {
@@ -57,14 +57,16 @@ export function createOrganizationRepository(client: SupabaseClient) {
         .from('internal_users')
         .select('*')
         .eq('auth_user_id', authUserId)
-        .single()
+        .single();
       if (error) {
-        if (error.code === 'PGRST116') return null
-        throw error
+        if (error.code === 'PGRST116') return null;
+        throw error;
       }
-      return mapInternalUser(data)
+      return mapInternalUser(data);
     },
-  }
+  };
 }
 
-export type OrganizationRepository = ReturnType<typeof createOrganizationRepository>
+export type OrganizationRepository = ReturnType<
+  typeof createOrganizationRepository
+>;

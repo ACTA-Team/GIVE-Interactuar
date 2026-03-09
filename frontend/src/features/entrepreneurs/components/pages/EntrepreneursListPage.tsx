@@ -1,15 +1,17 @@
-import type { Entrepreneur } from '../../types'
-import { EntrepreneurCard } from '../ui/EntrepreneurCard'
+import type { Entrepreneur } from '../../types';
+import { EntrepreneurCard } from '../ui/EntrepreneurCard';
 
 interface EntrepreneursListPageProps {
-  entrepreneurs: Entrepreneur[]
+  entrepreneurs: Entrepreneur[];
 }
 
 // Data is fetched server-side in app/(dashboard)/dashboard/entrepreneurs/page.tsx
 // TODO: add EntrepreneurSearchBar with URL-param-driven filters
 // TODO: add empty state when list is empty
 // TODO: add pagination controls
-export function EntrepreneursListPage({ entrepreneurs }: EntrepreneursListPageProps) {
+export function EntrepreneursListPage({
+  entrepreneurs,
+}: EntrepreneursListPageProps) {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
@@ -25,5 +27,5 @@ export function EntrepreneursListPage({ entrepreneurs }: EntrepreneursListPagePr
         ))}
       </div>
     </div>
-  )
+  );
 }

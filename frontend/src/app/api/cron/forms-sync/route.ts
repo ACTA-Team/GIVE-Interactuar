@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
-import { createFormsSyncRepository } from '@/features/forms-sync/repositories/formsSyncRepository'
-import { createFormsSyncService } from '@/features/forms-sync/services/formsSyncService'
-import { GoogleFormsClient } from '@/lib/services/googleFormsClient'
+import { NextResponse } from 'next/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createFormsSyncRepository } from '@/features/forms-sync/repositories/formsSyncRepository';
+import { createFormsSyncService } from '@/features/forms-sync/services/formsSyncService';
+import { GoogleFormsClient } from '@/lib/services/googleFormsClient';
 
 // Triggered by Vercel Cron or an external scheduler
 // Config in vercel.json:
@@ -13,11 +13,11 @@ export async function POST(request: Request) {
   // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
   //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   // }
-  void request
+  void request;
 
   try {
-    const supabase = await createServerSupabaseClient()
-    const syncRepo = createFormsSyncRepository(supabase)
+    const supabase = await createServerSupabaseClient();
+    const syncRepo = createFormsSyncRepository(supabase);
 
     // TODO: query active form_sources from DB and iterate over each
     const formsClient = new GoogleFormsClient({
@@ -26,16 +26,16 @@ export async function POST(request: Request) {
         clientEmail: process.env.GOOGLE_CLIENT_EMAIL!,
         privateKey: process.env.GOOGLE_PRIVATE_KEY!,
       },
-    })
+    });
 
-    const syncService = createFormsSyncService(syncRepo, formsClient)
+    const syncService = createFormsSyncService(syncRepo, formsClient);
 
     // TODO: replace with dynamic list of form source IDs from DB
-    await syncService.syncForm(process.env.GOOGLE_FORM_SOURCE_ID!)
+    await syncService.syncForm(process.env.GOOGLE_FORM_SOURCE_ID!);
 
-    return NextResponse.json({ ok: true })
+    return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error('[forms-sync cron] Error:', err)
-    return NextResponse.json({ error: 'Sync failed' }, { status: 500 })
+    console.error('[forms-sync cron] Error:', err);
+    return NextResponse.json({ error: 'Sync failed' }, { status: 500 });
   }
 }

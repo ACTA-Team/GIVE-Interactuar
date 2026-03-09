@@ -2,11 +2,11 @@ import type {
   Entrepreneur,
   BusinessProfile,
   EntrepreneurProfileSnapshot,
-} from '../types'
+} from '../types';
 
 // TODO: replace Record<string, unknown> with Database['public']['Tables']['entrepreneurs']['Row']
 // once database.types.ts is generated via `supabase gen types typescript`
-type RawRow = Record<string, unknown>
+type RawRow = Record<string, unknown>;
 
 export function mapEntrepreneur(row: RawRow): Entrepreneur {
   return {
@@ -26,7 +26,7 @@ export function mapEntrepreneur(row: RawRow): Entrepreneur {
     metadata: (row.metadata as Record<string, unknown>) ?? {},
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
-  }
+  };
 }
 
 export function mapBusinessProfile(row: RawRow): BusinessProfile {
@@ -43,7 +43,7 @@ export function mapBusinessProfile(row: RawRow): BusinessProfile {
     metadata: (row.metadata as Record<string, unknown>) ?? {},
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
-  }
+  };
 }
 
 export function mapSnapshot(row: RawRow): EntrepreneurProfileSnapshot {
@@ -57,5 +57,5 @@ export function mapSnapshot(row: RawRow): EntrepreneurProfileSnapshot {
     snapshotDate: row.snapshot_date as string,
     data: (row.data as Record<string, unknown>) ?? {},
     createdAt: row.created_at as string,
-  }
+  };
 }

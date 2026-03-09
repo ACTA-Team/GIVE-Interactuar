@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { ROUTES } from '@/lib/constants/routes'
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { ROUTES } from '@/lib/constants/routes';
 
 interface NavItem {
-  label: string
-  href: string
+  label: string;
+  href: string;
   // TODO: add icon prop when an icon library is added (e.g. lucide-react)
 }
 
@@ -16,10 +16,10 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Credenciales', href: ROUTES.credentials.list },
   { label: 'Wallets', href: ROUTES.wallets },
   { label: 'Vaults', href: ROUTES.vaults },
-]
+];
 
 export function Sidebar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <aside className="flex h-full w-56 flex-col border-r border-gray-200 bg-white px-3 py-6">
@@ -36,7 +36,7 @@ export function Sidebar() {
           const isActive =
             item.href === ROUTES.dashboard
               ? pathname === item.href
-              : pathname.startsWith(item.href)
+              : pathname.startsWith(item.href);
 
           return (
             <Link
@@ -51,7 +51,7 @@ export function Sidebar() {
             >
               {item.label}
             </Link>
-          )
+          );
         })}
       </nav>
 
@@ -60,5 +60,5 @@ export function Sidebar() {
         {/* TODO: render logged-in org name and sign-out link */}
       </div>
     </aside>
-  )
+  );
 }

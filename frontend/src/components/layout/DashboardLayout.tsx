@@ -1,8 +1,8 @@
-import type { ReactNode } from 'react'
-import { Sidebar } from './Sidebar'
+import type { ReactNode } from 'react';
+import { Sidebar } from './Sidebar';
 
 interface DashboardLayoutProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 // TODO: add auth guard — redirect to login if no session
@@ -15,5 +15,5 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="mx-auto w-full max-w-7xl px-6 py-8">{children}</div>
       </main>
     </div>
-  )
+  );
 }

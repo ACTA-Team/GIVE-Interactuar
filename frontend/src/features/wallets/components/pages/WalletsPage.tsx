@@ -1,8 +1,8 @@
-import type { StellarWallet } from '../../types'
-import { WalletCard } from '../ui/WalletCard'
+import type { StellarWallet } from '../../types';
+import { WalletCard } from '../ui/WalletCard';
 
 interface WalletsPageProps {
-  wallets: StellarWallet[]
+  wallets: StellarWallet[];
 }
 
 // TODO: add "Connect wallet" button using @creit-tech/stellar-wallets-kit
@@ -11,7 +11,9 @@ export function WalletsPage({ wallets }: WalletsPageProps) {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Wallets Stellar</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">
+          Wallets Stellar
+        </h1>
         {/* TODO: ConnectWalletButton */}
       </div>
 
@@ -27,5 +29,5 @@ export function WalletsPage({ wallets }: WalletsPageProps) {
         </p>
       )}
     </div>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import type { Credential, IssuanceDraft, CredentialTemplate } from '../types'
+import type { Credential, IssuanceDraft, CredentialTemplate } from '../types';
 
-type RawRow = Record<string, unknown>
+type RawRow = Record<string, unknown>;
 
 export function mapCredential(row: RawRow): Credential {
   return {
@@ -28,14 +28,15 @@ export function mapCredential(row: RawRow): Credential {
     onchainIssuanceContract: (row.onchain_issuance_contract as string) ?? null,
     onchainTxHash: (row.onchain_tx_hash as string) ?? null,
     onchainLedgerSequence: (row.onchain_ledger_sequence as number) ?? null,
-    onchainNetwork: (row.onchain_network as Credential['onchainNetwork']) ?? null,
+    onchainNetwork:
+      (row.onchain_network as Credential['onchainNetwork']) ?? null,
     metadata: (row.metadata as Record<string, unknown>) ?? {},
     publicClaims: (row.public_claims as Record<string, unknown>) ?? {},
     privateClaims: (row.private_claims as Record<string, unknown>) ?? {},
     createdBy: (row.created_by as string) ?? null,
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
-  }
+  };
 }
 
 export function mapIssuanceDraft(row: RawRow): IssuanceDraft {
@@ -52,7 +53,7 @@ export function mapIssuanceDraft(row: RawRow): IssuanceDraft {
     createdBy: (row.created_by as string) ?? null,
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
-  }
+  };
 }
 
 export function mapCredentialTemplate(row: RawRow): CredentialTemplate {
@@ -62,9 +63,10 @@ export function mapCredentialTemplate(row: RawRow): CredentialTemplate {
     name: row.name as string,
     credentialType: row.credential_type as CredentialTemplate['credentialType'],
     schemaVersion: row.schema_version as string,
-    templateDefinition: (row.template_definition as Record<string, unknown>) ?? {},
+    templateDefinition:
+      (row.template_definition as Record<string, unknown>) ?? {},
     active: row.active as boolean,
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
-  }
+  };
 }

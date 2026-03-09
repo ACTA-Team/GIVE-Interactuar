@@ -1,11 +1,11 @@
-import Link from 'next/link'
-import { ROUTES } from '@/lib/constants/routes'
-import { Button } from '@/components/ui/Button'
-import type { Credential } from '../../types'
-import { CredentialCard } from '../ui/CredentialCard'
+import Link from 'next/link';
+import { ROUTES } from '@/lib/constants/routes';
+import { Button } from '@/components/ui/Button';
+import type { Credential } from '../../types';
+import { CredentialCard } from '../ui/CredentialCard';
 
 interface CredentialsListPageProps {
-  credentials: Credential[]
+  credentials: Credential[];
 }
 
 // Data is fetched server-side in app/(dashboard)/dashboard/credentials/page.tsx
@@ -33,5 +33,5 @@ export function CredentialsListPage({ credentials }: CredentialsListPageProps) {
         </p>
       )}
     </div>
-  )
+  );
 }

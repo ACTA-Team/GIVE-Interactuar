@@ -1,9 +1,9 @@
-import { Badge } from '@/components/ui/Badge'
-import { formatDateTime } from '@/lib/helpers/date'
-import type { CredentialVerificationStatus } from '../../types'
+import { Badge } from '@/components/ui/Badge';
+import { formatDateTime } from '@/lib/helpers/date';
+import type { CredentialVerificationStatus } from '../../types';
 
 interface VerificationResultProps {
-  status: CredentialVerificationStatus
+  status: CredentialVerificationStatus;
 }
 
 export function VerificationResult({ status }: VerificationResultProps) {
@@ -18,7 +18,9 @@ export function VerificationResult({ status }: VerificationResultProps) {
       </div>
 
       {status.title && (
-        <h2 className="mt-2 text-xl font-semibold text-gray-900">{status.title}</h2>
+        <h2 className="mt-2 text-xl font-semibold text-gray-900">
+          {status.title}
+        </h2>
       )}
 
       {status.issuedAt && (
@@ -29,7 +31,9 @@ export function VerificationResult({ status }: VerificationResultProps) {
 
       {Object.keys(status.publicClaims).length > 0 && (
         <div className="mt-6 text-left">
-          <h3 className="mb-2 text-sm font-medium text-gray-700">Datos públicos</h3>
+          <h3 className="mb-2 text-sm font-medium text-gray-700">
+            Datos públicos
+          </h3>
           <dl className="space-y-1">
             {Object.entries(status.publicClaims).map(([key, value]) => (
               <div key={key} className="flex gap-2 text-sm">
@@ -47,5 +51,5 @@ export function VerificationResult({ status }: VerificationResultProps) {
 
       {/* TODO: show on-chain anchor info if onchainVerified is not null */}
     </div>
-  )
+  );
 }

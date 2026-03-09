@@ -1,5 +1,8 @@
-import { z } from 'zod'
-import { StellarAddressSchema, StellarNetworkSchema } from '@/features/stellar/schemas'
+import { z } from 'zod';
+import {
+  StellarAddressSchema,
+  StellarNetworkSchema,
+} from '@/features/stellar/schemas';
 
 export const AddWalletSchema = z.object({
   entrepreneurId: z.string().uuid(),
@@ -7,6 +10,6 @@ export const AddWalletSchema = z.object({
   network: StellarNetworkSchema.default('testnet'),
   isPrimary: z.boolean().default(false),
   federationAddress: z.string().optional(),
-})
+});
 
-export type AddWalletInput = z.infer<typeof AddWalletSchema>
+export type AddWalletInput = z.infer<typeof AddWalletSchema>;

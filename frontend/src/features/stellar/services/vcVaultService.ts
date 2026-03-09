@@ -3,7 +3,7 @@ import type {
   IssueVcParams,
   VerifyVcParams,
   RevokeVcParams,
-} from '../types'
+} from '../types';
 
 // Wraps calls to the vc-vault Soroban smart contract:
 // issue(owner, vc_id, issuer_addr)   → stores the VC in the vault
@@ -20,16 +20,16 @@ export function createVcVaultService() {
       // 1. Build Soroban invocation for issue(owner, vc_id, issuer_addr) on params.contractId
       // 2. Sign with issuer keypair
       // 3. Submit and return result
-      void params
-      throw new Error('Not implemented — install @stellar/stellar-sdk first')
+      void params;
+      throw new Error('Not implemented — install @stellar/stellar-sdk first');
     },
 
     async verify(params: VerifyVcParams): Promise<boolean> {
       // TODO:
       // 1. Simulate verify_vc(owner, vc_id) on params.contractId (read-only)
       // 2. Parse boolean return value
-      void params
-      throw new Error('Not implemented — install @stellar/stellar-sdk first')
+      void params;
+      throw new Error('Not implemented — install @stellar/stellar-sdk first');
     },
 
     async revoke(params: RevokeVcParams): Promise<SorobanInvokeResult> {
@@ -37,10 +37,10 @@ export function createVcVaultService() {
       // 1. Build Soroban invocation for revoke(owner, vc_id, issuer_addr) on params.contractId
       // 2. Sign with issuer keypair
       // 3. Submit and return result
-      void params
-      throw new Error('Not implemented — install @stellar/stellar-sdk first')
+      void params;
+      throw new Error('Not implemented — install @stellar/stellar-sdk first');
     },
-  }
+  };
 }
 
-export type VcVaultService = ReturnType<typeof createVcVaultService>
+export type VcVaultService = ReturnType<typeof createVcVaultService>;

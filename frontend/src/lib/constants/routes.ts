@@ -12,4 +12,4 @@ export const ROUTES = {
   wallets: '/dashboard/wallets',
   vaults: '/dashboard/vaults',
   verify: (credentialId: string) => `/verify/${credentialId}`,
-} as const
+} as const;

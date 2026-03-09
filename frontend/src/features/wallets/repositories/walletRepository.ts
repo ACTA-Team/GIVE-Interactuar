@@ -1,7 +1,7 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { StellarWallet } from '../types'
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { StellarWallet } from '../types';
 
-type RawRow = Record<string, unknown>
+type RawRow = Record<string, unknown>;
 
 function mapWallet(row: RawRow): StellarWallet {
   return {
@@ -15,7 +15,7 @@ function mapWallet(row: RawRow): StellarWallet {
     metadata: (row.metadata as Record<string, unknown>) ?? {},
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
-  }
+  };
 }
 
 // TODO: switch to SupabaseClient<Database> once database.types.ts is generated
@@ -27,10 +27,10 @@ export function createWalletRepository(client: SupabaseClient) {
         .from('stellar_wallets')
         .select('*')
         .eq('entrepreneur_id', entrepreneurId)
-        .order('is_primary', { ascending: false })
-      if (error) throw error
+        .order('is_primary', { ascending: false });
+      if (error) throw error;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (data ?? []).map((row: any) => mapWallet(row))
+      return (data ?? []).map((row: any) => mapWallet(row));
     },
 
     async findById(id: string): Promise<StellarWallet | null> {
@@ -39,14 +39,14 @@ export function createWalletRepository(client: SupabaseClient) {
         .from('stellar_wallets')
         .select('*')
         .eq('id', id)
-        .single()
+        .single();
       if (error) {
-        if (error.code === 'PGRST116') return null
-        throw error
+        if (error.code === 'PGRST116') return null;
+        throw error;
       }
-      return mapWallet(data)
+      return mapWallet(data);
     },
-  }
+  };
 }
 
-export type WalletRepository = ReturnType<typeof createWalletRepository>
+export type WalletRepository = ReturnType<typeof createWalletRepository>;

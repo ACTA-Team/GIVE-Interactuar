@@ -1,4 +1,4 @@
-type BadgeVariant = 'default' | 'success' | 'warning' | 'danger' | 'info'
+type BadgeVariant = 'default' | 'success' | 'warning' | 'danger' | 'info';
 
 const variantClasses: Record<BadgeVariant, string> = {
   default: 'bg-gray-100 text-gray-700',
@@ -6,15 +6,19 @@ const variantClasses: Record<BadgeVariant, string> = {
   warning: 'bg-yellow-100 text-yellow-800',
   danger: 'bg-red-100 text-red-700',
   info: 'bg-blue-100 text-blue-700',
-}
+};
 
 interface BadgeProps {
-  label: string
-  variant?: BadgeVariant
-  className?: string
+  label: string;
+  variant?: BadgeVariant;
+  className?: string;
 }
 
-export function Badge({ label, variant = 'default', className = '' }: BadgeProps) {
+export function Badge({
+  label,
+  variant = 'default',
+  className = '',
+}: BadgeProps) {
   return (
     <span
       className={[
@@ -25,5 +29,5 @@ export function Badge({ label, variant = 'default', className = '' }: BadgeProps
     >
       {label}
     </span>
-  )
+  );
 }

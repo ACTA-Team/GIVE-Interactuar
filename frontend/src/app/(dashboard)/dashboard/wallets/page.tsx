@@ -1,4 +1,4 @@
-import { WalletsPage } from '@/features/wallets/components/pages/WalletsPage'
+import { WalletsPage } from '@/features/wallets/components/pages/WalletsPage';
 
 // TODO: wallets are scoped to an entrepreneur, not directly to the org.
 // Decide if this page should:
@@ -7,5 +7,5 @@ import { WalletsPage } from '@/features/wallets/components/pages/WalletsPage'
 // For now renders an empty state as placeholder.
 export default async function Page() {
   // TODO: fetch wallets by org or by selected entrepreneur
-  return <WalletsPage wallets={[]} />
+  return <WalletsPage wallets={[]} />;
 }

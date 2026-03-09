@@ -5,16 +5,16 @@
 // TODO: connect to repositories and services once implemented in features/
 
 export interface IssuanceDraft {
-  entrepreneurId: string
-  credentialType: string
-  issuedAt: Date
-  metadata: Record<string, unknown>
+  entrepreneurId: string;
+  credentialType: string;
+  issuedAt: Date;
+  metadata: Record<string, unknown>;
 }
 
 export interface IssuanceResult {
-  credentialId: string
-  transactionHash: string
-  vaultAddress: string
+  credentialId: string;
+  transactionHash: string;
+  vaultAddress: string;
 }
 
 export class IssuanceOrchestrator {
@@ -31,7 +31,7 @@ export class IssuanceOrchestrator {
     // 4. Anchor VC hash on Soroban via vcVaultService.store()
     // 5. Update credential record with tx hash + vault address
     // 6. Return IssuanceResult
-    throw new Error('Not implemented')
+    throw new Error('Not implemented');
   }
 
   async revoke(_credentialId: string): Promise<void> {
@@ -39,6 +39,6 @@ export class IssuanceOrchestrator {
     // 1. Fetch credential from Supabase
     // 2. Call vcVaultService.revoke() with vault address
     // 3. Update credential status to 'revoked' in Supabase
-    throw new Error('Not implemented')
+    throw new Error('Not implemented');
   }
 }

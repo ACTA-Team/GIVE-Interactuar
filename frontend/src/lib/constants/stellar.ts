@@ -11,14 +11,14 @@ export const STELLAR_NETWORK = {
     rpcUrl: 'https://soroban-mainnet.stellar.org',
     horizonUrl: 'https://horizon.stellar.org',
   },
-} as const
+} as const;
 
-export type StellarNetwork = keyof typeof STELLAR_NETWORK
+export type StellarNetwork = keyof typeof STELLAR_NETWORK;
 
 // TODO: replace with actual deployed contract addresses
 export const CONTRACT_IDS = {
   VC_VAULT: '' as string,
-} as const
+} as const;
 
 export const ACTIVE_NETWORK: StellarNetwork =
-  (process.env.NEXT_PUBLIC_STELLAR_NETWORK as StellarNetwork) ?? 'TESTNET'
+  (process.env.NEXT_PUBLIC_STELLAR_NETWORK as StellarNetwork) ?? 'TESTNET';

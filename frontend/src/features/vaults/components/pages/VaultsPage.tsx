@@ -1,8 +1,8 @@
-import type { SponsorVault } from '../../types'
-import { VaultCard } from '../ui/VaultCard'
+import type { SponsorVault } from '../../types';
+import { VaultCard } from '../ui/VaultCard';
 
 interface VaultsPageProps {
-  vaults: SponsorVault[]
+  vaults: SponsorVault[];
 }
 
 // TODO: add "Deploy new vault" action
@@ -22,8 +22,10 @@ export function VaultsPage({ vaults }: VaultsPageProps) {
       </div>
 
       {vaults.length === 0 && (
-        <p className="mt-8 text-center text-sm text-gray-500">No hay vaults registrados.</p>
+        <p className="mt-8 text-center text-sm text-gray-500">
+          No hay vaults registrados.
+        </p>
       )}
     </div>
-  )
+  );
 }

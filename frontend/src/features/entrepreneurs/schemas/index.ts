@@ -1,13 +1,13 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const EntrepreneurSearchSchema = z.object({
   query: z.string().optional(),
   municipality: z.string().optional(),
   department: z.string().optional(),
   active: z.boolean().optional(),
-})
+});
 
-export type EntrepreneurSearchInput = z.infer<typeof EntrepreneurSearchSchema>
+export type EntrepreneurSearchInput = z.infer<typeof EntrepreneurSearchSchema>;
 
 export const CreateEntrepreneurSchema = z.object({
   firstName: z.string().min(1, 'Requerido'),
@@ -19,6 +19,6 @@ export const CreateEntrepreneurSchema = z.object({
   municipality: z.string().optional(),
   department: z.string().optional(),
   country: z.string().default('Colombia'),
-})
+});
 
-export type CreateEntrepreneurInput = z.infer<typeof CreateEntrepreneurSchema>
+export type CreateEntrepreneurInput = z.infer<typeof CreateEntrepreneurSchema>;

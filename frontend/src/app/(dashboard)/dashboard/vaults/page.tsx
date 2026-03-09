@@ -1,4 +1,4 @@
-import { VaultsPage } from '@/features/vaults/components/pages/VaultsPage'
+import { VaultsPage } from '@/features/vaults/components/pages/VaultsPage';
 
 // TODO: vaults are scoped to an entrepreneur, not directly to the org.
 // Decide if this page should:
@@ -7,5 +7,5 @@ import { VaultsPage } from '@/features/vaults/components/pages/VaultsPage'
 // For now renders an empty state as placeholder.
 export default async function Page() {
   // TODO: fetch vaults by org or by selected entrepreneur
-  return <VaultsPage vaults={[]} />
+  return <VaultsPage vaults={[]} />;
 }

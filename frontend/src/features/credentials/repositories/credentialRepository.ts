@@ -1,23 +1,25 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import { mapCredential, mapIssuanceDraft } from '../mappers/credentialMapper'
-import type { Credential, IssuanceDraft } from '../types'
-import type { CredentialFilters } from '../schemas'
+import type { SupabaseClient } from '@supabase/supabase-js';
+import { mapCredential, mapIssuanceDraft } from '../mappers/credentialMapper';
+import type { Credential, IssuanceDraft } from '../types';
+import type { CredentialFilters } from '../schemas';
 
 // TODO: switch to SupabaseClient<Database> once database.types.ts is generated
 export function createCredentialRepository(client: SupabaseClient) {
   return {
     async findAll(filters?: CredentialFilters): Promise<Credential[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let q = (client as any).from('credentials').select('*')
+      let q = (client as any).from('credentials').select('*');
 
-      if (filters?.entrepreneurId) q = q.eq('entrepreneur_id', filters.entrepreneurId)
-      if (filters?.status) q = q.eq('status', filters.status)
-      if (filters?.credentialType) q = q.eq('credential_type', filters.credentialType)
+      if (filters?.entrepreneurId)
+        q = q.eq('entrepreneur_id', filters.entrepreneurId);
+      if (filters?.status) q = q.eq('status', filters.status);
+      if (filters?.credentialType)
+        q = q.eq('credential_type', filters.credentialType);
 
-      const { data, error } = await q.order('created_at', { ascending: false })
-      if (error) throw error
+      const { data, error } = await q.order('created_at', { ascending: false });
+      if (error) throw error;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (data ?? []).map((row: any) => mapCredential(row))
+      return (data ?? []).map((row: any) => mapCredential(row));
     },
 
     async findById(id: string): Promise<Credential | null> {
@@ -26,12 +28,12 @@ export function createCredentialRepository(client: SupabaseClient) {
         .from('credentials')
         .select('*')
         .eq('id', id)
-        .single()
+        .single();
       if (error) {
-        if (error.code === 'PGRST116') return null
-        throw error
+        if (error.code === 'PGRST116') return null;
+        throw error;
       }
-      return mapCredential(data)
+      return mapCredential(data);
     },
 
     async findByPublicId(publicId: string): Promise<Credential | null> {
@@ -41,12 +43,12 @@ export function createCredentialRepository(client: SupabaseClient) {
         .from('credentials')
         .select('*')
         .eq('public_id', publicId)
-        .single()
+        .single();
       if (error) {
-        if (error.code === 'PGRST116') return null
-        throw error
+        if (error.code === 'PGRST116') return null;
+        throw error;
       }
-      return mapCredential(data)
+      return mapCredential(data);
     },
 
     async createDraft(
@@ -67,14 +69,24 @@ export function createCredentialRepository(client: SupabaseClient) {
           created_by: draft.createdBy,
         })
         .select()
-        .single()
-      if (error) throw error
-      return mapIssuanceDraft(data)
+        .single();
+      if (error) throw error;
+      return mapIssuanceDraft(data);
     },
 
     async updateOnchainData(
       id: string,
-      onchain: Pick<Credential, 'onchainVcId' | 'onchainOwnerAddress' | 'onchainContractId' | 'onchainTxHash' | 'onchainLedgerSequence' | 'onchainNetwork' | 'status' | 'issuedAt'>,
+      onchain: Pick<
+        Credential,
+        | 'onchainVcId'
+        | 'onchainOwnerAddress'
+        | 'onchainContractId'
+        | 'onchainTxHash'
+        | 'onchainLedgerSequence'
+        | 'onchainNetwork'
+        | 'status'
+        | 'issuedAt'
+      >,
     ): Promise<void> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (client as any)
@@ -89,10 +101,12 @@ export function createCredentialRepository(client: SupabaseClient) {
           status: onchain.status,
           issued_at: onchain.issuedAt,
         })
-        .eq('id', id)
-      if (error) throw error
+        .eq('id', id);
+      if (error) throw error;
     },
-  }
+  };
 }
 
-export type CredentialRepository = ReturnType<typeof createCredentialRepository>
+export type CredentialRepository = ReturnType<
+  typeof createCredentialRepository
+>;

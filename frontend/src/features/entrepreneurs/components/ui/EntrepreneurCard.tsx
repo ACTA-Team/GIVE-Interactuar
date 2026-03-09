@@ -1,12 +1,15 @@
-import type { Entrepreneur } from '../../types'
+import type { Entrepreneur } from '../../types';
 
 interface EntrepreneurCardProps {
-  entrepreneur: Entrepreneur
-  onClick?: (id: string) => void
+  entrepreneur: Entrepreneur;
+  onClick?: (id: string) => void;
 }
 
 // TODO: add Link wrapper to ROUTES.entrepreneurs.detail(entrepreneur.id)
-export function EntrepreneurCard({ entrepreneur, onClick }: EntrepreneurCardProps) {
+export function EntrepreneurCard({
+  entrepreneur,
+  onClick,
+}: EntrepreneurCardProps) {
   return (
     <div
       className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
@@ -26,5 +29,5 @@ export function EntrepreneurCard({ entrepreneur, onClick }: EntrepreneurCardProp
       {/* TODO: render Badge for active status */}
       {/* TODO: render business sector from businessProfile if present */}
     </div>
-  )
+  );
 }

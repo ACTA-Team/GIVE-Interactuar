@@ -1,5 +1,5 @@
-import type { GoogleFormResponse } from '@/lib/services/googleFormsClient'
-import type { FormSubmissionRaw } from '../types'
+import type { GoogleFormResponse } from '@/lib/services/googleFormsClient';
+import type { FormSubmissionRaw } from '../types';
 
 // Maps a Google Forms API response to the raw submission shape expected by the repository
 // TODO: compute checksum (e.g. SHA-256 of rawAnswers) to detect duplicate submissions
@@ -15,5 +15,5 @@ export function mapGoogleResponseToRawSubmission(
     rawPayload: response as unknown as Record<string, unknown>,
     rawAnswers: response.answers as unknown as Record<string, unknown>,
     checksum: null, // TODO: implement SHA-256 checksum
-  }
+  };
 }

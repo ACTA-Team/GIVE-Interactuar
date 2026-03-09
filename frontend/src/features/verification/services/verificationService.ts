@@ -1,11 +1,16 @@
-import type { CredentialRepository } from '@/features/credentials/repositories/credentialRepository'
-import type { CredentialVerificationStatus } from '../types'
+import type { CredentialRepository } from '@/features/credentials/repositories/credentialRepository';
+import type { CredentialVerificationStatus } from '../types';
 
 // TODO: inject VcVaultService for on-chain verification
-export function createVerificationService(credentialRepo: CredentialRepository) {
+export function createVerificationService(
+  credentialRepo: CredentialRepository,
+) {
   return {
-    async verify(credentialPublicId: string): Promise<CredentialVerificationStatus> {
-      const credential = await credentialRepo.findByPublicId(credentialPublicId)
+    async verify(
+      credentialPublicId: string,
+    ): Promise<CredentialVerificationStatus> {
+      const credential =
+        await credentialRepo.findByPublicId(credentialPublicId);
 
       if (!credential) {
         return {
@@ -17,7 +22,7 @@ export function createVerificationService(credentialRepo: CredentialRepository) 
           publicClaims: {},
           title: '',
           issuedAt: null,
-        }
+        };
       }
 
       // TODO: call VcVaultService.verify() if onchainContractId is present
@@ -25,7 +30,7 @@ export function createVerificationService(credentialRepo: CredentialRepository) 
       //   ? await vcVaultService.verify({ ... })
       //   : null
 
-      const isValid = credential.status === 'issued'
+      const isValid = credential.status === 'issued';
 
       // TODO: persist verification record via repository
       // await verificationRepo.create({ credentialId: credential.id, verificationResult: isValid ? 'success' : 'failed', ... })
@@ -39,9 +44,9 @@ export function createVerificationService(credentialRepo: CredentialRepository) 
         publicClaims: credential.publicClaims,
         title: credential.title,
         issuedAt: credential.issuedAt,
-      }
+      };
     },
-  }
+  };
 }
 
-export type VerificationService = ReturnType<typeof createVerificationService>
+export type VerificationService = ReturnType<typeof createVerificationService>;

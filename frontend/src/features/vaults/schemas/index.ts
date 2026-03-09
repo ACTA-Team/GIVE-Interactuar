@@ -1,7 +1,7 @@
-import { z } from 'zod'
-import { StellarNetworkSchema } from '@/features/stellar/schemas'
+import { z } from 'zod';
+import { StellarNetworkSchema } from '@/features/stellar/schemas';
 
-export const VaultRoleSchema = z.enum(['read', 'sponsor', 'observer'])
+export const VaultRoleSchema = z.enum(['read', 'sponsor', 'observer']);
 
 export const CreateVaultSchema = z.object({
   entrepreneurId: z.string().uuid(),
@@ -11,6 +11,6 @@ export const CreateVaultSchema = z.object({
   vaultAddress: z.string().optional(),
   vaultContractId: z.string().optional(),
   sponsorAddress: z.string().optional(),
-})
+});
 
-export type CreateVaultInput = z.infer<typeof CreateVaultSchema>
+export type CreateVaultInput = z.infer<typeof CreateVaultSchema>;

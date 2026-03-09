@@ -1,14 +1,14 @@
-import { StatsCard } from '../ui/StatsCard'
+import { StatsCard } from '../ui/StatsCard';
 
 interface DashboardStats {
-  totalEntrepreneurs: number
-  totalCredentialsIssued: number
-  totalCredentialsDraft: number
-  totalVaults: number
+  totalEntrepreneurs: number;
+  totalCredentialsIssued: number;
+  totalCredentialsDraft: number;
+  totalVaults: number;
 }
 
 interface DashboardPageProps {
-  stats: DashboardStats
+  stats: DashboardStats;
 }
 
 // Data is fetched server-side in app/(dashboard)/dashboard/page.tsx
@@ -46,5 +46,5 @@ export function DashboardPage({ stats }: DashboardPageProps) {
       {/* TODO: recent credentials table */}
       {/* TODO: last sync run status */}
     </div>
-  )
+  );
 }

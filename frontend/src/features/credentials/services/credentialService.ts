@@ -1,20 +1,20 @@
-import type { CredentialRepository } from '../repositories/credentialRepository'
-import type { Credential, IssuanceDraft } from '../types'
-import type { CredentialFilters, IssuanceDraftInput } from '../schemas'
+import type { CredentialRepository } from '../repositories/credentialRepository';
+import type { Credential, IssuanceDraft } from '../types';
+import type { CredentialFilters, IssuanceDraftInput } from '../schemas';
 
 export function createCredentialService(repo: CredentialRepository) {
   return {
     async list(filters?: CredentialFilters): Promise<Credential[]> {
       // TODO: add pagination
-      return repo.findAll(filters)
+      return repo.findAll(filters);
     },
 
     async getById(id: string): Promise<Credential | null> {
-      return repo.findById(id)
+      return repo.findById(id);
     },
 
     async getByPublicId(publicId: string): Promise<Credential | null> {
-      return repo.findByPublicId(publicId)
+      return repo.findByPublicId(publicId);
     },
 
     async createDraft(
@@ -32,12 +32,12 @@ export function createCredentialService(repo: CredentialRepository) {
         latestSnapshotId: null, // TODO: resolve latest snapshot
         subjectWalletId: input.subjectWalletId ?? null,
         sponsorVaultId: input.sponsorVaultId ?? null,
-        preparedPayload: {},   // TODO: build from template + snapshot
+        preparedPayload: {}, // TODO: build from template + snapshot
         status: 'draft',
         createdBy,
-      })
+      });
     },
-  }
+  };
 }
 
-export type CredentialService = ReturnType<typeof createCredentialService>
+export type CredentialService = ReturnType<typeof createCredentialService>;

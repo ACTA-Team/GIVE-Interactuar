@@ -1,5 +1,5 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
 import type { StellarWallet } from '../types';
+import type { SupabaseLikeClient } from '@/@types/supabase';
 
 type RawRow = Record<string, unknown>;
 
@@ -18,8 +18,7 @@ function mapWallet(row: RawRow): StellarWallet {
   };
 }
 
-// TODO: switch to SupabaseClient<Database> once database.types.ts is generated
-export function createWalletRepository(client: SupabaseClient) {
+export function createWalletRepository(client: SupabaseLikeClient) {
   return {
     async findByEntrepreneur(entrepreneurId: string): Promise<StellarWallet[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

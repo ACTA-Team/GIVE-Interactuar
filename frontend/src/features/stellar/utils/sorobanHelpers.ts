@@ -5,17 +5,13 @@ import { STELLAR_NETWORK } from '@/lib/constants/stellar';
 // import { Contract, SorobanRpc, TransactionBuilder, Networks } from '@stellar/stellar-sdk'
 
 export function getRpcUrl(network: StellarNetworkType): string {
-  return (
-    STELLAR_NETWORK[network.toUpperCase() as Uppercase<StellarNetworkType>]
-      ?.rpcUrl ?? ''
-  );
+  const key = network.toUpperCase() as keyof typeof STELLAR_NETWORK;
+  return STELLAR_NETWORK[key]?.rpcUrl ?? '';
 }
 
 export function getNetworkPassphrase(network: StellarNetworkType): string {
-  return (
-    STELLAR_NETWORK[network.toUpperCase() as Uppercase<StellarNetworkType>]
-      ?.networkPassphrase ?? ''
-  );
+  const key = network.toUpperCase() as keyof typeof STELLAR_NETWORK;
+  return STELLAR_NETWORK[key]?.networkPassphrase ?? '';
 }
 
 // TODO: implement once @stellar/stellar-sdk is installed

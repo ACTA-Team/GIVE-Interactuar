@@ -1,10 +1,9 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
 import { mapCredential, mapIssuanceDraft } from '../mappers/credentialMapper';
 import type { Credential, IssuanceDraft } from '../types';
 import type { CredentialFilters } from '../schemas';
+import type { SupabaseLikeClient } from '@/@types/supabase';
 
-// TODO: switch to SupabaseClient<Database> once database.types.ts is generated
-export function createCredentialRepository(client: SupabaseClient) {
+export function createCredentialRepository(client: SupabaseLikeClient) {
   return {
     async findAll(filters?: CredentialFilters): Promise<Credential[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

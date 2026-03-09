@@ -1,5 +1,5 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
 import type { SponsorVault } from '../types';
+import type { SupabaseLikeClient } from '@/@types/supabase';
 
 type RawRow = Record<string, unknown>;
 
@@ -22,8 +22,7 @@ function mapVault(row: RawRow): SponsorVault {
   };
 }
 
-// TODO: switch to SupabaseClient<Database> once database.types.ts is generated
-export function createVaultRepository(client: SupabaseClient) {
+export function createVaultRepository(client: SupabaseLikeClient) {
   return {
     async findByEntrepreneur(entrepreneurId: string): Promise<SponsorVault[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import type { NextRequest, NextResponse } from 'next/server';
+import type { CookieToSet } from '@/@types/supabase';
 import type { Database } from './database.types';
 
 // TODO: wire this up in project/src/middleware.ts to refresh sessions on every request
@@ -23,7 +24,11 @@ export function createMiddlewareClient(
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(
+          cookiesToSet: CookieToSet<
+            Parameters<NextResponse['cookies']['set']>[2]
+          >[],
+        ) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value),
           );

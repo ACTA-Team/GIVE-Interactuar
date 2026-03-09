@@ -1,9 +1,8 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
 import { mapEntrepreneur } from '../mappers/entrepreneurMapper';
 import type { Entrepreneur, EntrepreneurFilters } from '../types';
+import type { SupabaseLikeClient } from '@/@types/supabase';
 
-// TODO: switch to SupabaseClient<Database> once database.types.ts is generated
-export function createEntrepreneurRepository(client: SupabaseClient) {
+export function createEntrepreneurRepository(client: SupabaseLikeClient) {
   return {
     async findAll(filters?: EntrepreneurFilters): Promise<Entrepreneur[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

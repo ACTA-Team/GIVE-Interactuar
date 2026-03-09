@@ -1,8 +1,7 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
 import type { FormSubmissionRaw, FormSyncRun, SyncStatus } from '../types';
+import type { SupabaseLikeClient } from '@/@types/supabase';
 
-// TODO: switch to SupabaseClient<Database> once database.types.ts is generated
-export function createFormsSyncRepository(client: SupabaseClient) {
+export function createFormsSyncRepository(client: SupabaseLikeClient) {
   return {
     async upsertSubmission(
       submission: Omit<FormSubmissionRaw, 'id' | 'syncedAt' | 'createdAt'>,

@@ -1,5 +1,5 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Organization, InternalUser } from '../types';
+import type { SupabaseLikeClient } from '@/@types/supabase';
 
 type RawRow = Record<string, unknown>;
 
@@ -33,8 +33,7 @@ function mapInternalUser(row: RawRow): InternalUser {
   };
 }
 
-// TODO: switch to SupabaseClient<Database> once database.types.ts is generated
-export function createOrganizationRepository(client: SupabaseClient) {
+export function createOrganizationRepository(client: SupabaseLikeClient) {
   return {
     async findById(id: string): Promise<Organization | null> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -18,6 +18,7 @@ export interface Entrepreneur {
   // optional enrichments (joined queries)
   businessProfile?: BusinessProfile;
   latestSnapshot?: EntrepreneurProfileSnapshot;
+  financialProfile?: FinancialProfile;
 }
 
 export interface BusinessProfile {
@@ -47,9 +48,25 @@ export interface EntrepreneurProfileSnapshot {
   createdAt: string;
 }
 
+// TODO: replace with real credit scale when foundation defines it
+export type CreditLevel = 'bajo' | 'medio' | 'alto' | 'excelente';
+
+// TODO: add actual financial fields once foundation delivers Excel spec
+export interface FinancialProfile {
+  id: string;
+  entrepreneurId: string;
+  // TODO: add loan amount, balances, earnings before/after per Excel columns
+  creditLevel?: CreditLevel;
+  loanStatus?: string;
+  rawData: Record<string, unknown>;
+  importedAt: string;
+  sourceFile: string;
+}
+
 export interface EntrepreneurFilters {
   query?: string;
   municipality?: string;
   department?: string;
   active?: boolean;
+  creditLevel?: CreditLevel;
 }

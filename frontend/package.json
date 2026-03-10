@@ -7,21 +7,19 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "cd .. && husky frontend/.husky"
   },
   "dependencies": {
+    "@acta-team/acta-sdk": "^1.1.8",
+    "@creit.tech/stellar-wallets-kit": "^2.0.0",
     "@hookform/resolvers": "^3.9.0",
-    "@supabase/ssr": "^0.5.2",
-    "@supabase/supabase-js": "^2.47.0",
-    "@tanstack/react-query": "^5.62.0",
+    "@stellar/stellar-sdk": "^13.3.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.54.0",
-    "zod": "^3.23.8",
-    "@stellar/stellar-sdk": "^13.3.0",
-    "@creit.tech/stellar-wallets-kit": "^2.0.0",
-    "@acta-team/acta-sdk": "^1.1.6"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -31,8 +29,12 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "husky": "^9.1.7",
     "prettier": "^3.8.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.47.0",
+    "@tanstack/react-query": "^5.62.0"
   }
 }

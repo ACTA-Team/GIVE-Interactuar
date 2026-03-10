@@ -12,9 +12,9 @@ export default async function Page() {
 
   const stats = {
     totalEntrepreneurs: 0,
+    activeLoans: 0,
     totalCredentialsIssued: 0,
-    totalCredentialsDraft: 0,
-    totalVaults: 0,
+    avgIncomeGrowthPct: null,
   };
 
   return <DashboardPage stats={stats} />;

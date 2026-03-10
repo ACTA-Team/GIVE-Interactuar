@@ -7,7 +7,6 @@ interface CredentialDetailPageProps {
 }
 
 // TODO: add revoke action button (calls orchestrator.revoke)
-// TODO: add on-chain verification status panel
 // TODO: add credential relationships section
 // TODO: add evidence snapshots section
 export function CredentialDetailPage({
@@ -32,37 +31,17 @@ export function CredentialDetailPage({
         />
       </div>
 
-      {/* On-chain info */}
-      {credential.onchainTxHash && (
+      {/* ACTA VC info */}
+      {credential.actaVcId && (
         <section className="rounded-lg border border-gray-200 bg-white p-6">
           <h2 className="mb-4 text-lg font-medium text-gray-900">
-            Anclaje on-chain
+            Credencial ACTA
           </h2>
-          <dl className="space-y-2">
-            <div>
-              <dt className="text-xs text-gray-500">TX Hash</dt>
-              <dd className="break-all font-mono text-xs text-gray-900">
-                {credential.onchainTxHash}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs text-gray-500">Contrato (vc-vault)</dt>
-              <dd className="break-all font-mono text-xs text-gray-900">
-                {credential.onchainContractId ?? '—'}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs text-gray-500">VC ID on-chain</dt>
-              <dd className="font-mono text-xs text-gray-900">
-                {credential.onchainVcId ?? '—'}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs text-gray-500">Red</dt>
-              <dd className="text-sm capitalize">
-                {credential.onchainNetwork ?? '—'}
-              </dd>
-            </div>
+          <dl>
+            <dt className="text-xs text-gray-500">VC ID</dt>
+            <dd className="font-mono text-xs text-gray-900">
+              {credential.actaVcId}
+            </dd>
           </dl>
         </section>
       )}

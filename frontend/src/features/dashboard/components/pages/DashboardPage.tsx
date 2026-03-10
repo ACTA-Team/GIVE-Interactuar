@@ -2,9 +2,10 @@ import { StatsCard } from '../ui/StatsCard';
 
 interface DashboardStats {
   totalEntrepreneurs: number;
+  activeLoans: number;
   totalCredentialsIssued: number;
-  totalCredentialsDraft: number;
-  totalVaults: number;
+  // TODO: calculate from financial_profiles once data is imported
+  avgIncomeGrowthPct: number | null;
 }
 
 interface DashboardPageProps {
@@ -22,24 +23,28 @@ export function DashboardPage({ stats }: DashboardPageProps) {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatsCard
-          label="Emprendedores"
+          label="Total clientes"
           value={stats.totalEntrepreneurs}
           description="Registrados en la organización"
         />
         <StatsCard
+          label="Créditos vigentes"
+          value={stats.activeLoans}
+          description="Préstamos activos"
+        />
+        <StatsCard
           label="Credenciales emitidas"
           value={stats.totalCredentialsIssued}
-          description="Estado: issued"
+          description="Via ACTA SDK"
         />
         <StatsCard
-          label="Borradores"
-          value={stats.totalCredentialsDraft}
-          description="Pendientes de emitir"
-        />
-        <StatsCard
-          label="Vaults activos"
-          value={stats.totalVaults}
-          description="Contratos on-chain"
+          label="Crecimiento ingresos"
+          value={
+            stats.avgIncomeGrowthPct !== null
+              ? `${stats.avgIncomeGrowthPct}%`
+              : '—'
+          }
+          description="Promedio antes/después"
         />
       </div>
 

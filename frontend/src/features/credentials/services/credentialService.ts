@@ -28,10 +28,8 @@ export function createCredentialService(repo: CredentialRepository) {
       return repo.createDraft({
         organizationId,
         entrepreneurId: input.entrepreneurId,
-        templateId: input.templateId ?? null,
+        templateId: null,
         latestSnapshotId: null, // TODO: resolve latest snapshot
-        subjectWalletId: input.subjectWalletId ?? null,
-        sponsorVaultId: input.sponsorVaultId ?? null,
         preparedPayload: {}, // TODO: build from template + snapshot
         status: 'draft',
         createdBy,

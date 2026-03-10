@@ -1,0 +1,33 @@
+{
+  "name": "acta-skill",
+  "version": "1.0.0",
+  "description": "Claude Code skill for integrating acta.build verifiable credentials on Stellar blockchain",
+  "type": "commonjs",
+  "scripts": {
+    "test:api": "node scripts/test-api-connection.js",
+    "validate": "node scripts/validate-credential.js",
+    "validate:education": "node scripts/validate-credential.js assets/credential-templates/education.json",
+    "validate:employment": "node scripts/validate-credential.js assets/credential-templates/employment.json",
+    "validate:identity": "node scripts/validate-credential.js assets/credential-templates/identity.json"
+  },
+  "keywords": [
+    "verifiable-credentials",
+    "w3c-vc",
+    "stellar",
+    "blockchain",
+    "acta-build",
+    "credentials",
+    "identity",
+    "did",
+    "claude-skill"
+  ],
+  "author": "acta-build",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wlademyr/acta-skill"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "acta": {
+      "source": "wmendes/acta-skill",
+      "sourceType": "github",
+      "computedHash": "897dacaf20dc976955d081ef5fddb0f6f17dc3011460b62e0be24c144277abc5"
+    },
     "frontend-design": {
       "source": "anthropics/skills",
       "sourceType": "github",

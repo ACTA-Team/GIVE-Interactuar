@@ -1,0 +1,14 @@
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1"
+  ],
+  "type": ["VerifiableCredential", "EmploymentCredential"],
+  "credentialSubject": {
+    "id": "did:pkh:stellar:testnet:GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "jobTitle": "Senior Software Engineer",
+    "employer": "Acme Corporation",
+    "startDate": "2020-06-01",
+    "endDate": "2024-03-15",
+    "skills": ["JavaScript", "React", "Node.js", "TypeScript", "Stellar"]
+  }
+}

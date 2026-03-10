@@ -76,7 +76,11 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (client as any)
         .from('credentials')
-        .update({ acta_vc_id: actaVcId, status: 'issued', issued_at: new Date().toISOString() })
+        .update({
+          acta_vc_id: actaVcId,
+          status: 'issued',
+          issued_at: new Date().toISOString(),
+        })
         .eq('id', id);
       if (error) throw error;
     },

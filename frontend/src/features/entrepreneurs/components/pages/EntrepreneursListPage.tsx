@@ -1,7 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import type { CreditLevel, Entrepreneur, EntrepreneurFilters } from '../../types';
+import type {
+  CreditLevel,
+  Entrepreneur,
+  EntrepreneurFilters,
+} from '../../types';
 import { EntrepreneurCard } from '../ui/EntrepreneurCard';
 
 interface EntrepreneursListPageProps {

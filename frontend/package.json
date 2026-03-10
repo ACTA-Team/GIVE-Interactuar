@@ -18,7 +18,10 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.54.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@stellar/stellar-sdk": "^13.3.0",
+    "@creit.tech/stellar-wallets-kit": "^2.0.0",
+    "@acta-team/acta-sdk": "^1.1.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

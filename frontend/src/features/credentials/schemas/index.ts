@@ -15,13 +15,10 @@ export const CredentialStatusSchema = z.enum([
 
 export const IssuanceDraftSchema = z.object({
   entrepreneurId: z.string().uuid('ID de emprendedor inválido'),
-  templateId: z.string().uuid().optional(),
-  subjectWalletId: z.string().uuid().optional(),
-  sponsorVaultId: z.string().uuid().optional(),
   title: z.string().min(1, 'El título es requerido'),
   credentialType: CredentialTypeSchema,
   description: z.string().optional(),
-  publicClaims: z.record(z.unknown()).default({}),
+  operatorNote: z.string().optional(),
 });
 
 export type IssuanceDraftInput = z.infer<typeof IssuanceDraftSchema>;

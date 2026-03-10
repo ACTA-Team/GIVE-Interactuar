@@ -14,8 +14,6 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard', href: ROUTES.dashboard },
   { label: 'Emprendedores', href: ROUTES.entrepreneurs.list },
   { label: 'Credenciales', href: ROUTES.credentials.list },
-  { label: 'Wallets', href: ROUTES.wallets },
-  { label: 'Vaults', href: ROUTES.vaults },
 ];
 
 export function Sidebar() {

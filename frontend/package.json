@@ -11,7 +11,7 @@
     "prepare": "cd .. && husky frontend/.husky"
   },
   "dependencies": {
-    "@acta-team/acta-sdk": "^1.1.7",
+    "@acta-team/acta-sdk": "^1.1.8",
     "@creit.tech/stellar-wallets-kit": "^2.0.0",
     "@hookform/resolvers": "^3.9.0",
     "@stellar/stellar-sdk": "^13.3.0",

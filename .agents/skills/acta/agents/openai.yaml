@@ -1,0 +1,9 @@
+# UI metadata and invocation policy for acta.build skill
+interface:
+  display_name: "acta.build Credentials"
+  short_description: "Issue and verify credentials on Stellar"
+  default_prompt: "Help me integrate verifiable credentials with acta.build, focusing on issuance and verification workflows"
+
+policy:
+  # Allow implicit invocation when user mentions credentials
+  allow_implicit_invocation: true

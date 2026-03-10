@@ -1,0 +1,14 @@
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1"
+  ],
+  "type": ["VerifiableCredential", "IdentityCredential"],
+  "credentialSubject": {
+    "id": "did:pkh:stellar:testnet:GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "fullName": "Jane Doe",
+    "dateOfBirth": "1990-01-15",
+    "country": "United States",
+    "verified": true,
+    "kycLevel": "level-2"
+  }
+}

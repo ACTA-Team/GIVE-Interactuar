@@ -124,8 +124,8 @@ This repository follows a gitflow-style contribution model.
 
 ### Prerequisites
 
-- Node.js 20
-- npm
+- Node.js 24
+- npm 11+
 - Supabase CLI
 
 ### Run the app

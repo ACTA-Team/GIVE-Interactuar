@@ -61,8 +61,6 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
           entrepreneur_id: draft.entrepreneurId,
           template_id: draft.templateId,
           latest_snapshot_id: draft.latestSnapshotId,
-          subject_wallet_id: draft.subjectWalletId,
-          sponsor_vault_id: draft.sponsorVaultId,
           prepared_payload: draft.preparedPayload,
           status: draft.status,
           created_by: draft.createdBy,
@@ -73,32 +71,15 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
       return mapIssuanceDraft(data);
     },
 
-    async updateOnchainData(
-      id: string,
-      onchain: Pick<
-        Credential,
-        | 'onchainVcId'
-        | 'onchainOwnerAddress'
-        | 'onchainContractId'
-        | 'onchainTxHash'
-        | 'onchainLedgerSequence'
-        | 'onchainNetwork'
-        | 'status'
-        | 'issuedAt'
-      >,
-    ): Promise<void> {
+    async updateActaVcId(id: string, actaVcId: string): Promise<void> {
+      // TODO: call this after ACTA SDK returns the issued VC ID
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (client as any)
         .from('credentials')
         .update({
-          onchain_vc_id: onchain.onchainVcId,
-          onchain_owner_address: onchain.onchainOwnerAddress,
-          onchain_contract_id: onchain.onchainContractId,
-          onchain_tx_hash: onchain.onchainTxHash,
-          onchain_ledger_sequence: onchain.onchainLedgerSequence,
-          onchain_network: onchain.onchainNetwork,
-          status: onchain.status,
-          issued_at: onchain.issuedAt,
+          acta_vc_id: actaVcId,
+          status: 'issued',
+          issued_at: new Date().toISOString(),
         })
         .eq('id', id);
       if (error) throw error;

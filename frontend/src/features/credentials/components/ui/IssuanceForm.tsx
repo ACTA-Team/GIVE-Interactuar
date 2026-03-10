@@ -8,10 +8,9 @@ import { IssuanceDraftSchema, type IssuanceDraftInput } from '../../schemas';
 interface IssuanceFormProps {
   onSubmit: (data: IssuanceDraftInput) => void | Promise<void>;
   isLoading?: boolean;
-  // TODO: pass available templates, wallets, vaults as props for dropdowns
 }
 
-// TODO: fetch available entrepreneurs, templates, wallets, vaults via server (passed as props)
+// TODO: pass available entrepreneurs as props for a dropdown selector
 // TODO: add multi-step wizard: 1. Select entrepreneur → 2. Configure VC → 3. Review + issue
 export function IssuanceForm({
   onSubmit,
@@ -23,7 +22,7 @@ export function IssuanceForm({
     formState: { errors },
   } = useForm<IssuanceDraftInput>({
     resolver: zodResolver(IssuanceDraftSchema),
-    defaultValues: { credentialType: 'impact', publicClaims: {} },
+    defaultValues: { credentialType: 'impact' },
   });
 
   return (
@@ -46,6 +45,20 @@ export function IssuanceForm({
 
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">
+          Tipo
+        </label>
+        <select
+          {...register('credentialType')}
+          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+        >
+          <option value="impact">Impacto</option>
+          <option value="verification">Verificación</option>
+          <option value="endorsement">Endorsement</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="mb-1 block text-sm font-medium text-gray-700">
           Título
         </label>
         <input
@@ -60,25 +73,30 @@ export function IssuanceForm({
 
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">
-          Tipo
+          Descripción
         </label>
-        <select
-          {...register('credentialType')}
+        <textarea
+          {...register('description')}
+          rows={2}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-        >
-          <option value="impact">Impacto</option>
-          <option value="verification">Verificación</option>
-          <option value="endorsement">Endorsement</option>
-        </select>
+          placeholder="Descripción opcional"
+        />
       </div>
 
-      {/* TODO: Template selector dropdown */}
-      {/* TODO: Wallet selector dropdown */}
-      {/* TODO: Vault selector dropdown */}
-      {/* TODO: Public claims JSON editor */}
+      <div>
+        <label className="mb-1 block text-sm font-medium text-gray-700">
+          Nota del operador
+        </label>
+        <textarea
+          {...register('operatorNote')}
+          rows={2}
+          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+          placeholder="Observaciones internas (no se incluye en la credencial)"
+        />
+      </div>
 
       <Button type="submit" isLoading={isLoading} className="w-full">
-        Crear borrador
+        Emitir credencial
       </Button>
     </form>
   );

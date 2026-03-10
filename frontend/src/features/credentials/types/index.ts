@@ -10,7 +10,6 @@ export type RelationshipType =
   | 'verifies'
   | 'references'
   | 'supersedes';
-export type StellarNetwork = 'testnet' | 'mainnet' | 'futurenet';
 
 export interface Credential {
   id: string;
@@ -29,23 +28,13 @@ export interface Credential {
   expiresAt: string | null;
   revokedAt: string | null;
 
-  issuerStellarAddress: string | null;
   issuerDid: string | null;
 
-  subjectWalletId: string | null;
-  sponsorVaultId: string | null;
-
-  onchainVcId: string | null;
-  onchainOwnerAddress: string | null;
-  onchainContractId: string | null;
-  onchainIssuanceContract: string | null;
-  onchainTxHash: string | null;
-  onchainLedgerSequence: number | null;
-  onchainNetwork: StellarNetwork | null;
+  // TODO: populate with ACTA SDK response once integration is ready
+  actaVcId: string | null;
 
   metadata: Record<string, unknown>;
   publicClaims: Record<string, unknown>;
-  privateClaims: Record<string, unknown>;
 
   createdBy: string | null;
   createdAt: string;
@@ -58,8 +47,6 @@ export interface IssuanceDraft {
   entrepreneurId: string;
   templateId: string | null;
   latestSnapshotId: string | null;
-  subjectWalletId: string | null;
-  sponsorVaultId: string | null;
   preparedPayload: Record<string, unknown>;
   status: 'draft' | 'ready' | 'archived';
   createdBy: string | null;

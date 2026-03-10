@@ -9,7 +9,5 @@ export const ROUTES = {
     new: '/dashboard/credentials/new',
     detail: (id: string) => `/dashboard/credentials/${id}`,
   },
-  wallets: '/dashboard/wallets',
-  vaults: '/dashboard/vaults',
   verify: (credentialId: string) => `/verify/${credentialId}`,
 } as const;

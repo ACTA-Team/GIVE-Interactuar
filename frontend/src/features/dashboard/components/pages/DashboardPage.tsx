@@ -50,9 +50,7 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
-import {
-  STAGES,
-} from '@/features/entrepreneurs/types/stages';
+import { STAGES } from '@/features/entrepreneurs/types/stages';
 import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
 
 type SortField = 'name' | 'stage' | 'delinquent' | 'funding';

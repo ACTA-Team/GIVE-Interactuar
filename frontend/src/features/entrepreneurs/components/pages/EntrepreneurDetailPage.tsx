@@ -38,10 +38,7 @@ import {
   X,
   Lock,
 } from 'lucide-react';
-import {
-  STAGES,
-  AVAILABLE_BADGES,
-} from '../../types/stages';
+import { STAGES, AVAILABLE_BADGES } from '../../types/stages';
 import { MOCK_ENTREPRENEURS } from '../../data/mock-entrepreneurs';
 import { BadgeDetailDialog } from '../ui/BadgeDetailDialog';
 import {

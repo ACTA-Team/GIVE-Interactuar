@@ -31,9 +31,7 @@ import {
   Shield,
   ArrowUpDown,
 } from 'lucide-react';
-import {
-  STAGES,
-} from '../../types/stages';
+import { STAGES } from '../../types/stages';
 import { MOCK_ENTREPRENEURS } from '../../data/mock-entrepreneurs';
 import { NewEntrepreneurDialog } from '../ui/NewEntrepreneurDialog';
 import {

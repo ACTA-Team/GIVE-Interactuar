@@ -36,6 +36,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# impact measurement – local data & generated seeds
+*.xlsx
+supabase/generate_seed.py
+supabase/seed_impact.sql
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

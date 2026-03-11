@@ -2,108 +2,183 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ROUTES } from '@/lib/constants/routes';
+import { motion, AnimatePresence } from 'motion/react';
+import {
+  IconLayoutDashboard,
+  IconUsers,
+  IconList,
+  IconCertificate,
+  IconPlus,
+  IconBuildingCommunity,
+  IconX,
+} from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/Button';
-import { LayoutDashboard, Users, LogOut } from 'lucide-react';
+import { ROUTES } from '@/lib/constants/routes';
+import { SidebarNavGroup } from './SidebarNavGroup';
+import type { ReactNode } from 'react';
 
-const navItems = [
-  {
-    title: 'Dashboard',
-    href: ROUTES.dashboard,
-    icon: LayoutDashboard,
-  },
-  {
-    title: 'Empresarios',
-    href: ROUTES.entrepreneurs.list,
-    icon: Users,
-  },
-];
+interface NavItemProps {
+  icon: ReactNode;
+  label: string;
+  href: string;
+  isActive: boolean;
+  onClick?: () => void;
+}
 
-export function Sidebar() {
+function NavItem({ icon, label, href, isActive, onClick }: NavItemProps) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={cn(
+        'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+        isActive
+          ? 'bg-gray-100 text-gray-900'
+          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+      )}
+    >
+      <span
+        className={cn('shrink-0', isActive ? 'text-gray-700' : 'text-gray-400')}
+      >
+        {icon}
+      </span>
+      {label}
+    </Link>
+  );
+}
+
+interface SidebarProps {
+  isMobileOpen: boolean;
+  onMobileClose: () => void;
+}
+
+export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
 
-  const handleLogout = () => {
-    // TODO: wire Supabase sign-out
-    window.location.href = '/';
-  };
+  const isDashboardActive = pathname === ROUTES.dashboard;
+  const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);
+  const isCredentialsActive = pathname.startsWith(ROUTES.credentials.list);
 
-  return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 bg-[#002E5C] border-r border-[#0A3D6E]">
-      <div className="flex h-full flex-col">
-        {/* Logo */}
-        <div className="flex h-16 items-center gap-3 border-b border-[#0A3D6E] px-6">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F15A24]">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              className="h-5 w-5 text-white"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
+  const content = (
+    <div className="flex h-full flex-col">
+      {/* Logo */}
+      <div className="flex items-center justify-between px-4 py-5">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900">
+            <IconBuildingCommunity className="h-5 w-5 text-white" />
           </div>
-          <div>
-            <h2 className="text-sm font-semibold text-white">Interactuar</h2>
-            <p className="text-xs text-white/60">Panel de Asesores</p>
-          </div>
+          <span className="text-base font-semibold tracking-tight text-gray-900">
+            Interactuar
+          </span>
         </div>
+        <button
+          onClick={onMobileClose}
+          className="rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 lg:hidden"
+        >
+          <IconX className="h-5 w-5" />
+        </button>
+      </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 space-y-1 px-3 py-4">
-          {navItems.map((item) => {
-            const isActive =
-              pathname === item.href ||
-              (item.href !== ROUTES.dashboard &&
-                pathname.startsWith(item.href));
+      <hr className="mx-3 border-gray-100" />
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
-                  isActive
-                    ? 'bg-[#0A3D6E] text-white'
-                    : 'text-white/70 hover:bg-[#0A3D6E]/50 hover:text-white',
-                )}
-              >
-                <item.icon className="h-5 w-5" />
-                {item.title}
-              </Link>
-            );
-          })}
-        </nav>
+      {/* Nav */}
+      <nav className="flex flex-1 flex-col gap-0.5 px-3 py-4">
+        <NavItem
+          icon={<IconLayoutDashboard className="h-4 w-4" />}
+          label="Dashboard"
+          href={ROUTES.dashboard}
+          isActive={isDashboardActive}
+          onClick={onMobileClose}
+        />
 
-        {/* User Section */}
-        <div className="border-t border-[#0A3D6E] p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0A3D6E] text-white font-medium text-sm">
-              JP
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">
-                Juan Pérez
-              </p>
-              <p className="text-xs text-white/60 truncate">
-                asesor@interactuar.com
-              </p>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-white/60 hover:text-white hover:bg-[#0A3D6E]"
-              onClick={handleLogout}
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="sr-only">Cerrar sesión</span>
-            </Button>
+        <hr className="my-3 border-gray-100" />
+
+        <SidebarNavGroup
+          icon={<IconUsers className="h-4 w-4" />}
+          label="Emprendedores"
+          defaultOpen={isEntrepreneursActive}
+        >
+          <NavItem
+            icon={<IconList className="h-4 w-4" />}
+            label="Lista"
+            href={ROUTES.entrepreneurs.list}
+            isActive={pathname === ROUTES.entrepreneurs.list}
+            onClick={onMobileClose}
+          />
+        </SidebarNavGroup>
+
+        <SidebarNavGroup
+          icon={<IconCertificate className="h-4 w-4" />}
+          label="Credenciales"
+          defaultOpen={isCredentialsActive}
+        >
+          <NavItem
+            icon={<IconList className="h-4 w-4" />}
+            label="Lista"
+            href={ROUTES.credentials.list}
+            isActive={pathname === ROUTES.credentials.list}
+            onClick={onMobileClose}
+          />
+          <NavItem
+            icon={<IconPlus className="h-4 w-4" />}
+            label="Nueva Credencial"
+            href={ROUTES.credentials.new}
+            isActive={pathname === ROUTES.credentials.new}
+            onClick={onMobileClose}
+          />
+        </SidebarNavGroup>
+      </nav>
+
+      {/* Footer */}
+      <div className="border-t border-gray-100 px-4 py-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
+            GI
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-900">
+              Interactuar Team
+            </span>
+            <span className="text-xs text-gray-400">Organización</span>
           </div>
         </div>
       </div>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop */}
+      <aside className="hidden h-full w-64 flex-col border-r border-gray-200 bg-white lg:flex">
+        {content}
+      </aside>
+
+      {/* Mobile drawer */}
+      <AnimatePresence>
+        {isMobileOpen && (
+          <>
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={onMobileClose}
+              className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+            />
+            <motion.aside
+              key="drawer"
+              initial={{ x: -256 }}
+              animate={{ x: 0 }}
+              exit={{ x: -256 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+              className="fixed inset-y-0 left-0 z-50 w-64 border-r border-gray-200 bg-white lg:hidden"
+            >
+              {content}
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

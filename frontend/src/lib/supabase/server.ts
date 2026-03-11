@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import type { CookieToSet } from '@/@types/supabase';
+import type { CookieToSet } from '@/lib/supabase/types';
 import type { Database } from './database.types';
 import { supabaseUrl, supabaseRoleKey } from '@/lib/constants/env';
 

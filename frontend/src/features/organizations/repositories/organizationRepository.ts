@@ -1,5 +1,5 @@
 import type { Organization, InternalUser } from '../types';
-import type { SupabaseLikeClient } from '@/@types/supabase';
+import type { SupabaseLikeClient } from '@/lib/supabase/types';
 
 type RawRow = Record<string, unknown>;
 

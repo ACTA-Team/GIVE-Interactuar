@@ -1,7 +1,7 @@
 import { mapCredential, mapIssuanceDraft } from '../mappers/credentialMapper';
 import type { Credential, IssuanceDraft } from '../types';
 import type { CredentialFilters } from '../schemas';
-import type { SupabaseLikeClient } from '@/@types/supabase';
+import type { SupabaseLikeClient } from '@/lib/supabase/types';
 
 export function createCredentialRepository(client: SupabaseLikeClient) {
   return {

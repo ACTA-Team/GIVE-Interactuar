@@ -38,11 +38,7 @@ export interface BehaviorCredentialData {
   // Derived indicators
   estimatedOperatingCapacity: 'high' | 'medium' | 'low' | 'insufficient_data';
   leverageLevel: 'healthy' | 'moderate' | 'high' | 'insufficient_data';
-  commercialStability:
-    | 'stable'
-    | 'moderate'
-    | 'volatile'
-    | 'insufficient_data';
+  commercialStability: 'stable' | 'moderate' | 'volatile' | 'insufficient_data';
   financialTrend: 'positive' | 'neutral' | 'negative' | 'insufficient_data';
 }
 

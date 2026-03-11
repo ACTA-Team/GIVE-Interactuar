@@ -31,10 +31,10 @@ para consumo. Se acceden a través de la app Next.js.
 
 **Endpoint:** `GET /api/credentials/impact`
 
-| Parámetro        | Tipo   | Requerido | Descripción                                      |
-|------------------|--------|-----------|--------------------------------------------------|
-| `entrepreneurId` | uuid   | No        | ID del emprendedor. Si se omite, retorna todos.  |
-| `year`           | number | No        | Año de medición. Si se omite, usa el más reciente.|
+| Parámetro        | Tipo   | Requerido | Descripción                                        |
+| ---------------- | ------ | --------- | -------------------------------------------------- |
+| `entrepreneurId` | uuid   | No        | ID del emprendedor. Si se omite, retorna todos.    |
+| `year`           | number | No        | Año de medición. Si se omite, usa el más reciente. |
 
 **Ejemplos:**
 
@@ -78,12 +78,12 @@ GET /api/credentials/impact?entrepreneurId=0012fb99-...&year=2024
 
 **Campos derivados:**
 
-| Campo                | Cálculo                                                        |
-|----------------------|----------------------------------------------------------------|
-| `salesVariationPct`  | `((ventasActuales - ventasPrevias) / ventasPrevias) × 100`    |
-| `newJobsGenerated`   | `empleados_actuales - empleados_previos`                       |
-| `newJobsFormalized`  | `seguridad_social_actual - seguridad_social_previa`            |
-| `verdict`            | `>5%` → growing, `-5% a 5%` → sustaining, `<-5%` → deteriorating |
+| Campo               | Cálculo                                                          |
+| ------------------- | ---------------------------------------------------------------- |
+| `salesVariationPct` | `((ventasActuales - ventasPrevias) / ventasPrevias) × 100`       |
+| `newJobsGenerated`  | `empleados_actuales - empleados_previos`                         |
+| `newJobsFormalized` | `seguridad_social_actual - seguridad_social_previa`              |
+| `verdict`           | `>5%` → growing, `-5% a 5%` → sustaining, `<-5%` → deteriorating |
 
 ---
 
@@ -93,10 +93,10 @@ GET /api/credentials/impact?entrepreneurId=0012fb99-...&year=2024
 
 **Endpoint:** `GET /api/credentials/behavior`
 
-| Parámetro        | Tipo   | Requerido | Descripción                                      |
-|------------------|--------|-----------|--------------------------------------------------|
-| `entrepreneurId` | uuid   | No        | ID del emprendedor. Si se omite, retorna todos.  |
-| `year`           | number | No        | Año de medición. Si se omite, usa el más reciente.|
+| Parámetro        | Tipo   | Requerido | Descripción                                        |
+| ---------------- | ------ | --------- | -------------------------------------------------- |
+| `entrepreneurId` | uuid   | No        | ID del emprendedor. Si se omite, retorna todos.    |
+| `year`           | number | No        | Año de medición. Si se omite, usa el más reciente. |
 
 **Ejemplos:**
 
@@ -137,23 +137,23 @@ GET /api/credentials/behavior?entrepreneurId=0012fb99-...&year=2024
 
 **Campos derivados:**
 
-| Campo                         | Cálculo                                                                 |
-|-------------------------------|-------------------------------------------------------------------------|
-| `estimatedOperatingMargin`    | `((ventas - costos) / ventas) × 100`                                   |
-| `leverageRatio`               | `pasivos / activos`                                                     |
-| `monthlyIncomeStability`      | `1 - coeficiente_de_variación(ventas_mensuales)` (más cercano a 1 = más estable) |
-| `estimatedOperatingCapacity`  | Margen ≥20% → `high`, ≥10% → `medium`, <10% → `low`                   |
-| `leverageLevel`               | Ratio ≤0.4 → `healthy`, ≤0.7 → `moderate`, >0.7 → `high`             |
-| `commercialStability`         | CV ≤0.15 → `stable`, ≤0.35 → `moderate`, >0.35 → `volatile`          |
-| `financialTrend`              | Combina margen operativo y apalancamiento (ver tabla abajo)            |
+| Campo                        | Cálculo                                                                          |
+| ---------------------------- | -------------------------------------------------------------------------------- |
+| `estimatedOperatingMargin`   | `((ventas - costos) / ventas) × 100`                                             |
+| `leverageRatio`              | `pasivos / activos`                                                              |
+| `monthlyIncomeStability`     | `1 - coeficiente_de_variación(ventas_mensuales)` (más cercano a 1 = más estable) |
+| `estimatedOperatingCapacity` | Margen ≥20% → `high`, ≥10% → `medium`, <10% → `low`                              |
+| `leverageLevel`              | Ratio ≤0.4 → `healthy`, ≤0.7 → `moderate`, >0.7 → `high`                         |
+| `commercialStability`        | CV ≤0.15 → `stable`, ≤0.35 → `moderate`, >0.35 → `volatile`                      |
+| `financialTrend`             | Combina margen operativo y apalancamiento (ver tabla abajo)                      |
 
 **Lógica de `financialTrend`:**
 
-| Condición                              | Resultado    |
-|----------------------------------------|--------------|
-| Margen ≥15% **y** Apalancamiento ≤0.5 | `positive`   |
-| Margen ≥5% **y** Apalancamiento ≤0.8  | `neutral`    |
-| Cualquier otro caso                    | `negative`   |
+| Condición                             | Resultado  |
+| ------------------------------------- | ---------- |
+| Margen ≥15% **y** Apalancamiento ≤0.5 | `positive` |
+| Margen ≥5% **y** Apalancamiento ≤0.8  | `neutral`  |
+| Cualquier otro caso                   | `negative` |
 
 ---
 
@@ -163,9 +163,9 @@ GET /api/credentials/behavior?entrepreneurId=0012fb99-...&year=2024
 
 **Endpoint:** `GET /api/credentials/profile`
 
-| Parámetro        | Tipo | Requerido | Descripción                                      |
-|------------------|------|-----------|--------------------------------------------------|
-| `entrepreneurId` | uuid | No        | ID del emprendedor. Si se omite, retorna todos.  |
+| Parámetro        | Tipo | Requerido | Descripción                                     |
+| ---------------- | ---- | --------- | ----------------------------------------------- |
+| `entrepreneurId` | uuid | No        | ID del emprendedor. Si se omite, retorna todos. |
 
 **Ejemplos:**
 
@@ -207,21 +207,21 @@ GET /api/credentials/profile?entrepreneurId=0012fb99-...
 
 **Campos derivados:**
 
-| Campo                 | Cálculo                                                                 |
-|-----------------------|-------------------------------------------------------------------------|
-| `identityValidated`   | `true` si tiene número de documento no vacío                           |
-| `businessFormalized`  | `true` si tiene NIT **y** la figura legal ≠ "Sin formalización (sin RUT)" |
-| `hasInternet`         | `true` si el acceso a internet no contiene "no tengo"                  |
-| `contributesPension`  | `true` si la respuesta comienza con "sí/si" o menciona "BEPS"         |
-| `yearsInOperation`    | Calculado a partir de `founded_date` hasta hoy                         |
+| Campo                | Cálculo                                                                   |
+| -------------------- | ------------------------------------------------------------------------- |
+| `identityValidated`  | `true` si tiene número de documento no vacío                              |
+| `businessFormalized` | `true` si tiene NIT **y** la figura legal ≠ "Sin formalización (sin RUT)" |
+| `hasInternet`        | `true` si el acceso a internet no contiene "no tengo"                     |
+| `contributesPension` | `true` si la respuesta comienza con "sí/si" o menciona "BEPS"             |
+| `yearsInOperation`   | Calculado a partir de `founded_date` hasta hoy                            |
 
 **Códigos de respuesta (todos los endpoints):**
 
-| Código | Significado                                     |
-|--------|-------------------------------------------------|
-| `200`  | Éxito                                           |
-| `404`  | Emprendedor o datos de medición no encontrados  |
-| `500`  | Error interno del servidor                      |
+| Código | Significado                                    |
+| ------ | ---------------------------------------------- |
+| `200`  | Éxito                                          |
+| `404`  | Emprendedor o datos de medición no encontrados |
+| `500`  | Error interno del servidor                     |
 
 ---
 
@@ -250,17 +250,17 @@ Content-Type: application/json
 
 Datos de catálogos y listas maestras.
 
-| Endpoint                           | Descripción                | Registros |
-|------------------------------------|----------------------------|-----------|
-| `/rest/v1/im_allies`               | Aliados del programa       | 10        |
-| `/rest/v1/im_consultants`          | Consultores asignados      | 34        |
-| `/rest/v1/im_levels`               | Niveles del programa       | 4         |
-| `/rest/v1/im_economic_sectors`     | Sectores económicos        | 7         |
-| `/rest/v1/im_economic_activities`  | Actividades económicas     | 141       |
-| `/rest/v1/im_legal_figures`        | Figuras legales            | 5         |
-| `/rest/v1/im_education_levels`     | Niveles de escolaridad     | 9         |
-| `/rest/v1/im_marital_statuses`     | Estados civiles            | 6         |
-| `/rest/v1/im_compensation_funds`   | Cajas de compensación      | 7         |
+| Endpoint                          | Descripción            | Registros |
+| --------------------------------- | ---------------------- | --------- |
+| `/rest/v1/im_allies`              | Aliados del programa   | 10        |
+| `/rest/v1/im_consultants`         | Consultores asignados  | 34        |
+| `/rest/v1/im_levels`              | Niveles del programa   | 4         |
+| `/rest/v1/im_economic_sectors`    | Sectores económicos    | 7         |
+| `/rest/v1/im_economic_activities` | Actividades económicas | 141       |
+| `/rest/v1/im_legal_figures`       | Figuras legales        | 5         |
+| `/rest/v1/im_education_levels`    | Niveles de escolaridad | 9         |
+| `/rest/v1/im_marital_statuses`    | Estados civiles        | 6         |
+| `/rest/v1/im_compensation_funds`  | Cajas de compensación  | 7         |
 
 **Ejemplo — listar todos los sectores económicos:**
 
@@ -275,12 +275,12 @@ curl "http://localhost:54321/rest/v1/im_economic_sectors?select=id,name" \
 
 Datos de emprendedores, cohortes y negocios.
 
-| Endpoint                                    | Descripción                      | Registros |
-|---------------------------------------------|----------------------------------|-----------|
-| `/rest/v1/im_cohorts`                       | Cohortes/grupos                  | 101       |
-| `/rest/v1/im_entrepreneur_demographics`     | Demografía del emprendedor       | 1,403     |
-| `/rest/v1/im_entrepreneur_self_identifications` | Autoidentificación étnica    | 56        |
-| `/rest/v1/im_businesses`                    | Datos del negocio                | 1,403     |
+| Endpoint                                        | Descripción                | Registros |
+| ----------------------------------------------- | -------------------------- | --------- |
+| `/rest/v1/im_cohorts`                           | Cohortes/grupos            | 101       |
+| `/rest/v1/im_entrepreneur_demographics`         | Demografía del emprendedor | 1,403     |
+| `/rest/v1/im_entrepreneur_self_identifications` | Autoidentificación étnica  | 56        |
+| `/rest/v1/im_businesses`                        | Datos del negocio          | 1,403     |
 
 **Ejemplo — emprendedores con su demografía (join):**
 
@@ -309,13 +309,13 @@ curl "http://localhost:54321/rest/v1/im_cohorts?select=name,cohort_year,program,
 
 Datos del proceso de medición de impacto.
 
-| Endpoint                           | Descripción                    | Registros |
-|------------------------------------|--------------------------------|-----------|
-| `/rest/v1/im_measurements`         | Mediciones (tabla hecho)       | 1,460     |
-| `/rest/v1/im_monthly_sales`        | Ventas mensuales               | 15,232    |
-| `/rest/v1/im_monthly_costs`        | Costos mensuales               | 14,903    |
-| `/rest/v1/im_quarterly_balances`   | Balances trimestrales          | 3,658     |
-| `/rest/v1/im_employment_snapshots` | Empleo (prev_year / current)   | 2,232     |
+| Endpoint                           | Descripción                  | Registros |
+| ---------------------------------- | ---------------------------- | --------- |
+| `/rest/v1/im_measurements`         | Mediciones (tabla hecho)     | 1,460     |
+| `/rest/v1/im_monthly_sales`        | Ventas mensuales             | 15,232    |
+| `/rest/v1/im_monthly_costs`        | Costos mensuales             | 14,903    |
+| `/rest/v1/im_quarterly_balances`   | Balances trimestrales        | 3,658     |
+| `/rest/v1/im_employment_snapshots` | Empleo (prev_year / current) | 2,232     |
 
 **Ejemplo — mediciones del año 2024 con cohorte y consultor:**
 
@@ -344,12 +344,12 @@ curl "http://localhost:54321/rest/v1/im_employment_snapshots?period=eq.current_y
 
 Datos de créditos vencidos y seguimiento de recolección.
 
-| Endpoint                                  | Descripción                    | Registros |
-|-------------------------------------------|--------------------------------|-----------|
-| `/rest/v1/im_overdue_credits`             | Cartera vencida                | 587       |
-| `/rest/v1/im_collection_responses`        | Respuestas de recolección      | 1,474     |
-| `/rest/v1/im_collection_monthly_figures`  | Ventas/costos de recolección   | 2,427     |
-| `/rest/v1/im_collection_balances`         | Balances de recolección        | 463       |
+| Endpoint                                 | Descripción                  | Registros |
+| ---------------------------------------- | ---------------------------- | --------- |
+| `/rest/v1/im_overdue_credits`            | Cartera vencida              | 587       |
+| `/rest/v1/im_collection_responses`       | Respuestas de recolección    | 1,474     |
+| `/rest/v1/im_collection_monthly_figures` | Ventas/costos de recolección | 2,427     |
+| `/rest/v1/im_collection_balances`        | Balances de recolección      | 463       |
 
 **Ejemplo — créditos vencidos con datos del emprendedor:**
 
@@ -369,19 +369,19 @@ curl "http://localhost:54321/rest/v1/im_collection_responses?collection_period=e
 
 ### Operadores PostgREST útiles
 
-| Operador  | Uso                          | Ejemplo                                      |
-|-----------|------------------------------|----------------------------------------------|
-| `eq`      | Igual a                      | `?field=eq.valor`                            |
-| `neq`     | Distinto de                  | `?field=neq.valor`                           |
-| `gt`/`lt` | Mayor/menor que              | `?amount=gt.1000000`                         |
-| `gte`/`lte`| Mayor/menor o igual         | `?measurement_year=gte.2023`                 |
-| `like`    | Coincidencia parcial         | `?full_name=like.*Restrepo*`                 |
-| `ilike`   | Coincidencia sin mayúsculas  | `?municipality=ilike.*medellin*`             |
-| `in`      | Está en lista                | `?classification=in.(A,B)`                   |
-| `is`      | Es null / not null           | `?nit=not.is.null`                           |
-| `order`   | Ordenar resultados           | `?order=amount.desc`                         |
-| `limit`   | Limitar resultados           | `?limit=10`                                  |
-| `offset`  | Paginar desde                | `?offset=20&limit=10`                        |
+| Operador    | Uso                         | Ejemplo                          |
+| ----------- | --------------------------- | -------------------------------- |
+| `eq`        | Igual a                     | `?field=eq.valor`                |
+| `neq`       | Distinto de                 | `?field=neq.valor`               |
+| `gt`/`lt`   | Mayor/menor que             | `?amount=gt.1000000`             |
+| `gte`/`lte` | Mayor/menor o igual         | `?measurement_year=gte.2023`     |
+| `like`      | Coincidencia parcial        | `?full_name=like.*Restrepo*`     |
+| `ilike`     | Coincidencia sin mayúsculas | `?municipality=ilike.*medellin*` |
+| `in`        | Está en lista               | `?classification=in.(A,B)`       |
+| `is`        | Es null / not null          | `?nit=not.is.null`               |
+| `order`     | Ordenar resultados          | `?order=amount.desc`             |
+| `limit`     | Limitar resultados          | `?limit=10`                      |
+| `offset`    | Paginar desde               | `?offset=20&limit=10`            |
 
 ---
 
@@ -392,49 +392,49 @@ para análisis o futuros endpoints.
 
 ### 3.1 Indicadores por cohorte / aliado
 
-| Indicador                          | Fuente                                    | Descripción                                                       |
-|------------------------------------|-------------------------------------------|-------------------------------------------------------------------|
-| Tasa de crecimiento por cohorte    | `im_measurements` + `im_monthly_sales`    | % promedio de variación de ventas agrupado por cohorte            |
-| Generación de empleo por aliado    | `im_employment_snapshots` + `im_cohorts`  | Total de nuevos empleos generados, agrupado por aliado            |
-| Tasa de formalización por cohorte  | `im_businesses`                           | % de negocios con NIT y figura legal formal por cohorte           |
-| Morosidad por aliado               | `im_overdue_credits`                      | Saldo total vencido y cantidad de créditos por aliado             |
+| Indicador                         | Fuente                                   | Descripción                                             |
+| --------------------------------- | ---------------------------------------- | ------------------------------------------------------- |
+| Tasa de crecimiento por cohorte   | `im_measurements` + `im_monthly_sales`   | % promedio de variación de ventas agrupado por cohorte  |
+| Generación de empleo por aliado   | `im_employment_snapshots` + `im_cohorts` | Total de nuevos empleos generados, agrupado por aliado  |
+| Tasa de formalización por cohorte | `im_businesses`                          | % de negocios con NIT y figura legal formal por cohorte |
+| Morosidad por aliado              | `im_overdue_credits`                     | Saldo total vencido y cantidad de créditos por aliado   |
 
 ### 3.2 Indicadores longitudinales (entre años)
 
-| Indicador                      | Fuente                                     | Descripción                                                        |
-|--------------------------------|--------------------------------------------|--------------------------------------------------------------------|
-| Evolución de ventas            | `im_monthly_sales` de distintos años       | Comparar curvas mensuales año vs. año para un emprendedor          |
-| Evolución del empleo           | `im_employment_snapshots`                  | Tendencia de empleados formales vs. informales a lo largo del tiempo|
-| Transición de segmento         | `im_measurements.credit_segment_start/end` | Cuántos emprendedores migraron de segmento (ej: cuenta propia → crecimiento) |
-| Progresión de apalancamiento   | `im_quarterly_balances`                    | Cómo evoluciona la relación deuda/activos en el tiempo             |
+| Indicador                    | Fuente                                     | Descripción                                                                  |
+| ---------------------------- | ------------------------------------------ | ---------------------------------------------------------------------------- |
+| Evolución de ventas          | `im_monthly_sales` de distintos años       | Comparar curvas mensuales año vs. año para un emprendedor                    |
+| Evolución del empleo         | `im_employment_snapshots`                  | Tendencia de empleados formales vs. informales a lo largo del tiempo         |
+| Transición de segmento       | `im_measurements.credit_segment_start/end` | Cuántos emprendedores migraron de segmento (ej: cuenta propia → crecimiento) |
+| Progresión de apalancamiento | `im_quarterly_balances`                    | Cómo evoluciona la relación deuda/activos en el tiempo                       |
 
 ### 3.3 Indicadores de perfil demográfico
 
-| Indicador                       | Fuente                                  | Descripción                                                           |
-|---------------------------------|-----------------------------------------|-----------------------------------------------------------------------|
-| Distribución por género         | `im_entrepreneur_demographics`          | % hombres vs. mujeres en el programa                                 |
-| Ingreso per cápita vs. línea de pobreza | `im_entrepreneur_demographics`  | Cuántos emprendedores están por debajo de la línea de pobreza        |
-| Cobertura de seguridad social   | `im_entrepreneur_demographics`          | % con pensión, salud contributiva, caja de compensación              |
-| Mapa de municipios              | `im_entrepreneur_demographics`          | Distribución geográfica de los emprendedores atendidos               |
-| Nivel educativo vs. impacto     | Cruce `demographics` + `measurements`   | Correlación entre nivel de estudio e indicadores de crecimiento       |
+| Indicador                               | Fuente                                | Descripción                                                     |
+| --------------------------------------- | ------------------------------------- | --------------------------------------------------------------- |
+| Distribución por género                 | `im_entrepreneur_demographics`        | % hombres vs. mujeres en el programa                            |
+| Ingreso per cápita vs. línea de pobreza | `im_entrepreneur_demographics`        | Cuántos emprendedores están por debajo de la línea de pobreza   |
+| Cobertura de seguridad social           | `im_entrepreneur_demographics`        | % con pensión, salud contributiva, caja de compensación         |
+| Mapa de municipios                      | `im_entrepreneur_demographics`        | Distribución geográfica de los emprendedores atendidos          |
+| Nivel educativo vs. impacto             | Cruce `demographics` + `measurements` | Correlación entre nivel de estudio e indicadores de crecimiento |
 
 ### 3.4 Indicadores de cartera
 
-| Indicador                           | Fuente                | Descripción                                                       |
-|-------------------------------------|-----------------------|-------------------------------------------------------------------|
-| Concentración de riesgo             | `im_overdue_credits`  | % del saldo vencido total concentrado en top 10 deudores          |
-| Distribución por clasificación      | `im_overdue_credits`  | Cantidad y monto por clasificación (A, B, E)                      |
-| Días promedio de mora por aliado    | `im_overdue_credits`  | Promedio de `days_overdue` agrupado por aliado                    |
-| Relación mora vs. ventas            | Cruce `overdue` + `monthly_sales` | Si los morosos tienen ventas más bajas que el promedio    |
+| Indicador                        | Fuente                            | Descripción                                              |
+| -------------------------------- | --------------------------------- | -------------------------------------------------------- |
+| Concentración de riesgo          | `im_overdue_credits`              | % del saldo vencido total concentrado en top 10 deudores |
+| Distribución por clasificación   | `im_overdue_credits`              | Cantidad y monto por clasificación (A, B, E)             |
+| Días promedio de mora por aliado | `im_overdue_credits`              | Promedio de `days_overdue` agrupado por aliado           |
+| Relación mora vs. ventas         | Cruce `overdue` + `monthly_sales` | Si los morosos tienen ventas más bajas que el promedio   |
 
 ### 3.5 Indicadores de recolección
 
-| Indicador                          | Fuente                               | Descripción                                                      |
-|------------------------------------|--------------------------------------|------------------------------------------------------------------|
-| Tasa de adopción de prácticas      | `im_collection_responses`            | % que implementó prácticas enseñadas en el programa              |
-| Necesidad de crédito               | `im_collection_responses`            | % que manifiesta necesidad de crédito y monto promedio solicitado|
-| Destino de inversión               | `im_collection_responses`            | Distribución de destinos (capital de trabajo, maquinaria, etc.)  |
-| Seguimiento contable               | `im_collection_responses`            | % con contador y método de registro financiero                   |
+| Indicador                     | Fuente                    | Descripción                                                       |
+| ----------------------------- | ------------------------- | ----------------------------------------------------------------- |
+| Tasa de adopción de prácticas | `im_collection_responses` | % que implementó prácticas enseñadas en el programa               |
+| Necesidad de crédito          | `im_collection_responses` | % que manifiesta necesidad de crédito y monto promedio solicitado |
+| Destino de inversión          | `im_collection_responses` | Distribución de destinos (capital de trabajo, maquinaria, etc.)   |
+| Seguimiento contable          | `im_collection_responses` | % con contador y método de registro financiero                    |
 
 ---
 

@@ -5,15 +5,11 @@ interface DashboardLayoutProps {
   children: ReactNode;
 }
 
-// TODO: add auth guard — redirect to login if no session
-// TODO: add top header bar (breadcrumbs, user menu) when needed
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex min-h-screen bg-background">
       <Sidebar />
-      <main className="flex flex-1 flex-col overflow-y-auto">
-        <div className="mx-auto w-full max-w-7xl px-6 py-8">{children}</div>
-      </main>
+      <main className="flex-1 ml-64 p-8">{children}</main>
     </div>
   );
 }

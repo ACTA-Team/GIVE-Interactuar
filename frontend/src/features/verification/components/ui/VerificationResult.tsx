@@ -11,10 +11,11 @@ export function VerificationResult({ status }: VerificationResultProps) {
     <div className="rounded-xl border-2 border-gray-200 bg-white p-8 text-center shadow-sm">
       <div className="mb-4 flex justify-center">
         <Badge
-          label={status.isValid ? 'Credencial válida' : 'Credencial inválida'}
           variant={status.isValid ? 'success' : 'danger'}
           className="text-base px-4 py-1"
-        />
+        >
+          {status.isValid ? 'Credencial válida' : 'Credencial inválida'}
+        </Badge>
       </div>
 
       {status.title && (

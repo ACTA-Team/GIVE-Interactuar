@@ -1,1 +1,2 @@
-npm --prefix frontend run format
+cd frontend || exit 1
+npm run format

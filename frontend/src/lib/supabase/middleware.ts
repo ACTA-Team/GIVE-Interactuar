@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import type { NextRequest, NextResponse } from 'next/server';
-import type { CookieToSet } from '@/@types/supabase';
+import type { CookieToSet } from '@/lib/supabase/types';
 import type { Database } from './database.types';
 import { supabaseUrl, supabaseKey } from '@/lib/constants/env';
 

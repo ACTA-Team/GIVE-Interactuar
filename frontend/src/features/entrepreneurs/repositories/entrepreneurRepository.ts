@@ -1,6 +1,6 @@
 import { mapEntrepreneur } from '../mappers/entrepreneurMapper';
 import type { Entrepreneur, EntrepreneurFilters } from '../types';
-import type { SupabaseLikeClient } from '@/@types/supabase';
+import type { SupabaseLikeClient } from '@/lib/supabase/types';
 
 export function createEntrepreneurRepository(client: SupabaseLikeClient) {
   return {

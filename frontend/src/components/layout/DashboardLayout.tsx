@@ -9,7 +9,6 @@ interface DashboardLayoutProps {
   children: ReactNode;
 }
 
-// TODO: add auth guard — redirect to login if no session
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 

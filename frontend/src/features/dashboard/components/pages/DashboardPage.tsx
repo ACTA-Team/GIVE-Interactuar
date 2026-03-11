@@ -52,7 +52,6 @@ import {
 } from 'recharts';
 import {
   STAGES,
-  type DashboardEntrepreneur,
 } from '@/features/entrepreneurs/types/stages';
 import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
 

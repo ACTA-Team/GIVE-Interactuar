@@ -29,11 +29,6 @@ import {
   Shield,
   Award,
   Clock,
-  TrendingUp,
-  Users,
-  GraduationCap,
-  Lightbulb,
-  Leaf,
   Mail,
   Phone,
   Building2,
@@ -46,8 +41,6 @@ import {
 import {
   STAGES,
   AVAILABLE_BADGES,
-  type DashboardEntrepreneur,
-  type BadgeData,
 } from '../../types/stages';
 import { MOCK_ENTREPRENEURS } from '../../data/mock-entrepreneurs';
 import { BadgeDetailDialog } from '../ui/BadgeDetailDialog';

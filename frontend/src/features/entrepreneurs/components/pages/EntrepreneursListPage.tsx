@@ -33,8 +33,6 @@ import {
 } from 'lucide-react';
 import {
   STAGES,
-  type DashboardEntrepreneur,
-  type BadgeData,
 } from '../../types/stages';
 import { MOCK_ENTREPRENEURS } from '../../data/mock-entrepreneurs';
 import { NewEntrepreneurDialog } from '../ui/NewEntrepreneurDialog';

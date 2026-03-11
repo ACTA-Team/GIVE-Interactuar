@@ -25,10 +25,9 @@ export function CredentialDetailPage({
             </p>
           )}
         </div>
-        <Badge
-          label={credential.status}
-          variant={credential.status === 'issued' ? 'success' : 'default'}
-        />
+        <Badge variant={credential.status === 'issued' ? 'success' : 'default'}>
+          {credential.status}
+        </Badge>
       </div>
 
       {/* ACTA VC info */}

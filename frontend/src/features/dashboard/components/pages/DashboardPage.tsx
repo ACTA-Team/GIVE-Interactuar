@@ -19,9 +19,61 @@ interface DashboardStats {
   avgIncomeGrowthPct: number | null;
 }
 
-interface DashboardPageProps {
-  stats: DashboardStats;
-}
+import { useState, useMemo } from 'react';
+import Link from 'next/link';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Users,
+  AlertTriangle,
+  DollarSign,
+  GraduationCap,
+  ArrowUpRight,
+  ArrowDownRight,
+  ChevronRight,
+  CheckCircle2,
+  Shield,
+} from 'lucide-react';
+import {
+  AreaChart,
+  Area,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+} from 'recharts';
+import {
+  STAGES,
+  type DashboardEntrepreneur,
+} from '@/features/entrepreneurs/types/stages';
+import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
 
 const MOCK_ENTREPRENEURS = [
   {
@@ -180,8 +232,65 @@ export function DashboardPage({ stats }: DashboardPageProps) {
               ? `${stats.avgIncomeGrowthPct}%`
               : '—'
           }
-          description="Promedio antes/después"
-        />
+          break;
+        case 'funding':
+          comparison = (a.fundingAmount || 0) - (b.fundingAmount || 0);
+          break;
+      }
+      return sortDirection === 'desc' ? -comparison : comparison;
+    });
+  }, [entrepreneurs, sortField, sortDirection, filterStage, filterStatus]);
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  const handleSelectAll = () => {
+    if (selectedIds.size === filteredAndSortedEntrepreneurs.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredAndSortedEntrepreneurs.map((e) => e.id)));
+    }
+  };
+
+  const handleSelect = (id: string) => {
+    const newSelected = new Set(selectedIds);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedIds(newSelected);
+  };
+
+  const handleBulkCertify = (stageId: number) => {
+    // TODO: wire to certify service
+    console.log('Bulk certify', Array.from(selectedIds), 'stage', stageId);
+    setSelectedIds(new Set());
+  };
+
+  const toggleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-muted-foreground mt-1">
+          Bienvenido. Resumen de tu cartera de empresarios.
+        </p>
       </div>
 
       <div className="mt-8 rounded-lg border bg-card p-6">

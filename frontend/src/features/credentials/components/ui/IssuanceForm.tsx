@@ -95,7 +95,7 @@ export function IssuanceForm({
         />
       </div>
 
-      <Button type="submit" isLoading={isLoading} className="w-full">
+      <Button type="submit" disabled={isLoading} className="w-full">
         Emitir credencial
       </Button>
     </form>

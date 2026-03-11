@@ -2,61 +2,183 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'motion/react';
+import {
+  IconLayoutDashboard,
+  IconUsers,
+  IconList,
+  IconCertificate,
+  IconPlus,
+  IconBuildingCommunity,
+  IconX,
+} from '@tabler/icons-react';
+import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
+import { SidebarNavGroup } from './SidebarNavGroup';
+import type { ReactNode } from 'react';
 
-interface NavItem {
+interface NavItemProps {
+  icon: ReactNode;
   label: string;
   href: string;
-  // TODO: add icon prop when an icon library is added (e.g. lucide-react)
+  isActive: boolean;
+  onClick?: () => void;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { label: 'Dashboard', href: ROUTES.dashboard },
-  { label: 'Emprendedores', href: ROUTES.entrepreneurs.list },
-  { label: 'Credenciales', href: ROUTES.credentials.list },
-];
+function NavItem({ icon, label, href, isActive, onClick }: NavItemProps) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={cn(
+        'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+        isActive
+          ? 'bg-gray-100 text-gray-900'
+          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+      )}
+    >
+      <span
+        className={cn('shrink-0', isActive ? 'text-gray-700' : 'text-gray-400')}
+      >
+        {icon}
+      </span>
+      {label}
+    </Link>
+  );
+}
 
-export function Sidebar() {
+interface SidebarProps {
+  isMobileOpen: boolean;
+  onMobileClose: () => void;
+}
+
+export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
 
-  return (
-    <aside className="flex h-full w-56 flex-col border-r border-gray-200 bg-white px-3 py-6">
-      {/* Logo / brand */}
-      <div className="mb-8 px-2">
-        <span className="text-lg font-semibold tracking-tight text-gray-900">
-          GIVE Interactuar
-        </span>
+  const isDashboardActive = pathname === ROUTES.dashboard;
+  const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);
+  const isCredentialsActive = pathname.startsWith(ROUTES.credentials.list);
+
+  const content = (
+    <div className="flex h-full flex-col">
+      {/* Logo */}
+      <div className="flex items-center justify-between px-4 py-5">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900">
+            <IconBuildingCommunity className="h-5 w-5 text-white" />
+          </div>
+          <span className="text-base font-semibold tracking-tight text-gray-900">
+            Interactuar
+          </span>
+        </div>
+        <button
+          onClick={onMobileClose}
+          className="rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 lg:hidden"
+        >
+          <IconX className="h-5 w-5" />
+        </button>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex flex-1 flex-col gap-1">
-        {NAV_ITEMS.map((item) => {
-          const isActive =
-            item.href === ROUTES.dashboard
-              ? pathname === item.href
-              : pathname.startsWith(item.href);
+      <hr className="mx-3 border-gray-100" />
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={[
-                'rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                isActive
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
-              ].join(' ')}
-            >
-              {item.label}
-            </Link>
-          );
-        })}
+      {/* Nav */}
+      <nav className="flex flex-1 flex-col gap-0.5 px-3 py-4">
+        <NavItem
+          icon={<IconLayoutDashboard className="h-4 w-4" />}
+          label="Dashboard"
+          href={ROUTES.dashboard}
+          isActive={isDashboardActive}
+          onClick={onMobileClose}
+        />
+
+        <hr className="my-3 border-gray-100" />
+
+        <SidebarNavGroup
+          icon={<IconUsers className="h-4 w-4" />}
+          label="Emprendedores"
+          defaultOpen={isEntrepreneursActive}
+        >
+          <NavItem
+            icon={<IconList className="h-4 w-4" />}
+            label="Lista"
+            href={ROUTES.entrepreneurs.list}
+            isActive={pathname === ROUTES.entrepreneurs.list}
+            onClick={onMobileClose}
+          />
+        </SidebarNavGroup>
+
+        <SidebarNavGroup
+          icon={<IconCertificate className="h-4 w-4" />}
+          label="Credenciales"
+          defaultOpen={isCredentialsActive}
+        >
+          <NavItem
+            icon={<IconList className="h-4 w-4" />}
+            label="Lista"
+            href={ROUTES.credentials.list}
+            isActive={pathname === ROUTES.credentials.list}
+            onClick={onMobileClose}
+          />
+          <NavItem
+            icon={<IconPlus className="h-4 w-4" />}
+            label="Nueva Credencial"
+            href={ROUTES.credentials.new}
+            isActive={pathname === ROUTES.credentials.new}
+            onClick={onMobileClose}
+          />
+        </SidebarNavGroup>
       </nav>
 
-      {/* Footer slot — TODO: add user/org info or sign-out button */}
-      <div className="mt-auto px-2 text-xs text-gray-400">
-        {/* TODO: render logged-in org name and sign-out link */}
+      {/* Footer */}
+      <div className="border-t border-gray-100 px-4 py-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
+            GI
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-900">
+              Interactuar Team
+            </span>
+            <span className="text-xs text-gray-400">Organización</span>
+          </div>
+        </div>
       </div>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop */}
+      <aside className="hidden h-full w-64 flex-col border-r border-gray-200 bg-white lg:flex">
+        {content}
+      </aside>
+
+      {/* Mobile drawer */}
+      <AnimatePresence>
+        {isMobileOpen && (
+          <>
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={onMobileClose}
+              className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+            />
+            <motion.aside
+              key="drawer"
+              initial={{ x: -256 }}
+              animate={{ x: 0 }}
+              exit={{ x: -256 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+              className="fixed inset-y-0 left-0 z-50 w-64 border-r border-gray-200 bg-white lg:hidden"
+            >
+              {content}
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

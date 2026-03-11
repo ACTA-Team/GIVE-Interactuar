@@ -1,4 +1,8 @@
+'use client';
+
+import { useState } from 'react';
 import type { ReactNode } from 'react';
+import { IconMenu2 } from '@tabler/icons-react';
 import { Sidebar } from './Sidebar';
 
 interface DashboardLayoutProps {
@@ -6,14 +10,34 @@ interface DashboardLayoutProps {
 }
 
 // TODO: add auth guard — redirect to login if no session
-// TODO: add top header bar (breadcrumbs, user menu) when needed
 export function DashboardLayout({ children }: DashboardLayoutProps) {
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar />
-      <main className="flex flex-1 flex-col overflow-y-auto">
-        <div className="mx-auto w-full max-w-7xl px-6 py-8">{children}</div>
-      </main>
+      <Sidebar
+        isMobileOpen={isMobileOpen}
+        onMobileClose={() => setIsMobileOpen(false)}
+      />
+
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {/* Mobile top bar */}
+        <header className="flex items-center gap-3 border-b border-gray-200 bg-white px-4 py-3 lg:hidden">
+          <button
+            onClick={() => setIsMobileOpen(true)}
+            className="rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+          >
+            <IconMenu2 className="h-5 w-5" />
+          </button>
+          <span className="text-sm font-semibold text-gray-900">
+            Interactuar
+          </span>
+        </header>
+
+        <main className="flex flex-1 flex-col overflow-y-auto">
+          <div className="mx-auto w-full max-w-7xl px-6 py-8">{children}</div>
+        </main>
+      </div>
     </div>
   );
 }

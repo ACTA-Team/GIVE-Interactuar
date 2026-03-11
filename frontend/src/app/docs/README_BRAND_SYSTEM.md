@@ -2,11 +2,11 @@ This document summarizes the **brand rules and design system** of Interactuar fo
 
 It is intended to be used by:
 
-* developers
-* designers
-* AI agents
-* code generation tools
-* UI generation tools
+- developers
+- designers
+- AI agents
+- code generation tools
+- UI generation tools
 
 This document acts as the **single source of truth** for visual and design decisions inside the repository.
 
@@ -20,18 +20,18 @@ The Interactuar logo is primarily **typographic**, where the letter **"i" acts a
 
 This visual metaphor represents:
 
-* interaction
-* connection
-* collaboration
-* business growth
-* support and progress
+- interaction
+- connection
+- collaboration
+- business growth
+- support and progress
 
 Design outputs should try to reflect these values through:
 
-* clarity
-* simplicity
-* professional tone
-* structured layouts
+- clarity
+- simplicity
+- professional tone
+- structured layouts
 
 ---
 
@@ -62,16 +62,16 @@ Deep blue should dominate the UI.
 
 Use cyan for:
 
-* buttons
-* links
-* active states
-* highlights
+- buttons
+- links
+- active states
+- highlights
 
 Use orange only for:
 
-* important actions
-* alerts
-* notifications
+- important actions
+- alerts
+- notifications
 
 Secondary palette should be used **sparingly**.
 
@@ -83,15 +83,14 @@ All UI implementations should derive colors from these tokens.
 
 ```css
 :root {
-
   /* Brand */
   --color-primary: #021442;
-  --color-accent: #20A7D1;
-  --color-danger: #EA4E2F;
+  --color-accent: #20a7d1;
+  --color-danger: #ea4e2f;
 
   /* Supporting */
   --color-gray: #808080;
-  --color-warning: #FFAB00;
+  --color-warning: #ffab00;
 
   /* Backgrounds */
   --bg-primary: #ffffff;
@@ -100,7 +99,6 @@ All UI implementations should derive colors from these tokens.
   /* Text */
   --text-primary: #021442;
   --text-secondary: #808080;
-
 }
 ```
 
@@ -133,9 +131,9 @@ Arial
 
 Arial should only be used for:
 
-* documents
-* emails
-* Office environments
+- documents
+- emails
+- Office environments
 
 All UI components should prioritize **Manrope**.
 
@@ -172,13 +170,13 @@ This ensures visibility and visual clarity.
 
 The following modifications are not allowed:
 
-* changing logo colors
-* altering proportions
-* separating the symbol from the typography
-* adding shadows
-* rearranging logo elements
-* replacing the word "Interactuar"
-* embedding the logo inside paragraphs or text blocks
+- changing logo colors
+- altering proportions
+- separating the symbol from the typography
+- adding shadows
+- rearranging logo elements
+- replacing the word "Interactuar"
+- embedding the logo inside paragraphs or text blocks
 
 The logo must remain consistent across all interfaces.
 
@@ -192,16 +190,16 @@ When generating UI components, the interface should follow these principles.
 
 Prefer:
 
-* card-based layouts
-* structured grids
-* clear hierarchy
-* generous spacing
+- card-based layouts
+- structured grids
+- clear hierarchy
+- generous spacing
 
 Avoid:
 
-* cluttered layouts
-* overly decorative UI
-* heavy gradients
+- cluttered layouts
+- overly decorative UI
+- heavy gradients
 
 ---
 
@@ -310,11 +308,11 @@ mixed typography
 
 When an AI tool generates:
 
-* UI
-* CSS
-* components
-* layouts
-* dashboards
+- UI
+- CSS
+- components
+- layouts
+- dashboards
 
 it must follow these rules:
 

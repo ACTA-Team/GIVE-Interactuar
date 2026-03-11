@@ -1,6 +1,13 @@
 import type { Metadata } from 'next';
+import { Manrope } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
+
+const manrope = Manrope({
+  variable: '--font-manrope',
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'GIVE Interactuar',
@@ -14,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className="font-sans antialiased">
+      <body className={`${manrope.variable} font-sans antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>

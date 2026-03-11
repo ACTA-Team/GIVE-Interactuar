@@ -127,8 +127,8 @@ const STAGE_OPTIONS = [
       MOCK_ENTREPRENEURS.map((e) => [
         e.stageNumber,
         { value: String(e.stageNumber), label: `${e.stageNumber}: ${e.stage}` },
-      ])
-    ).values()
+      ]),
+    ).values(),
   ).sort((a, b) => Number(a.value) - Number(b.value)),
 ];
 
@@ -148,9 +148,9 @@ export function DashboardPage({ stats }: DashboardPageProps) {
       MOCK_ENTREPRENEURS.filter(
         (e) =>
           (filterStage === 'all' || String(e.stageNumber) === filterStage) &&
-          (filterStatus === 'all' || e.status === filterStatus)
+          (filterStatus === 'all' || e.status === filterStatus),
       ),
-    [filterStage, filterStatus]
+    [filterStage, filterStatus],
   );
 
   return (

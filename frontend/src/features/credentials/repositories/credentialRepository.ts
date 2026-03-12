@@ -1,5 +1,9 @@
-import { mapCredential, mapIssuanceDraft } from '../mappers/credentialMapper';
-import type { Credential, IssuanceDraft } from '../types';
+import {
+  mapCredential,
+  mapCredentialTemplate,
+  mapIssuanceDraft,
+} from '../mappers/credentialMapper';
+import type { Credential, CredentialTemplate, IssuanceDraft } from '../types';
 import type { CredentialFilters } from '../schemas';
 import type { SupabaseLikeClient } from '@/@types/supabase';
 
@@ -83,6 +87,72 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
         })
         .eq('id', id);
       if (error) throw error;
+    },
+
+    async findAllTemplates(
+      filters?: {
+        organizationId?: string;
+        credentialType?: string;
+        active?: boolean;
+      },
+    ): Promise<CredentialTemplate[]> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let q = (client as any).from('credential_templates').select('*');
+
+      if (filters?.organizationId)
+        q = q.eq('organization_id', filters.organizationId);
+      if (filters?.credentialType)
+        q = q.eq('credential_type', filters.credentialType);
+      if (filters?.active !== undefined) q = q.eq('active', filters.active);
+
+      const { data, error } = await q.order('created_at', { ascending: false });
+      if (error) throw error;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (data ?? []).map((row: any) => mapCredentialTemplate(row));
+    },
+
+    async findTemplateById(id: string): Promise<CredentialTemplate | null> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (client as any)
+        .from('credential_templates')
+        .select('*')
+        .eq('id', id)
+        .single();
+      if (error) {
+        if (error.code === 'PGRST116') return null;
+        throw error;
+      }
+      return mapCredentialTemplate(data);
+    },
+
+    async findAllDrafts(
+      filters?: { entrepreneurId?: string; status?: string },
+    ): Promise<IssuanceDraft[]> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let q = (client as any).from('issuance_drafts').select('*');
+
+      if (filters?.entrepreneurId)
+        q = q.eq('entrepreneur_id', filters.entrepreneurId);
+      if (filters?.status) q = q.eq('status', filters.status);
+
+      const { data, error } = await q.order('created_at', { ascending: false });
+      if (error) throw error;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (data ?? []).map((row: any) => mapIssuanceDraft(row));
+    },
+
+    async findDraftById(id: string): Promise<IssuanceDraft | null> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (client as any)
+        .from('issuance_drafts')
+        .select('*')
+        .eq('id', id)
+        .single();
+      if (error) {
+        if (error.code === 'PGRST116') return null;
+        throw error;
+      }
+      return mapIssuanceDraft(data);
     },
   };
 }

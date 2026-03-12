@@ -1,5 +1,14 @@
-import { mapEntrepreneur } from '../mappers/entrepreneurMapper';
-import type { Entrepreneur, EntrepreneurFilters } from '../types';
+import {
+  mapEntrepreneur,
+  mapBusinessProfile,
+  mapSnapshot,
+} from '../mappers/entrepreneurMapper';
+import type {
+  Entrepreneur,
+  EntrepreneurFilters,
+  BusinessProfile,
+  EntrepreneurProfileSnapshot,
+} from '../types';
 import type { SupabaseLikeClient } from '@/@types/supabase';
 
 export function createEntrepreneurRepository(client: SupabaseLikeClient) {
@@ -39,6 +48,80 @@ export function createEntrepreneurRepository(client: SupabaseLikeClient) {
         throw error;
       }
       return mapEntrepreneur(data);
+    },
+
+    async findAllBusinessProfiles(
+      filters?: { entrepreneurId?: string },
+    ): Promise<BusinessProfile[]> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let q = (client as any)
+        .from('entrepreneur_business_profiles')
+        .select('*');
+
+      if (filters?.entrepreneurId)
+        q = q.eq('entrepreneur_id', filters.entrepreneurId);
+
+      const { data, error } = await q.order('created_at', {
+        ascending: false,
+      });
+      if (error) throw error;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (data ?? []).map((row: any) => mapBusinessProfile(row));
+    },
+
+    async findBusinessProfileById(
+      id: string,
+    ): Promise<BusinessProfile | null> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (client as any)
+        .from('entrepreneur_business_profiles')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') return null;
+        throw error;
+      }
+      return mapBusinessProfile(data);
+    },
+
+    async findAllSnapshots(
+      filters?: { entrepreneurId?: string; isLatest?: boolean },
+    ): Promise<EntrepreneurProfileSnapshot[]> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let q = (client as any)
+        .from('entrepreneur_profile_snapshots')
+        .select('*');
+
+      if (filters?.entrepreneurId)
+        q = q.eq('entrepreneur_id', filters.entrepreneurId);
+      if (filters?.isLatest !== undefined)
+        q = q.eq('is_latest', filters.isLatest);
+
+      const { data, error } = await q.order('created_at', {
+        ascending: false,
+      });
+      if (error) throw error;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (data ?? []).map((row: any) => mapSnapshot(row));
+    },
+
+    async findSnapshotById(
+      id: string,
+    ): Promise<EntrepreneurProfileSnapshot | null> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (client as any)
+        .from('entrepreneur_profile_snapshots')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') return null;
+        throw error;
+      }
+      return mapSnapshot(data);
     },
   };
 }

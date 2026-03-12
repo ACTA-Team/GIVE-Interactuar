@@ -1,14 +1,41 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createEntrepreneurRepository } from '@/features/entrepreneurs/repositories/entrepreneurRepository';
 import { createCredentialRepository } from '@/features/credentials/repositories/credentialRepository';
-import { createCredentialService } from '@/features/credentials/services/credentialService';
 import { CredentialsListPage } from '@/features/credentials/components/pages/CredentialsListPage';
+import type { Entrepreneur } from '@/features/entrepreneurs/types';
+import type { Credential } from '@/features/credentials/types';
 
-// TODO: add searchParams prop for status/type filters
 export default async function Page() {
   const supabase = await createServerSupabaseClient();
-  const repo = createCredentialRepository(supabase);
-  const service = createCredentialService(repo);
-  const credentials = await service.list();
+  const entrepreneurRepo = createEntrepreneurRepository(supabase);
+  const credentialRepo = createCredentialRepository(supabase);
 
-  return <CredentialsListPage credentials={credentials} />;
+  let entrepreneurs: Entrepreneur[] = [];
+  try {
+    entrepreneurs = await entrepreneurRepo.findAll();
+  } catch {
+    // table may not exist yet
+  }
+
+  let allCredentials: Credential[] = [];
+  try {
+    allCredentials = await credentialRepo.findAll();
+  } catch {
+    // table may not exist yet
+  }
+
+  const countByEntrepreneur = new Map<string, number>();
+  for (const c of allCredentials) {
+    countByEntrepreneur.set(
+      c.entrepreneurId,
+      (countByEntrepreneur.get(c.entrepreneurId) ?? 0) + 1,
+    );
+  }
+
+  const entrepreneursWithCount = entrepreneurs.map((e) => ({
+    ...e,
+    credentialCount: countByEntrepreneur.get(e.id) ?? 0,
+  }));
+
+  return <CredentialsListPage entrepreneurs={entrepreneursWithCount} />;
 }

@@ -190,7 +190,13 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
               <Select
                 value={filterType}
                 onValueChange={(value) =>
-                  setFilterType((value ?? 'all') as 'all' | 'impact' | 'behavior' | 'profile')
+                  setFilterType(
+                    (value ?? 'all') as
+                      | 'all'
+                      | 'impact'
+                      | 'behavior'
+                      | 'profile',
+                  )
                 }
               >
                 <SelectTrigger className="w-[170px]">
@@ -210,7 +216,11 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                 value={fundingFilter}
                 onValueChange={(value) =>
                   setFundingFilter(
-                    (value ?? 'all') as 'all' | 'funded' | 'not-funded' | 'delinquent',
+                    (value ?? 'all') as
+                      | 'all'
+                      | 'funded'
+                      | 'not-funded'
+                      | 'delinquent',
                   )
                 }
               >
@@ -234,7 +244,9 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
               <Select
                 value={onChainFilter}
                 onValueChange={(value) =>
-                  setOnChainFilter((value ?? 'all') as 'all' | 'with' | 'without')
+                  setOnChainFilter(
+                    (value ?? 'all') as 'all' | 'with' | 'without',
+                  )
                 }
               >
                 <SelectTrigger className="w-[190px]">
@@ -252,7 +264,9 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
               <Select
                 value={hasCredentialsFilter}
                 onValueChange={(value) =>
-                  setHasCredentialsFilter((value ?? 'all') as 'all' | 'with' | 'without')
+                  setHasCredentialsFilter(
+                    (value ?? 'all') as 'all' | 'with' | 'without',
+                  )
                 }
               >
                 <SelectTrigger className="w-[210px]">

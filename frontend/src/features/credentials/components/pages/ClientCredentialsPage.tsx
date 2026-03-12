@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Plus, ShieldCheck, FileWarning } from 'lucide-react';
-import type { Entrepreneur } from '@/features/entrepreneurs/types';
 import type { Credential, CredentialType } from '../../types';
 import {
   CREDENTIAL_TYPE_LABELS,
@@ -12,15 +11,24 @@ import {
 } from '../../types';
 import { CredentialCard } from '../ui/CredentialCard';
 
+interface ClientInfo {
+  id: string;
+  name: string;
+  businessName: string;
+  businessType: string;
+  email: string;
+  phone: string;
+}
+
 interface ClientCredentialsPageProps {
-  entrepreneur: Entrepreneur;
+  client: ClientInfo;
   credentials: Credential[];
 }
 
 const CREDENTIAL_TYPES: CredentialType[] = ['impact', 'behavior', 'profile'];
 
 export function ClientCredentialsPage({
-  entrepreneur,
+  client,
   credentials,
 }: ClientCredentialsPageProps) {
   const groupedCredentials = CREDENTIAL_TYPES.map((type) => ({
@@ -42,7 +50,7 @@ export function ClientCredentialsPage({
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-foreground">
-              {entrepreneur.fullName}
+              {client.name}
             </h1>
             <p className="text-muted-foreground mt-0.5">
               Credenciales verificables del cliente
@@ -63,29 +71,21 @@ export function ClientCredentialsPage({
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <p className="text-xs font-medium text-muted-foreground">
-                Documento
-              </p>
-              <p className="mt-1 text-sm font-medium">
-                {entrepreneur.documentType} {entrepreneur.documentNumber}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs font-medium text-muted-foreground">
                 Negocio
               </p>
-              <p className="mt-1 text-sm font-medium">
-                {entrepreneur.businessProfile?.businessName ?? '—'}
-              </p>
+              <p className="mt-1 text-sm font-medium">{client.businessName}</p>
             </div>
             <div>
               <p className="text-xs font-medium text-muted-foreground">
-                Ubicación
+                Sector
               </p>
-              <p className="mt-1 text-sm font-medium">
-                {[entrepreneur.municipality, entrepreneur.department]
-                  .filter(Boolean)
-                  .join(', ') || '—'}
+              <p className="mt-1 text-sm font-medium">{client.businessType}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-muted-foreground">
+                Email
               </p>
+              <p className="mt-1 text-sm font-medium">{client.email}</p>
             </div>
             <div>
               <p className="text-xs font-medium text-muted-foreground">
@@ -107,7 +107,9 @@ export function ClientCredentialsPage({
         <section key={type} className="space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-foreground">{label}</h2>
+              <h2 className="text-lg font-semibold text-foreground">
+                {label}
+              </h2>
               <p className="text-sm text-muted-foreground">{description}</p>
             </div>
             {items.length > 0 && (

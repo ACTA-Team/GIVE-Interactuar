@@ -54,11 +54,15 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
   const t = useTranslations('credentials');
   const tc = useTranslations('common');
   const [search, setSearch] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'impact' | 'behavior' | 'profile'>('all');
+  const [filterType, setFilterType] = useState<
+    'all' | 'impact' | 'behavior' | 'profile'
+  >('all');
   const [fundingFilter, setFundingFilter] = useState<
     'all' | 'funded' | 'not-funded' | 'delinquent'
   >('all');
-  const [onChainFilter, setOnChainFilter] = useState<'all' | 'with' | 'without'>('all');
+  const [onChainFilter, setOnChainFilter] = useState<
+    'all' | 'with' | 'without'
+  >('all');
   const [hasCredentialsFilter, setHasCredentialsFilter] = useState<
     'all' | 'with' | 'without'
   >('all');
@@ -102,7 +106,14 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
         matchesHasCredentials
       );
     });
-  }, [clients, search, filterType, fundingFilter, onChainFilter, hasCredentialsFilter]);
+  }, [
+    clients,
+    search,
+    filterType,
+    fundingFilter,
+    onChainFilter,
+    hasCredentialsFilter,
+  ]);
 
   const totalImpact = clients.reduce((acc, c) => acc + c.impactCount, 0);
   const totalBehavior = clients.reduce((acc, c) => acc + c.behaviorCount, 0);
@@ -178,9 +189,9 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
             <div className="flex flex-wrap gap-3">
               <Select
                 value={filterType}
-                onValueChange={(value: 'all' | 'impact' | 'behavior' | 'profile') =>
-                  setFilterType(value)
-                }
+                onValueChange={(
+                  value: 'all' | 'impact' | 'behavior' | 'profile',
+                ) => setFilterType(value)}
               >
                 <SelectTrigger className="w-[170px]">
                   <SelectValue placeholder={t('vault.filterByType')} />
@@ -188,7 +199,9 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                 <SelectContent>
                   <SelectItem value="all">{t('vault.allTypes')}</SelectItem>
                   <SelectItem value="impact">{t('vault.impact')}</SelectItem>
-                  <SelectItem value="behavior">{t('vault.behavior')}</SelectItem>
+                  <SelectItem value="behavior">
+                    {t('vault.behavior')}
+                  </SelectItem>
                   <SelectItem value="profile">{t('vault.profile')}</SelectItem>
                 </SelectContent>
               </Select>
@@ -204,7 +217,9 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('vault.fundingAny')}</SelectItem>
-                  <SelectItem value="funded">{t('vault.fundingFunded')}</SelectItem>
+                  <SelectItem value="funded">
+                    {t('vault.fundingFunded')}
+                  </SelectItem>
                   <SelectItem value="not-funded">
                     {t('vault.fundingNotFunded')}
                   </SelectItem>
@@ -239,7 +254,9 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                 }
               >
                 <SelectTrigger className="w-[210px]">
-                  <SelectValue placeholder={t('vault.filterByCredentialPresence')} />
+                  <SelectValue
+                    placeholder={t('vault.filterByCredentialPresence')}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">

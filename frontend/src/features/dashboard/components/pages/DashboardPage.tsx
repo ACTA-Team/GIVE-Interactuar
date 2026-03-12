@@ -58,7 +58,11 @@ type SortDirection = 'asc' | 'desc';
 export function DashboardPage() {
   const t = useTranslations('dashboard');
   const tc = useTranslations('common');
-  const { data: entrepreneurs = [], isLoading, error } = useDashboardEntrepreneurs();
+  const {
+    data: entrepreneurs = [],
+    isLoading,
+    error,
+  } = useDashboardEntrepreneurs();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortField, setSortField] = useState<SortField>('delinquent');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');

@@ -104,8 +104,7 @@ export function EntrepreneursListPage() {
         (filterStatus === 'not-funded' && !e.hasFunding);
 
       const matchesGender =
-        filterGender === 'all' ||
-        normalizeGender(e.gender) === filterGender;
+        filterGender === 'all' || normalizeGender(e.gender) === filterGender;
 
       return matchesSearch && matchesStage && matchesStatus && matchesGender;
     });
@@ -261,15 +260,9 @@ export function EntrepreneursListPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('allGenders')}</SelectItem>
-                  <SelectItem value="female">
-                    {t('genderFemale')}
-                  </SelectItem>
-                  <SelectItem value="male">
-                    {t('genderMale')}
-                  </SelectItem>
-                  <SelectItem value="unknown">
-                    {t('genderUnknown')}
-                  </SelectItem>
+                  <SelectItem value="female">{t('genderFemale')}</SelectItem>
+                  <SelectItem value="male">{t('genderMale')}</SelectItem>
+                  <SelectItem value="unknown">{t('genderUnknown')}</SelectItem>
                 </SelectContent>
               </Select>
 

@@ -16,7 +16,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { ArrowLeft, Shield, Mail, Phone, Building2, Banknote, AlertTriangle } from 'lucide-react';
+import {
+  ArrowLeft,
+  Shield,
+  Mail,
+  Phone,
+  Building2,
+  Banknote,
+  AlertTriangle,
+} from 'lucide-react';
 import { STAGES } from '../../types/stages';
 import { useDashboardEntrepreneur } from '../../hooks/useDashboardEntrepreneurs';
 import { CredentialIssuanceModal } from '@/features/credentials/components/ui/CredentialIssuanceModal';

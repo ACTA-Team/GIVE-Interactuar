@@ -19,6 +19,7 @@ export interface DashboardEntrepreneur {
   name: string;
   email: string;
   phone: string;
+  gender?: string;
   businessName: string;
   businessType: string;
   currentStage: number;

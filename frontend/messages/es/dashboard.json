@@ -1,6 +1,8 @@
 {
   "title": "Dashboard",
   "welcome": "Bienvenido. Resumen de tu cartera de empresarios.",
+  "loading": "Cargando datos del dashboard…",
+  "error": "Error cargando datos del dashboard. Intenta de nuevo más tarde.",
   "stats": {
     "totalEntrepreneurs": "Total Empresarios",
     "totalFunding": "Financiamiento Total",
@@ -10,7 +12,10 @@
     "entrepreneursFunded": "{count} empresarios financiados",
     "stages1to3": "Etapas 1-3 del proceso",
     "needsAttention": "Requieren atención",
-    "allUpToDate": "Todo al día"
+    "allUpToDate": "Todo al día",
+    "genderDistribution": "Distribución por género",
+    "female": "Mujeres",
+    "male": "Hombres"
   },
   "charts": {
     "growthTrend": "Tendencia de Crecimiento",
@@ -40,6 +45,7 @@
   "table": {
     "title": "Empresarios",
     "description": "Selecciona empresarios para verificar etapas en lote",
+    "top10Description": "Top 10 empresarios según filtros y orden actual",
     "entrepreneur": "Empresario",
     "business": "Negocio",
     "stage": "Etapa",

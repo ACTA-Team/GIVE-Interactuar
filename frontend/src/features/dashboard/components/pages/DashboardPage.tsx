@@ -31,11 +31,9 @@ import {
 import {
   Users,
   AlertTriangle,
-  DollarSign,
   GraduationCap,
   ArrowUpRight,
   ArrowDownRight,
-  ChevronRight,
   CheckCircle2,
   Shield,
 } from 'lucide-react';
@@ -52,15 +50,19 @@ import {
   Legend,
 } from 'recharts';
 import { STAGES } from '@/features/entrepreneurs/types/stages';
-import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
+import { useDashboardEntrepreneurs } from '@/features/entrepreneurs/hooks/useDashboardEntrepreneurs';
 
-type SortField = 'name' | 'stage' | 'delinquent' | 'funding';
+type SortField = 'name' | 'stage' | 'delinquent';
 type SortDirection = 'asc' | 'desc';
 
 export function DashboardPage() {
   const t = useTranslations('dashboard');
   const tc = useTranslations('common');
-  const entrepreneurs = MOCK_ENTREPRENEURS;
+  const {
+    data: entrepreneurs = [],
+    isLoading,
+    error,
+  } = useDashboardEntrepreneurs();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortField, setSortField] = useState<SortField>('delinquent');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
@@ -75,10 +77,6 @@ export function DashboardPage() {
   const totalEntrepreneurs = entrepreneurs.length;
   const delinquentCount = entrepreneurs.filter((e) => e.isDelinquent).length;
   const fundedCount = entrepreneurs.filter((e) => e.hasFunding).length;
-  const totalFunding = entrepreneurs.reduce(
-    (sum, e) => sum + (e.fundingAmount || 0),
-    0,
-  );
   const inTraining = entrepreneurs.filter(
     (e) => e.currentStage >= 1 && e.currentStage <= 3,
   ).length;
@@ -138,22 +136,45 @@ export function DashboardPage() {
             comparison = (a.delinquentDays || 0) - (b.delinquentDays || 0);
           }
           break;
-        case 'funding':
-          comparison = (a.fundingAmount || 0) - (b.fundingAmount || 0);
-          break;
+        // funding removed from dashboard sorting
       }
       return sortDirection === 'desc' ? -comparison : comparison;
     });
   }, [entrepreneurs, sortField, sortDirection, filterStage, filterStatus]);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
+  const normalizeGender = (value?: string) => {
+    if (!value) return 'unknown';
+    const normalized = value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
+
+    if (
+      normalized === 'f' ||
+      normalized === 'femenino' ||
+      normalized === 'mujer'
+    ) {
+      return 'female';
+    }
+    if (
+      normalized === 'm' ||
+      normalized === 'masculino' ||
+      normalized === 'hombre'
+    ) {
+      return 'male';
+    }
+    return 'unknown';
   };
+
+  const femaleCount = entrepreneurs.filter(
+    (e) => normalizeGender(e.gender) === 'female',
+  ).length;
+  const maleCount = entrepreneurs.filter(
+    (e) => normalizeGender(e.gender) === 'male',
+  ).length;
+
+  const topEntrepreneurs = filteredAndSortedEntrepreneurs.slice(0, 10);
 
   const handleSelectAll = () => {
     if (selectedIds.size === filteredAndSortedEntrepreneurs.length) {
@@ -188,6 +209,22 @@ export function DashboardPage() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <p className="text-muted-foreground">{t('loading')}</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <p className="text-destructive">{t('error')}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -216,35 +253,6 @@ export function DashboardPage() {
           </CardContent>
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary/20">
             <div className="h-full bg-primary" style={{ width: '75%' }} />
-          </div>
-        </Card>
-
-        <Card className="relative overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              {t('stats.totalFunding')}
-            </CardTitle>
-            <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center">
-              <DollarSign className="h-4 w-4 text-accent" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">
-              {formatCurrency(totalFunding)}
-            </div>
-            <div className="flex items-center gap-1 mt-1 text-sm text-muted-foreground">
-              <span>
-                {t('stats.entrepreneursFunded', { count: fundedCount })}
-              </span>
-            </div>
-          </CardContent>
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-accent/20">
-            <div
-              className="h-full bg-accent"
-              style={{
-                width: `${(fundedCount / totalEntrepreneurs) * 100}%`,
-              }}
-            />
           </div>
         </Card>
 
@@ -316,6 +324,32 @@ export function DashboardPage() {
               }}
             />
           </div>
+        </Card>
+
+        <Card className="relative overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              {t('stats.genderDistribution')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  {t('stats.female')}
+                </span>
+                <span className="font-semibold">
+                  {femaleCount} / {totalEntrepreneurs}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">{t('stats.male')}</span>
+                <span className="font-semibold">
+                  {maleCount} / {totalEntrepreneurs}
+                </span>
+              </div>
+            </div>
+          </CardContent>
         </Card>
       </div>
 
@@ -448,13 +482,13 @@ export function DashboardPage() {
         </Card>
       </div>
 
-      {/* Sortable Table */}
+      {/* Sortable Table - Top 10 */}
       <Card>
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <CardTitle>{t('table.title')}</CardTitle>
-              <CardDescription>{t('table.description')}</CardDescription>
+              <CardDescription>{t('table.top10Description')}</CardDescription>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Select value={filterStage} onValueChange={handleFilterStage}>
@@ -574,24 +608,11 @@ export function DashboardPage() {
                       )}
                     </button>
                   </TableHead>
-                  <TableHead>
-                    <button
-                      onClick={() => toggleSort('funding')}
-                      className="flex items-center gap-1 hover:text-foreground transition-colors"
-                    >
-                      {t('table.funding')}
-                      {sortField === 'funding' && (
-                        <span className="text-primary">
-                          {sortDirection === 'asc' ? '↑' : '↓'}
-                        </span>
-                      )}
-                    </button>
-                  </TableHead>
-                  <TableHead className="w-[50px]"></TableHead>
+                  {/* Funding column removed from dashboard table */}
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAndSortedEntrepreneurs.length === 0 ? (
+                {topEntrepreneurs.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="h-32 text-center">
                       <p className="text-muted-foreground">
@@ -600,7 +621,7 @@ export function DashboardPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredAndSortedEntrepreneurs.map((entrepreneur) => {
+                  topEntrepreneurs.map((entrepreneur) => {
                     const currentStage = STAGES.find(
                       (s) => s.id === entrepreneur.currentStage,
                     );
@@ -671,24 +692,6 @@ export function DashboardPage() {
                             </Badge>
                           )}
                         </TableCell>
-                        <TableCell>
-                          {entrepreneur.hasFunding ? (
-                            <span className="font-medium">
-                              {formatCurrency(entrepreneur.fundingAmount || 0)}
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground">-</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <Link
-                            href={`/dashboard/entrepreneurs/${entrepreneur.id}`}
-                          >
-                            <Button variant="ghost" size="icon">
-                              <ChevronRight className="h-4 w-4" />
-                            </Button>
-                          </Link>
-                        </TableCell>
                       </TableRow>
                     );
                   })
@@ -700,7 +703,7 @@ export function DashboardPage() {
           <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
             <p>
               {tc('showing', {
-                count: filteredAndSortedEntrepreneurs.length,
+                count: topEntrepreneurs.length,
                 total: entrepreneurs.length,
               })}
             </p>

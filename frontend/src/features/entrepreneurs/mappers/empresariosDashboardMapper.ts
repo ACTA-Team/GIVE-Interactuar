@@ -3,6 +3,7 @@ import type { DashboardEntrepreneur } from '../types/stages';
 export type EmpresarioRow = {
   id: string;
   name: string;
+  gender: string | null;
   company: string | null;
   sector: string | null;
   active_credit: string | null;
@@ -30,6 +31,7 @@ export function mapEmpresarioToDashboardEntrepreneur(
   return {
     id: row.id,
     name: row.name,
+    gender: row.gender ?? undefined,
     email: '',
     phone: '',
     businessName: row.company ?? '',

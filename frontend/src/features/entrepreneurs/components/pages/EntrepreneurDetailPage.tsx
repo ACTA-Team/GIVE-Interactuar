@@ -1,17 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,25 +20,17 @@ import {
   ArrowLeft,
   CheckCircle,
   Shield,
-  Award,
   Clock,
   Mail,
   Phone,
   Building2,
   Banknote,
   AlertTriangle,
-  Plus,
-  X,
-  Lock,
 } from 'lucide-react';
-import { STAGES, AVAILABLE_BADGES } from '../../types/stages';
+import { STAGES } from '../../types/stages';
 import { MOCK_ENTREPRENEURS } from '../../data/mock-entrepreneurs';
-import { BadgeDetailDialog } from '../ui/BadgeDetailDialog';
-import {
-  BADGE_ICONS,
-  BADGE_ICONS_LARGE,
-  getBadgeColors,
-} from '../../constants/badge-ui';
+import { CredentialIssuanceModal } from '@/features/credentials/components/ui/CredentialIssuanceModal';
+import { IconCertificate } from '@tabler/icons-react';
 
 interface EntrepreneurDetailPageProps {
   entrepreneurId: string;
@@ -55,32 +40,31 @@ export function EntrepreneurDetailPage({
   entrepreneurId,
 }: EntrepreneurDetailPageProps) {
   const router = useRouter();
-  const [isBadgeDialogOpen, setIsBadgeDialogOpen] = useState(false);
+  const t = useTranslations('entrepreneurs');
+  const tc = useTranslations('common');
+  const locale = useLocale();
   const [certifyDialogOpen, setCertifyDialogOpen] = useState(false);
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
+  const [isCredentialModalOpen, setIsCredentialModalOpen] = useState(false);
 
   const entrepreneur = MOCK_ENTREPRENEURS.find((e) => e.id === entrepreneurId);
 
   if (!entrepreneur) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-        <p className="text-muted-foreground">Empresario no encontrado</p>
+        <p className="text-muted-foreground">{t('notFound')}</p>
         <Button
           variant="outline"
           onClick={() => router.push('/dashboard/entrepreneurs')}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Volver a la lista
+          {t('backToList')}
         </Button>
       </div>
     );
   }
 
   const completedStages = new Set(entrepreneur.stages.map((s) => s.stageId));
-  const earnedBadgeIds = new Set(entrepreneur.badges.map((b) => b.id));
-  const availableBadgesToAward = AVAILABLE_BADGES.filter(
-    (b) => !earnedBadgeIds.has(b.id),
-  );
   const nextStageToCertify = STAGES.find((s) => !completedStages.has(s.id));
 
   const formatCurrency = (amount: number) => {
@@ -99,21 +83,10 @@ export function EntrepreneurDetailPage({
     setSelectedStageId(null);
   };
 
-  const handleAwardBadge = (badgeId: string) => {
-    // TODO: wire to badge service
-    console.log('Award badge', badgeId, 'to', entrepreneur.id);
-    setIsBadgeDialogOpen(false);
-  };
-
-  const handleRemoveBadge = (badgeId: string) => {
-    // TODO: wire to badge service
-    console.log('Remove badge', badgeId, 'from', entrepreneur.id);
-  };
-
   return (
     <div className="h-[calc(100vh-6rem)] flex flex-col">
       {/* Header */}
-      <div className="flex-shrink-0 pb-4 border-b mb-4">
+      <div className="shrink-0 pb-4 border-b mb-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <Button
@@ -131,7 +104,9 @@ export function EntrepreneurDetailPage({
                 {entrepreneur.isDelinquent && (
                   <Badge variant="danger" className="gap-1">
                     <AlertTriangle className="h-3 w-3" />
-                    Moroso {entrepreneur.delinquentDays}d
+                    {t('table.delinquent', {
+                      days: entrepreneur.delinquentDays ?? 0,
+                    })}
                   </Badge>
                 )}
                 {entrepreneur.hasFunding && !entrepreneur.isDelinquent && (
@@ -164,66 +139,80 @@ export function EntrepreneurDetailPage({
             </div>
           </div>
 
-          {/* Main CTA */}
-          <AlertDialog
-            open={certifyDialogOpen}
-            onOpenChange={setCertifyDialogOpen}
-          >
-            <AlertDialogTrigger
-              render={
-                <Button
-                  size="lg"
-                  className="gap-2 shadow-lg bg-accent hover:bg-accent/90 text-accent-foreground"
-                  disabled={!nextStageToCertify}
-                  onClick={() =>
-                    nextStageToCertify &&
-                    setSelectedStageId(nextStageToCertify.id)
-                  }
-                >
-                  <Shield className="h-5 w-5" />
-                  {nextStageToCertify
-                    ? `Aprobar Etapa ${nextStageToCertify.id}`
-                    : 'Todas las etapas certificadas'}
-                </Button>
-              }
-            />
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Aprobar Certificación - Etapa {selectedStageId}
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Esta acción emitirá una credencial verificable en blockchain
-                  certificando que {entrepreneur.name} ha completado la etapa
-                  &quot;
-                  {STAGES.find((s) => s.id === selectedStageId)?.name}&quot;.
-                  Esta acción no se puede deshacer.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() =>
-                    selectedStageId && handleCertifyStage(selectedStageId)
-                  }
-                >
-                  <Shield className="h-4 w-4 mr-2" />
-                  Emitir Credencial
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          {/* Main CTAs */}
+          <div className="flex items-center gap-2">
+            <Button
+              size="lg"
+              variant="outline"
+              className="gap-2"
+              onClick={() => setIsCredentialModalOpen(true)}
+            >
+              <IconCertificate className="h-5 w-5" />
+              {t('detail.issueCredential')}
+            </Button>
+            <AlertDialog
+              open={certifyDialogOpen}
+              onOpenChange={setCertifyDialogOpen}
+            >
+              <AlertDialogTrigger
+                render={
+                  <Button
+                    size="lg"
+                    className="gap-2 shadow-lg bg-accent hover:bg-accent/90 text-accent-foreground"
+                    disabled={!nextStageToCertify}
+                    onClick={() =>
+                      nextStageToCertify &&
+                      setSelectedStageId(nextStageToCertify.id)
+                    }
+                  >
+                    <Shield className="h-5 w-5" />
+                    {nextStageToCertify
+                      ? t('detail.approveStage', { id: nextStageToCertify.id })
+                      : t('detail.allStagesCertified')}
+                  </Button>
+                }
+              />
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    {t('detail.certifyStageApproveTitle', {
+                      id: selectedStageId ?? 0,
+                    })}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {t('detail.certifyStageDesc', {
+                      name: entrepreneur.name,
+                      stageName:
+                        STAGES.find((s) => s.id === selectedStageId)?.name ??
+                        '',
+                    })}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>{tc('buttons.cancel')}</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() =>
+                      selectedStageId && handleCertifyStage(selectedStageId)
+                    }
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    {t('detail.issueCredential')}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 grid grid-cols-5 gap-6 min-h-0">
-        {/* Left: Stages Timeline */}
-        <div className="col-span-2 bg-card rounded-xl border p-5 overflow-auto">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 min-h-0">
+        {/* Stages Timeline */}
+        <div className="bg-card rounded-xl border p-5 overflow-auto">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-semibold flex items-center gap-2">
               <Shield className="h-4 w-4 text-primary" />
-              Ruta de Apoyo
+              {t('detail.supportPath')}
             </h2>
             <span className="text-sm text-muted-foreground">
               {entrepreneur.stages.length}/{STAGES.length}
@@ -244,7 +233,7 @@ export function EntrepreneurDetailPage({
                 <div key={stage.id} className="relative flex gap-4">
                   <div className="flex flex-col items-center">
                     <div
-                      className={`relative z-10 flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center border-2 transition-all ${
+                      className={`relative z-10 shrink-0 h-8 w-8 rounded-full flex items-center justify-center border-2 transition-all ${
                         isCompleted
                           ? 'bg-[#10B981] border-[#10B981]'
                           : isCurrent
@@ -262,7 +251,7 @@ export function EntrepreneurDetailPage({
                     </div>
                     {!isLast && (
                       <div
-                        className={`w-0.5 flex-1 min-h-[3rem] ${
+                        className={`w-0.5 flex-1 min-h-12 ${
                           isCompleted
                             ? 'bg-[#10B981]'
                             : 'bg-muted-foreground/20'
@@ -281,22 +270,25 @@ export function EntrepreneurDetailPage({
                               : 'text-muted-foreground'
                           }`}
                         >
-                          {stage.id}. {stage.name}
+                          {stage.id}. {t(`stages.${stage.id}`)}
                         </p>
                         {isCompleted && stageData ? (
                           <p className="text-xs text-muted-foreground mt-0.5">
                             {new Date(stageData.completedAt).toLocaleDateString(
-                              'es-CO',
+                              locale,
                             )}{' '}
-                            - <span className="text-[#10B981]">Completado</span>
+                            -{' '}
+                            <span className="text-[#10B981]">
+                              {t('detail.completed')}
+                            </span>
                           </p>
                         ) : isCurrent ? (
                           <p className="text-xs text-[#F15A24] mt-0.5">
-                            En progreso
+                            {t('detail.inProgress')}
                           </p>
                         ) : (
                           <p className="text-xs text-muted-foreground mt-0.5">
-                            Pendiente
+                            {t('detail.pending')}
                           </p>
                         )}
                       </div>
@@ -310,27 +302,32 @@ export function EntrepreneurDetailPage({
                                 className={`h-7 text-xs gap-1 ${isCurrent ? 'bg-accent hover:bg-accent/90 text-accent-foreground' : 'text-accent hover:text-accent'}`}
                               >
                                 <Shield className="h-3 w-3" />
-                                Certificar
+                                {t('detail.certify')}
                               </Button>
                             }
                           />
                           <AlertDialogContent>
                             <AlertDialogHeader>
                               <AlertDialogTitle>
-                                Certificar Etapa {stage.id}
+                                {t('detail.certifyStageTitle', {
+                                  id: stage.id,
+                                })}
                               </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Esta acción emitirá una credencial verificable
-                                certificando que {entrepreneur.name} ha
-                                completado &quot;{stage.name}&quot;.
+                                {t('detail.certifyStageDescShort', {
+                                  name: entrepreneur.name,
+                                  stageName: t(`stages.${stage.id}`),
+                                })}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogCancel>
+                                {tc('buttons.cancel')}
+                              </AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => handleCertifyStage(stage.id)}
                               >
-                                Emitir Credencial
+                                {t('detail.issueCredential')}
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -343,138 +340,15 @@ export function EntrepreneurDetailPage({
             })}
           </div>
         </div>
-
-        {/* Right: Reputation Badges */}
-        <div className="col-span-3 bg-card rounded-xl border p-5 overflow-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold flex items-center gap-2">
-              <Award className="h-4 w-4 text-[#F15A24]" />
-              Insignias de Reputación
-            </h2>
-            <Dialog
-              open={isBadgeDialogOpen}
-              onOpenChange={setIsBadgeDialogOpen}
-            >
-              <DialogTrigger
-                render={
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={availableBadgesToAward.length === 0}
-                    className="gap-1"
-                  >
-                    <Plus className="h-3 w-3" />
-                    Otorgar
-                  </Button>
-                }
-              />
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Otorgar Insignia</DialogTitle>
-                  <DialogDescription>
-                    Selecciona una insignia para {entrepreneur.name}
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-2 py-4">
-                  {availableBadgesToAward.map((badge) => (
-                    <button
-                      key={badge.id}
-                      onClick={() => handleAwardBadge(badge.id)}
-                      className="flex items-center gap-3 p-3 rounded-xl border-2 border-dashed hover:border-primary hover:bg-primary/5 transition-all text-left"
-                    >
-                      <div
-                        className={`h-10 w-10 rounded-xl bg-gradient-to-br ${getBadgeColors(badge.id).bg} flex items-center justify-center`}
-                      >
-                        {BADGE_ICONS[badge.id]}
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">{badge.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {badge.description}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {/* Badges Grid */}
-          <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
-            {/* Earned Badges */}
-            {entrepreneur.badges.map((badge) => {
-              const colors = getBadgeColors(badge.id);
-              return (
-                <BadgeDetailDialog
-                  key={badge.id}
-                  badge={badge}
-                  entrepreneurName={entrepreneur.name}
-                >
-                  <div
-                    className={`group relative p-4 rounded-2xl bg-gradient-to-br ${colors.bg} border-2 ${colors.border} hover:shadow-xl ${colors.glow} transition-all duration-300 hover:scale-[1.03] text-center cursor-pointer`}
-                  >
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                    <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary flex items-center justify-center shadow-lg">
-                      <CheckCircle className="h-3 w-3 text-primary-foreground" />
-                    </div>
-
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveBadge(badge.id);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.stopPropagation();
-                          handleRemoveBadge(badge.id);
-                        }
-                      }}
-                      className="absolute top-1 left-1 p-1 rounded-full bg-background/80 opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive hover:text-destructive-foreground"
-                    >
-                      <X className="h-3 w-3" />
-                    </div>
-
-                    <div
-                      className={`mx-auto h-16 w-16 rounded-2xl bg-gradient-to-br ${colors.bg} border ${colors.border} flex items-center justify-center shadow-inner mb-2`}
-                    >
-                      {BADGE_ICONS_LARGE[badge.id]}
-                    </div>
-                    <p className="font-semibold text-sm">{badge.name}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">
-                      Verificado
-                    </p>
-                  </div>
-                </BadgeDetailDialog>
-              );
-            })}
-
-            {/* Locked Badges */}
-            {availableBadgesToAward.map((badge) => (
-              <div
-                key={badge.id}
-                className="relative p-4 rounded-2xl bg-muted/30 border-2 border-dashed border-muted-foreground/20 text-center opacity-50"
-              >
-                <div className="absolute top-2 right-2">
-                  <Lock className="h-3 w-3 text-muted-foreground" />
-                </div>
-                <div className="mx-auto h-16 w-16 rounded-2xl bg-muted/50 flex items-center justify-center mb-2">
-                  {BADGE_ICONS_LARGE[badge.id]}
-                </div>
-                <p className="font-medium text-sm text-muted-foreground">
-                  {badge.name}
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">
-                  Por desbloquear
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
+
+      <CredentialIssuanceModal
+        open={isCredentialModalOpen}
+        onOpenChange={setIsCredentialModalOpen}
+        entrepreneurId={entrepreneur.id}
+        entrepreneurName={entrepreneur.name}
+        businessName={entrepreneur.businessName}
+      />
     </div>
   );
 }

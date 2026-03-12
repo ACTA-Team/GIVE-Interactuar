@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "entrepreneurs": "Emprendedores",
+    "credentials": "Credenciales",
+    "list": "Lista",
+    "newCredential": "Nueva Credencial"
+  },
+  "wallet": {
+    "connected": "Wallet conectada",
+    "disconnect": "Desconectar wallet",
+    "connectStellar": "Conectar Wallet Stellar",
+    "connecting": "Conectando...",
+    "approveTransaction": "Aprueba la transacción en tu wallet Freighter",
+    "needFreighter": "Necesitas {link} para conectar tu wallet Stellar.",
+    "freighter": "Freighter"
+  },
+  "footer": {
+    "team": "Interactuar Team",
+    "organization": "Organización",
+    "copyright": "© 2024 Interactuar. Todos los derechos reservados."
+  },
+  "buttons": {
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "continue": "Continuar",
+    "back": "Atrás",
+    "save": "Guardar",
+    "retry": "Reintentar",
+    "viewAll": "Ver todos",
+    "viewOnBlockchain": "Ver en blockchain",
+    "download": "Descargar",
+    "copy": "Copiar",
+    "copied": "Copiado"
+  },
+  "status": {
+    "draft": "Borrador",
+    "issued": "Emitida",
+    "revoked": "Revocada",
+    "expired": "Expirada",
+    "pending": "Pendiente",
+    "verified": "Verificado",
+    "onChain": "On-chain"
+  },
+  "credentialTypes": {
+    "impact": "Credencial de Impacto",
+    "behavior": "Credencial de Comportamiento",
+    "profile": "Credencial de Perfil y Formalización"
+  },
+  "credentialTypeDescriptions": {
+    "impact": "Mide el impacto económico y social del empresario",
+    "behavior": "Refleja el comportamiento financiero y crediticio",
+    "profile": "Documenta el perfil y nivel de formalización"
+  },
+  "toggle": {
+    "yes": "Sí",
+    "no": "No"
+  },
+  "showing": "Mostrando {count} de {total}",
+  "selected": "{count} seleccionados",
+  "language": "Idioma"
+}

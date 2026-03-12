@@ -1,7 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   IconLayoutDashboard,
@@ -9,13 +11,26 @@ import {
   IconList,
   IconCertificate,
   IconPlus,
-  IconBuildingCommunity,
   IconX,
+  IconWallet,
+  IconPlugOff,
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
 import { SidebarNavGroup } from './SidebarNavGroup';
-import type { ReactNode } from 'react';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
+import { useWalletContext } from '@/lib/stellar/WalletContext';
+import { useWalletKit } from '@/lib/stellar/useWalletKit';
+import { useSyncExternalStore, useState, type ReactNode } from 'react';
+
+const subscribe = () => () => {};
+function useIsMounted() {
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
+}
 
 interface NavItemProps {
   icon: ReactNode;
@@ -52,24 +67,44 @@ interface SidebarProps {
   onMobileClose: () => void;
 }
 
+function truncateAddress(addr: string) {
+  return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+}
+
 export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
+  const t = useTranslations('common');
+  const wallet = useWalletContext();
+  const mounted = useIsMounted();
+  const { disconnectWalletKit } = useWalletKit();
+  const [disconnecting, setDisconnecting] = useState(false);
+
+  const handleDisconnect = async () => {
+    setDisconnecting(true);
+    try {
+      await disconnectWalletKit();
+    } finally {
+      setDisconnecting(false);
+    }
+  };
 
   const isDashboardActive = pathname === ROUTES.dashboard;
   const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);
-  const isCredentialsActive = pathname.startsWith(ROUTES.credentials.list);
+  const isCredentialsActive =
+    pathname.startsWith(ROUTES.entrepreneurs.storage) ||
+    pathname.startsWith('/dashboard/entrepreneurs/credentials/details/');
 
   const content = (
     <div className="flex h-full flex-col">
       {/* Logo */}
-      <div className="flex items-center justify-between px-4 py-5">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900">
-            <IconBuildingCommunity className="h-5 w-5 text-white" />
-          </div>
-          <span className="text-base font-semibold tracking-tight text-gray-900">
-            Interactuar
-          </span>
+      <div className="flex items-center justify-between px-4">
+        <div className="flex items-center gap-1">
+          <Image
+            src="/interactuar-logo.svg"
+            alt="Interactuar"
+            width={150}
+            height={150}
+          />
         </div>
         <button
           onClick={onMobileClose}
@@ -85,7 +120,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
       <nav className="flex flex-1 flex-col gap-0.5 px-3 py-4">
         <NavItem
           icon={<IconLayoutDashboard className="h-4 w-4" />}
-          label="Dashboard"
+          label={t('nav.dashboard')}
           href={ROUTES.dashboard}
           isActive={isDashboardActive}
           onClick={onMobileClose}
@@ -95,7 +130,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
 
         <NavItem
           icon={<IconUsers className="h-4 w-4" />}
-          label="Emprendedores"
+          label={t('nav.entrepreneurs')}
           href={ROUTES.entrepreneurs.list}
           isActive={isEntrepreneursActive}
           onClick={onMobileClose}
@@ -103,19 +138,24 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
 
         <SidebarNavGroup
           icon={<IconCertificate className="h-4 w-4" />}
-          label="Credenciales"
+          label={t('nav.credentials')}
           defaultOpen={isCredentialsActive}
         >
           <NavItem
             icon={<IconList className="h-4 w-4" />}
-            label="Lista"
-            href={ROUTES.credentials.list}
-            isActive={pathname === ROUTES.credentials.list}
+            label={t('nav.list')}
+            href={ROUTES.entrepreneurs.storage}
+            isActive={
+              pathname === ROUTES.entrepreneurs.storage ||
+              pathname.startsWith(
+                '/dashboard/entrepreneurs/credentials/details/',
+              )
+            }
             onClick={onMobileClose}
           />
           <NavItem
             icon={<IconPlus className="h-4 w-4" />}
-            label="Nueva Credencial"
+            label={t('nav.newCredential')}
             href={ROUTES.credentials.new}
             isActive={pathname === ROUTES.credentials.new}
             onClick={onMobileClose}
@@ -124,16 +164,40 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-gray-100 px-4 py-4">
+      <div className="border-t border-gray-100 px-4 py-4 space-y-3">
+        {mounted && wallet.connected && wallet.walletAddress && (
+          <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2">
+            <IconWallet className="h-4 w-4 text-emerald-600 shrink-0" />
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="text-[11px] font-medium text-emerald-700">
+                {wallet.walletName ?? t('wallet.connected')}
+              </span>
+              <span className="text-[10px] font-mono text-emerald-600 truncate">
+                {truncateAddress(wallet.walletAddress)}
+              </span>
+            </div>
+            <button
+              onClick={handleDisconnect}
+              disabled={disconnecting}
+              title={t('wallet.disconnect')}
+              className="shrink-0 rounded p-1 text-emerald-500 transition-colors hover:bg-emerald-100 hover:text-red-500 disabled:opacity-50"
+            >
+              <IconPlugOff className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
+        <LanguageSwitcher />
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
             GI
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-medium text-gray-900">
-              Interactuar Team
+              {t('footer.team')}
             </span>
-            <span className="text-xs text-gray-400">Organización</span>
+            <span className="text-xs text-gray-400">
+              {t('footer.organization')}
+            </span>
           </div>
         </div>
       </div>

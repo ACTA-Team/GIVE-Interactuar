@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/Badge';
 import { formatDateTime } from '@/lib/helpers/date';
 import type { CredentialVerificationStatus } from '../../types';
@@ -7,6 +8,8 @@ interface VerificationResultProps {
 }
 
 export function VerificationResult({ status }: VerificationResultProps) {
+  const t = useTranslations('verification');
+
   return (
     <div className="rounded-xl border-2 border-gray-200 bg-white p-8 text-center shadow-sm">
       <div className="mb-4 flex justify-center">
@@ -14,7 +17,7 @@ export function VerificationResult({ status }: VerificationResultProps) {
           variant={status.isValid ? 'success' : 'danger'}
           className="text-base px-4 py-1"
         >
-          {status.isValid ? 'Credencial válida' : 'Credencial inválida'}
+          {status.isValid ? t('validCredential') : t('invalidCredential')}
         </Badge>
       </div>
 
@@ -26,14 +29,14 @@ export function VerificationResult({ status }: VerificationResultProps) {
 
       {status.issuedAt && (
         <p className="mt-1 text-sm text-gray-500">
-          Emitida el {formatDateTime(status.issuedAt)}
+          {t('issuedOn', { date: formatDateTime(status.issuedAt) })}
         </p>
       )}
 
       {Object.keys(status.publicClaims).length > 0 && (
         <div className="mt-6 text-left">
           <h3 className="mb-2 text-sm font-medium text-gray-700">
-            Datos públicos
+            {t('publicData')}
           </h3>
           <dl className="space-y-1">
             {Object.entries(status.publicClaims).map(([key, value]) => (
@@ -47,7 +50,7 @@ export function VerificationResult({ status }: VerificationResultProps) {
       )}
 
       <p className="mt-6 text-xs text-gray-400">
-        Verificado el {formatDateTime(status.checkedAt)}
+        {t('verifiedOn', { date: formatDateTime(status.checkedAt) })}
       </p>
 
       {/* TODO: show on-chain anchor info if onchainVerified is not null */}

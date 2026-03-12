@@ -1,0 +1,8 @@
+{
+  "portalTitle": "GIVE Interactuar — Verification Portal",
+  "validCredential": "Valid credential",
+  "invalidCredential": "Invalid credential",
+  "issuedOn": "Issued on {date}",
+  "publicData": "Public data",
+  "verifiedOn": "Verified on {date}"
+}

@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/Button';
+import { useTranslations } from 'next-intl';
 import { IssuanceDraftSchema, type IssuanceDraftInput } from '../../schemas';
 
 interface IssuanceFormProps {
@@ -16,6 +17,7 @@ export function IssuanceForm({
   onSubmit,
   isLoading = false,
 }: IssuanceFormProps) {
+  const t = useTranslations('credentials');
   const {
     register,
     handleSubmit,
@@ -29,12 +31,12 @@ export function IssuanceForm({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">
-          ID del emprendedor
+          {t('issuanceForm.entrepreneurId')}
         </label>
         <input
           {...register('entrepreneurId')}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          placeholder="UUID del emprendedor"
+          placeholder={t('issuanceForm.entrepreneurIdPlaceholder')}
         />
         {errors.entrepreneurId && (
           <p className="mt-1 text-xs text-red-600">
@@ -45,26 +47,26 @@ export function IssuanceForm({
 
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">
-          Tipo
+          {t('issuanceForm.type')}
         </label>
         <select
           {...register('credentialType')}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
         >
-          <option value="impact">Impacto</option>
-          <option value="verification">Verificación</option>
-          <option value="endorsement">Endorsement</option>
+          <option value="impact">{t('issuanceForm.impactOption')}</option>
+          <option value="behavior">{t('issuanceForm.behaviorOption')}</option>
+          <option value="profile">{t('issuanceForm.profileOption')}</option>
         </select>
       </div>
 
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">
-          Título
+          {t('issuanceForm.titleLabel')}
         </label>
         <input
           {...register('title')}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          placeholder="Título de la credencial"
+          placeholder={t('issuanceForm.titlePlaceholder')}
         />
         {errors.title && (
           <p className="mt-1 text-xs text-red-600">{errors.title.message}</p>
@@ -73,30 +75,30 @@ export function IssuanceForm({
 
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">
-          Descripción
+          {t('issuanceForm.description')}
         </label>
         <textarea
           {...register('description')}
           rows={2}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          placeholder="Descripción opcional"
+          placeholder={t('issuanceForm.descriptionPlaceholder')}
         />
       </div>
 
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">
-          Nota del operador
+          {t('issuanceForm.operatorNote')}
         </label>
         <textarea
           {...register('operatorNote')}
           rows={2}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          placeholder="Observaciones internas (no se incluye en la credencial)"
+          placeholder={t('issuanceForm.operatorNotePlaceholder')}
         />
       </div>
 
       <Button type="submit" disabled={isLoading} className="w-full">
-        Emitir credencial
+        {t('issuanceForm.submit')}
       </Button>
     </form>
   );

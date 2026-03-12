@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import {
   Card,
@@ -11,29 +12,46 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Wallet, Loader2 } from 'lucide-react';
+import { Wallet, Loader2, AlertTriangle } from 'lucide-react';
+import { useWalletKit } from '@/lib/stellar/useWalletKit';
 
 export default function LoginPage() {
+  const t = useTranslations('login');
+  const tc = useTranslations('common');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const { connectWithWalletKit } = useWalletKit();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
-    // TODO: wire Supabase auth here
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     if (email && password.length >= 6) {
       window.location.href = '/dashboard';
     } else {
-      setError('Credenciales inválidas. Contraseña mínimo 6 caracteres.');
+      setError(t('invalidCredentials'));
     }
 
     setIsLoading(false);
+  };
+
+  const handleWalletLogin = async () => {
+    setError(null);
+    setIsConnecting(true);
+    try {
+      await connectWithWalletKit();
+      window.location.href = '/dashboard';
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t('walletError'));
+    } finally {
+      setIsConnecting(false);
+    }
   };
 
   return (
@@ -55,26 +73,24 @@ export default function LoginPage() {
                 <path d="M2 12l10 5 10-5" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-foreground">Interactuar</h1>
-            <p className="text-sm text-muted-foreground">Panel de Asesores</p>
+            <h1 className="text-2xl font-bold text-foreground">{t('brand')}</h1>
+            <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
           </div>
 
           <Card className="border-border/50 shadow-lg">
             <CardHeader className="space-y-1 pb-4">
-              <CardTitle className="text-xl">Iniciar Sesión</CardTitle>
-              <CardDescription>
-                Ingresa tus credenciales para acceder al sistema
-              </CardDescription>
+              <CardTitle className="text-xl">{t('title')}</CardTitle>
+              <CardDescription>{t('description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleLogin}>
                 <div className="flex flex-col gap-5">
                   <div className="grid gap-2">
-                    <Label htmlFor="email">Correo electrónico</Label>
+                    <Label htmlFor="email">{t('email')}</Label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="asesor@interactuar.com"
+                      placeholder={t('emailPlaceholder')}
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -82,11 +98,11 @@ export default function LoginPage() {
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="password">Contraseña</Label>
+                    <Label htmlFor="password">{t('password')}</Label>
                     <Input
                       id="password"
                       type="password"
-                      placeholder="Mínimo 6 caracteres"
+                      placeholder={t('passwordPlaceholder')}
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -95,9 +111,10 @@ export default function LoginPage() {
                   </div>
 
                   {error && (
-                    <p className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
-                      {error}
-                    </p>
+                    <div className="flex items-start gap-2 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                      <span>{error}</span>
+                    </div>
                   )}
 
                   <Button
@@ -108,10 +125,10 @@ export default function LoginPage() {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Ingresando...
+                        {t('submitting')}
                       </>
                     ) : (
-                      'Ingresar'
+                      t('submit')
                     )}
                   </Button>
 
@@ -121,7 +138,7 @@ export default function LoginPage() {
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
                       <span className="bg-card px-2 text-muted-foreground">
-                        O continúa con
+                        {t('orContinueWith')}
                       </span>
                     </div>
                   </div>
@@ -129,26 +146,44 @@ export default function LoginPage() {
                   <Button
                     type="button"
                     variant="outline"
-                    className="w-full h-11 gap-2 opacity-60 cursor-not-allowed"
-                    disabled
+                    className="w-full h-11 gap-2"
+                    disabled={isConnecting}
+                    onClick={handleWalletLogin}
                   >
-                    <Wallet className="h-4 w-4" />
-                    Conectar Wallet
-                    <span className="ml-auto text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded">
-                      Próximamente
-                    </span>
+                    {isConnecting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        {tc('wallet.connecting')}
+                      </>
+                    ) : (
+                      <>
+                        <Wallet className="h-4 w-4" />
+                        {tc('wallet.connectStellar')}
+                      </>
+                    )}
                   </Button>
                 </div>
               </form>
 
               <p className="mt-6 text-center text-xs text-muted-foreground">
-                Demo: usa cualquier email y contraseña (mín. 6 caracteres)
+                {tc.rich('wallet.needFreighter', {
+                  link: (chunks) => (
+                    <a
+                      href="https://freighter.app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline hover:text-foreground"
+                    >
+                      {chunks}
+                    </a>
+                  ),
+                })}
               </p>
             </CardContent>
           </Card>
 
           <p className="text-center text-xs text-muted-foreground">
-            &copy; 2024 Interactuar. Todos los derechos reservados.
+            {tc('footer.copyright')}
           </p>
         </div>
       </div>

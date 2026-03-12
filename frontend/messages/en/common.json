@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "entrepreneurs": "Entrepreneurs",
+    "credentials": "Credentials",
+    "list": "List",
+    "newCredential": "New Credential"
+  },
+  "wallet": {
+    "connected": "Wallet connected",
+    "disconnect": "Disconnect wallet",
+    "connectStellar": "Connect Stellar Wallet",
+    "connecting": "Connecting...",
+    "approveTransaction": "Approve the transaction in your Freighter wallet",
+    "needFreighter": "You need {link} to connect your Stellar wallet.",
+    "freighter": "Freighter"
+  },
+  "footer": {
+    "team": "Interactuar Team",
+    "organization": "Organization",
+    "copyright": "© 2024 Interactuar. All rights reserved."
+  },
+  "buttons": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "continue": "Continue",
+    "back": "Back",
+    "save": "Save",
+    "retry": "Retry",
+    "viewAll": "View all",
+    "viewOnBlockchain": "View on blockchain",
+    "download": "Download",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "status": {
+    "draft": "Draft",
+    "issued": "Issued",
+    "revoked": "Revoked",
+    "expired": "Expired",
+    "pending": "Pending",
+    "verified": "Verified",
+    "onChain": "On-chain"
+  },
+  "credentialTypes": {
+    "impact": "Impact Credential",
+    "behavior": "Behavior Credential",
+    "profile": "Profile & Formalization Credential"
+  },
+  "credentialTypeDescriptions": {
+    "impact": "Measures the entrepreneur's economic and social impact",
+    "behavior": "Reflects financial and credit behavior",
+    "profile": "Documents the profile and formalization level"
+  },
+  "toggle": {
+    "yes": "Yes",
+    "no": "No"
+  },
+  "showing": "Showing {count} of {total}",
+  "selected": "{count} selected",
+  "language": "Language"
+}

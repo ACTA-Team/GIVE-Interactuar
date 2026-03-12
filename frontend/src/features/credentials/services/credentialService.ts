@@ -32,6 +32,10 @@ export function createCredentialService(repo: CredentialRepository) {
         latestSnapshotId: null, // TODO: resolve latest snapshot
         preparedPayload: {}, // TODO: build from template + snapshot
         status: 'draft',
+        credentialType: input.credentialType,
+        title: input.title,
+        description: input.description ?? null,
+        operatorNote: input.operatorNote ?? null,
         createdBy,
       });
     },

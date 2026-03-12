@@ -390,9 +390,7 @@ export function DashboardPage() {
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">
-                  {t('stats.male')}
-                </span>
+                <span className="text-muted-foreground">{t('stats.male')}</span>
                 <span className="font-semibold">
                   {maleCount} / {totalEntrepreneurs}
                 </span>

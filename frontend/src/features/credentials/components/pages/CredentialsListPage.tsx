@@ -189,9 +189,9 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
             <div className="flex flex-wrap gap-3">
               <Select
                 value={filterType}
-                onValueChange={(
-                  value: 'all' | 'impact' | 'behavior' | 'profile',
-                ) => setFilterType(value)}
+                onValueChange={(value) =>
+                  setFilterType((value ?? 'all') as 'all' | 'impact' | 'behavior' | 'profile')
+                }
               >
                 <SelectTrigger className="w-[170px]">
                   <SelectValue placeholder={t('vault.filterByType')} />
@@ -208,9 +208,11 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
 
               <Select
                 value={fundingFilter}
-                onValueChange={(
-                  value: 'all' | 'funded' | 'not-funded' | 'delinquent',
-                ) => setFundingFilter(value)}
+                onValueChange={(value) =>
+                  setFundingFilter(
+                    (value ?? 'all') as 'all' | 'funded' | 'not-funded' | 'delinquent',
+                  )
+                }
               >
                 <SelectTrigger className="w-[190px]">
                   <SelectValue placeholder={t('vault.filterByFundingStatus')} />
@@ -231,8 +233,8 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
 
               <Select
                 value={onChainFilter}
-                onValueChange={(value: 'all' | 'with' | 'without') =>
-                  setOnChainFilter(value)
+                onValueChange={(value) =>
+                  setOnChainFilter((value ?? 'all') as 'all' | 'with' | 'without')
                 }
               >
                 <SelectTrigger className="w-[190px]">
@@ -249,8 +251,8 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
 
               <Select
                 value={hasCredentialsFilter}
-                onValueChange={(value: 'all' | 'with' | 'without') =>
-                  setHasCredentialsFilter(value)
+                onValueChange={(value) =>
+                  setHasCredentialsFilter((value ?? 'all') as 'all' | 'with' | 'without')
                 }
               >
                 <SelectTrigger className="w-[210px]">

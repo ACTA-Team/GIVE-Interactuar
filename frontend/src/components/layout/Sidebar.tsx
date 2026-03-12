@@ -14,6 +14,7 @@ import {
   IconX,
   IconWallet,
   IconPlugOff,
+  IconFileText,
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
@@ -93,6 +94,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const isCredentialsActive =
     pathname.startsWith(ROUTES.entrepreneurs.storage) ||
     pathname.startsWith('/dashboard/credentials/client/');
+  const isFormsActive = pathname.startsWith(ROUTES.forms.responses);
 
   const content = (
     <div className="flex h-full flex-col">
@@ -133,6 +135,14 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
           label={t('nav.entrepreneurs')}
           href={ROUTES.entrepreneurs.list}
           isActive={isEntrepreneursActive}
+          onClick={onMobileClose}
+        />
+
+        <NavItem
+          icon={<IconFileText className="h-4 w-4" />}
+          label="Formulario"
+          href={ROUTES.forms.responses}
+          isActive={isFormsActive}
           onClick={onMobileClose}
         />
 

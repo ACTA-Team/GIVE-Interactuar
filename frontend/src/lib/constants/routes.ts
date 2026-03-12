@@ -12,5 +12,8 @@ export const ROUTES = {
       `/dashboard/credentials/client/${entrepreneurId}`,
     detail: (id: string) => `/dashboard/credentials/${id}`,
   },
+  forms: {
+    responses: '/dashboard/forms',
+  },
   verify: (credentialId: string) => `/verify/${credentialId}`,
 } as const;

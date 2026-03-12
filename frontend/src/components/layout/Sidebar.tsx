@@ -17,7 +17,12 @@ import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
 import { SidebarNavGroup } from './SidebarNavGroup';
 import { useWalletContext } from '@/lib/stellar/WalletContext';
-import { useState, useEffect, type ReactNode } from 'react';
+import { useSyncExternalStore, type ReactNode } from 'react';
+
+const subscribe = () => () => {};
+function useIsMounted() {
+  return useSyncExternalStore(subscribe, () => true, () => false);
+}
 
 interface NavItemProps {
   icon: ReactNode;
@@ -61,11 +66,7 @@ function truncateAddress(addr: string) {
 export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
   const wallet = useWalletContext();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsMounted();
 
   const isDashboardActive = pathname === ROUTES.dashboard;
   const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);

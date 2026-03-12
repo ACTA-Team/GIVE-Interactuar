@@ -11,20 +11,22 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Wallet, Loader2 } from 'lucide-react';
+import { Wallet, Loader2, AlertTriangle } from 'lucide-react';
+import { useWalletKit } from '@/lib/stellar/useWalletKit';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const { connectWithWalletKit } = useWalletKit();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
-    // TODO: wire Supabase auth here
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     if (email && password.length >= 6) {
@@ -34,6 +36,21 @@ export default function LoginPage() {
     }
 
     setIsLoading(false);
+  };
+
+  const handleWalletLogin = async () => {
+    setError(null);
+    setIsConnecting(true);
+    try {
+      await connectWithWalletKit();
+      window.location.href = '/dashboard';
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'No se pudo conectar la wallet.',
+      );
+    } finally {
+      setIsConnecting(false);
+    }
   };
 
   return (
@@ -63,7 +80,7 @@ export default function LoginPage() {
             <CardHeader className="space-y-1 pb-4">
               <CardTitle className="text-xl">Iniciar Sesión</CardTitle>
               <CardDescription>
-                Ingresa tus credenciales para acceder al sistema
+                Ingresa tus credenciales o conecta tu wallet Stellar
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -95,9 +112,10 @@ export default function LoginPage() {
                   </div>
 
                   {error && (
-                    <p className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
-                      {error}
-                    </p>
+                    <div className="flex items-start gap-2 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                      <span>{error}</span>
+                    </div>
                   )}
 
                   <Button
@@ -129,20 +147,36 @@ export default function LoginPage() {
                   <Button
                     type="button"
                     variant="outline"
-                    className="w-full h-11 gap-2 opacity-60 cursor-not-allowed"
-                    disabled
+                    className="w-full h-11 gap-2"
+                    disabled={isConnecting}
+                    onClick={handleWalletLogin}
                   >
-                    <Wallet className="h-4 w-4" />
-                    Conectar Wallet
-                    <span className="ml-auto text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded">
-                      Próximamente
-                    </span>
+                    {isConnecting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Conectando...
+                      </>
+                    ) : (
+                      <>
+                        <Wallet className="h-4 w-4" />
+                        Conectar Wallet Stellar
+                      </>
+                    )}
                   </Button>
                 </div>
               </form>
 
               <p className="mt-6 text-center text-xs text-muted-foreground">
-                Demo: usa cualquier email y contraseña (mín. 6 caracteres)
+                Necesitas{' '}
+                <a
+                  href="https://freighter.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-foreground"
+                >
+                  Freighter
+                </a>{' '}
+                para conectar tu wallet Stellar.
               </p>
             </CardContent>
           </Card>

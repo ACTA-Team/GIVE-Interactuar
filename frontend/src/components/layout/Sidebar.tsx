@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
 import { SidebarNavGroup } from './SidebarNavGroup';
 import { useWalletContext } from '@/lib/stellar/WalletContext';
-import type { ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 
 interface NavItemProps {
   icon: ReactNode;
@@ -61,6 +61,11 @@ function truncateAddress(addr: string) {
 export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
   const wallet = useWalletContext();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isDashboardActive = pathname === ROUTES.dashboard;
   const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);
@@ -135,7 +140,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
 
       {/* Footer */}
       <div className="border-t border-gray-100 px-4 py-4 space-y-3">
-        {wallet.connected && wallet.walletAddress && (
+        {mounted && wallet.connected && wallet.walletAddress && (
           <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2">
             <IconWallet className="h-4 w-4 text-emerald-600 shrink-0" />
             <div className="flex flex-col min-w-0">

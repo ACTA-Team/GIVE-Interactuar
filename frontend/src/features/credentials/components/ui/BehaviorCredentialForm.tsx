@@ -118,8 +118,7 @@ export function BehaviorCredentialForm({
     commercialStability: 'stable',
   });
 
-  const formatPercent = (n: number) =>
-    `${n >= 0 ? '+' : ''}${n.toFixed(1)}%`;
+  const formatPercent = (n: number) => `${n >= 0 ? '+' : ''}${n.toFixed(1)}%`;
 
   const formatRatio = (n: number) => n.toFixed(2);
 
@@ -143,9 +142,7 @@ export function BehaviorCredentialForm({
             render={({ field }) => (
               <Select
                 value={field.value}
-                onValueChange={(v: string | null) =>
-                  field.onChange(v ?? '')
-                }
+                onValueChange={(v: string | null) => field.onChange(v ?? '')}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccionar" />
@@ -175,9 +172,7 @@ export function BehaviorCredentialForm({
             render={({ field }) => (
               <Select
                 value={field.value}
-                onValueChange={(v: string | null) =>
-                  field.onChange(v ?? '')
-                }
+                onValueChange={(v: string | null) => field.onChange(v ?? '')}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccionar" />
@@ -240,10 +235,7 @@ export function BehaviorCredentialForm({
           </div>
           <div className="space-y-1.5">
             <Label>Moneda</Label>
-            <Input
-              {...register('activeCredit.currency')}
-              placeholder="COP"
-            />
+            <Input {...register('activeCredit.currency')} placeholder="COP" />
           </div>
           <div className="space-y-1.5">
             <Label>Estado</Label>
@@ -253,9 +245,7 @@ export function BehaviorCredentialForm({
               render={({ field }) => (
                 <Select
                   value={field.value ?? undefined}
-                  onValueChange={(v: string | null) =>
-                    field.onChange(v)
-                  }
+                  onValueChange={(v: string | null) => field.onChange(v)}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Seleccionar" />
@@ -263,9 +253,7 @@ export function BehaviorCredentialForm({
                   <SelectContent>
                     <SelectItem value="current">Al día</SelectItem>
                     <SelectItem value="late">Mora</SelectItem>
-                    <SelectItem value="restructured">
-                      Reestructurado
-                    </SelectItem>
+                    <SelectItem value="restructured">Reestructurado</SelectItem>
                     <SelectItem value="closed">Cerrado</SelectItem>
                   </SelectContent>
                 </Select>
@@ -305,9 +293,7 @@ export function BehaviorCredentialForm({
             {...register('assets', { valueAsNumber: true })}
           />
           {errors.assets && (
-            <p className="text-xs text-destructive">
-              {errors.assets.message}
-            </p>
+            <p className="text-xs text-destructive">{errors.assets.message}</p>
           )}
         </div>
 
@@ -380,9 +366,7 @@ export function BehaviorCredentialForm({
                   <SelectItem value="partially_validated">
                     Parcialmente validado
                   </SelectItem>
-                  <SelectItem value="not_validated">
-                    No validado
-                  </SelectItem>
+                  <SelectItem value="not_validated">No validado</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -396,9 +380,7 @@ export function BehaviorCredentialForm({
             {...register('newJobs', { valueAsNumber: true })}
           />
           {errors.newJobs && (
-            <p className="text-xs text-destructive">
-              {errors.newJobs.message}
-            </p>
+            <p className="text-xs text-destructive">{errors.newJobs.message}</p>
           )}
         </div>
       </div>
@@ -448,9 +430,7 @@ export function BehaviorCredentialForm({
                 <SelectContent>
                   <SelectItem value="improving">Mejorando</SelectItem>
                   <SelectItem value="stable">Estable</SelectItem>
-                  <SelectItem value="deteriorating">
-                    Deteriorándose
-                  </SelectItem>
+                  <SelectItem value="deteriorating">Deteriorándose</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -462,7 +442,10 @@ export function BehaviorCredentialForm({
         <Button type="button" variant="outline" onClick={onBack}>
           &larr; Atrás
         </Button>
-        <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+        <Button
+          type="submit"
+          className="bg-accent hover:bg-accent/90 text-accent-foreground"
+        >
           Generar Credencial &rarr;
         </Button>
       </div>

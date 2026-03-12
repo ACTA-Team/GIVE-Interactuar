@@ -1,11 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogClose,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';

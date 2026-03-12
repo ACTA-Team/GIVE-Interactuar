@@ -30,7 +30,9 @@ export type BehaviorCredentialFormInput = z.infer<
   typeof behaviorCredentialFormSchema
 >;
 
-export function computeBehaviorDerivedFields(data: BehaviorCredentialFormInput) {
+export function computeBehaviorDerivedFields(
+  data: BehaviorCredentialFormInput,
+) {
   const estimatedOperatingMargin =
     data.averageSales > 0
       ? ((data.averageSales - data.costsAndExpenses) / data.averageSales) * 100
@@ -64,8 +66,7 @@ export function computeBehaviorDerivedFields(data: BehaviorCredentialFormInput) 
 
   return {
     estimatedOperatingMargin: Math.round(estimatedOperatingMargin * 100) / 100,
-    liabilitiesToAssetsRatio:
-      Math.round(liabilitiesToAssetsRatio * 100) / 100,
+    liabilitiesToAssetsRatio: Math.round(liabilitiesToAssetsRatio * 100) / 100,
     estimatedOperationalCapacity,
     leverageLevel,
     paymentCapacitySignal,

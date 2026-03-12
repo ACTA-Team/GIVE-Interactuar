@@ -80,8 +80,7 @@ export function ImpactCredentialForm({
     businessTrend: 'stable',
   });
 
-  const formatPercent = (n: number) =>
-    `${n >= 0 ? '+' : ''}${n.toFixed(1)}%`;
+  const formatPercent = (n: number) => `${n >= 0 ? '+' : ''}${n.toFixed(1)}%`;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -111,9 +110,7 @@ export function ImpactCredentialForm({
             render={({ field }) => (
               <Select
                 value={field.value || undefined}
-                onValueChange={(v: string | null) =>
-                  field.onChange(v ?? '')
-                }
+                onValueChange={(v: string | null) => field.onChange(v ?? '')}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccionar" />
@@ -129,9 +126,7 @@ export function ImpactCredentialForm({
             )}
           />
           {errors.sector && (
-            <p className="text-xs text-destructive">
-              {errors.sector.message}
-            </p>
+            <p className="text-xs text-destructive">{errors.sector.message}</p>
           )}
         </div>
       </div>
@@ -244,9 +239,7 @@ export function ImpactCredentialForm({
                 <SelectContent>
                   <SelectItem value="growing">En crecimiento</SelectItem>
                   <SelectItem value="stable">Estable</SelectItem>
-                  <SelectItem value="deteriorating">
-                    En deterioro
-                  </SelectItem>
+                  <SelectItem value="deteriorating">En deterioro</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -261,17 +254,11 @@ export function ImpactCredentialForm({
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="assessmentPeriod.startDate">Fecha inicio</Label>
-            <Input
-              type="date"
-              {...register('assessmentPeriod.startDate')}
-            />
+            <Input type="date" {...register('assessmentPeriod.startDate')} />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="assessmentPeriod.endDate">Fecha fin</Label>
-            <Input
-              type="date"
-              {...register('assessmentPeriod.endDate')}
-            />
+            <Input type="date" {...register('assessmentPeriod.endDate')} />
           </div>
         </div>
       </div>
@@ -280,7 +267,10 @@ export function ImpactCredentialForm({
         <Button type="button" variant="outline" onClick={onBack}>
           &larr; Atrás
         </Button>
-        <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+        <Button
+          type="submit"
+          className="bg-accent hover:bg-accent/90 text-accent-foreground"
+        >
           Generar Credencial &rarr;
         </Button>
       </div>

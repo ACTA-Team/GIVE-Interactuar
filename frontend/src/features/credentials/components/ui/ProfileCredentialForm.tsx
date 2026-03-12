@@ -140,9 +140,7 @@ export function ProfileCredentialForm({
                   <SelectItem value="primary">Primaria</SelectItem>
                   <SelectItem value="secondary">Secundaria</SelectItem>
                   <SelectItem value="technical">Técnico</SelectItem>
-                  <SelectItem value="undergraduate">
-                    Universitario
-                  </SelectItem>
+                  <SelectItem value="undergraduate">Universitario</SelectItem>
                   <SelectItem value="postgraduate">Posgrado</SelectItem>
                   <SelectItem value="other">Otro</SelectItem>
                 </SelectContent>
@@ -155,10 +153,7 @@ export function ProfileCredentialForm({
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="municipality">Municipio *</Label>
-          <Input
-            {...register('municipality')}
-            placeholder="Ej: Medellín"
-          />
+          <Input {...register('municipality')} placeholder="Ej: Medellín" />
           {errors.municipality && (
             <p className="text-xs text-destructive">
               {errors.municipality.message}
@@ -234,10 +229,7 @@ export function ProfileCredentialForm({
         {formalizedBusiness && (
           <div className="space-y-1.5">
             <Label htmlFor="nit">NIT</Label>
-            <Input
-              {...register('nit')}
-              placeholder="Ej: 900123456-7"
-            />
+            <Input {...register('nit')} placeholder="Ej: 900123456-7" />
           </div>
         )}
       </div>
@@ -385,9 +377,7 @@ export function ProfileCredentialForm({
             render={({ field }) => (
               <Select
                 value={field.value}
-                onValueChange={(v: string | null) =>
-                  field.onChange(v ?? 'low')
-                }
+                onValueChange={(v: string | null) => field.onChange(v ?? 'low')}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccionar" />
@@ -433,7 +423,10 @@ export function ProfileCredentialForm({
         <Button type="button" variant="outline" onClick={onBack}>
           &larr; Atrás
         </Button>
-        <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+        <Button
+          type="submit"
+          className="bg-accent hover:bg-accent/90 text-accent-foreground"
+        >
           Generar Credencial &rarr;
         </Button>
       </div>

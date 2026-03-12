@@ -178,54 +178,54 @@ export function EntrepreneurDetailPage({
               <IconCertificate className="h-5 w-5" />
               Emitir Credencial
             </Button>
-          <AlertDialog
-            open={certifyDialogOpen}
-            onOpenChange={setCertifyDialogOpen}
-          >
-            <AlertDialogTrigger
-              render={
-                <Button
-                  size="lg"
-                  className="gap-2 shadow-lg bg-accent hover:bg-accent/90 text-accent-foreground"
-                  disabled={!nextStageToCertify}
-                  onClick={() =>
-                    nextStageToCertify &&
-                    setSelectedStageId(nextStageToCertify.id)
-                  }
-                >
-                  <Shield className="h-5 w-5" />
-                  {nextStageToCertify
-                    ? `Aprobar Etapa ${nextStageToCertify.id}`
-                    : 'Todas las etapas certificadas'}
-                </Button>
-              }
-            />
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Aprobar Certificación - Etapa {selectedStageId}
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Esta acción emitirá una credencial verificable en blockchain
-                  certificando que {entrepreneur.name} ha completado la etapa
-                  &quot;
-                  {STAGES.find((s) => s.id === selectedStageId)?.name}&quot;.
-                  Esta acción no se puede deshacer.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() =>
-                    selectedStageId && handleCertifyStage(selectedStageId)
-                  }
-                >
-                  <Shield className="h-4 w-4 mr-2" />
-                  Emitir Credencial
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+            <AlertDialog
+              open={certifyDialogOpen}
+              onOpenChange={setCertifyDialogOpen}
+            >
+              <AlertDialogTrigger
+                render={
+                  <Button
+                    size="lg"
+                    className="gap-2 shadow-lg bg-accent hover:bg-accent/90 text-accent-foreground"
+                    disabled={!nextStageToCertify}
+                    onClick={() =>
+                      nextStageToCertify &&
+                      setSelectedStageId(nextStageToCertify.id)
+                    }
+                  >
+                    <Shield className="h-5 w-5" />
+                    {nextStageToCertify
+                      ? `Aprobar Etapa ${nextStageToCertify.id}`
+                      : 'Todas las etapas certificadas'}
+                  </Button>
+                }
+              />
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Aprobar Certificación - Etapa {selectedStageId}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta acción emitirá una credencial verificable en blockchain
+                    certificando que {entrepreneur.name} ha completado la etapa
+                    &quot;
+                    {STAGES.find((s) => s.id === selectedStageId)?.name}&quot;.
+                    Esta acción no se puede deshacer.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() =>
+                      selectedStageId && handleCertifyStage(selectedStageId)
+                    }
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    Emitir Credencial
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </div>

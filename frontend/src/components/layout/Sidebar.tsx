@@ -21,7 +21,11 @@ import { useSyncExternalStore, type ReactNode } from 'react';
 
 const subscribe = () => () => {};
 function useIsMounted() {
-  return useSyncExternalStore(subscribe, () => true, () => false);
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
 }
 
 interface NavItemProps {

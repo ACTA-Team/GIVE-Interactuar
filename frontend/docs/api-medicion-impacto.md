@@ -52,12 +52,12 @@ Endpoints aligned with the OpenAPI 3.0 specification documented in
 
 **Response codes:**
 
-| Code  | Meaning                                        |
-| ----- | ---------------------------------------------- |
-| `200` | Successful request                             |
-| `400` | Invalid parameter (malformed UUID, page < 1)   |
-| `404` | Resource not found (only on `/:id` routes)     |
-| `500` | Internal server error                          |
+| Code  | Meaning                                      |
+| ----- | -------------------------------------------- |
+| `200` | Successful request                           |
+| `400` | Invalid parameter (malformed UUID, page < 1) |
+| `404` | Resource not found (only on `/:id` routes)   |
+| `500` | Internal server error                        |
 
 ---
 
@@ -113,13 +113,13 @@ GET /api/organizations/00000000-0000-0000-0000-000000000001
 
 List of internal users.
 
-| Parameter         | Type    | Required | Description                           |
-| ----------------- | ------- | -------- | ------------------------------------- |
-| `organization_id` | uuid    | No       | Filter by organization                |
-| `active`          | boolean | No       | Filter by status                      |
+| Parameter         | Type    | Required | Description                            |
+| ----------------- | ------- | -------- | -------------------------------------- |
+| `organization_id` | uuid    | No       | Filter by organization                 |
+| `active`          | boolean | No       | Filter by status                       |
 | `role`            | string  | No       | Filter by role (admin/operator/viewer) |
-| `page`            | integer | No       | Page                                  |
-| `page_size`       | integer | No       | Page size                             |
+| `page`            | integer | No       | Page                                   |
+| `page_size`       | integer | No       | Page size                              |
 
 **Model fields (`InternalUser`):**
 
@@ -139,14 +139,14 @@ Individual internal user.
 
 List of entrepreneurs with name search.
 
-| Parameter      | Type    | Required | Description                  |
-| -------------- | ------- | -------- | ---------------------------- |
-| `query`        | string  | No       | Search by name (substring)   |
-| `municipality` | string  | No       | Filter by municipality       |
-| `department`   | string  | No       | Filter by department         |
-| `active`       | boolean | No       | Filter by status             |
-| `page`         | integer | No       | Page                         |
-| `page_size`    | integer | No       | Page size                    |
+| Parameter      | Type    | Required | Description                |
+| -------------- | ------- | -------- | -------------------------- |
+| `query`        | string  | No       | Search by name (substring) |
+| `municipality` | string  | No       | Filter by municipality     |
+| `department`   | string  | No       | Filter by department       |
+| `active`       | boolean | No       | Filter by status           |
+| `page`         | integer | No       | Page                       |
+| `page_size`    | integer | No       | Page size                  |
 
 ```bash
 GET /api/entrepreneurs?query=Gustavo&page_size=5
@@ -168,9 +168,9 @@ Individual entrepreneur with optional enrichments (`business_profile`, `latest_s
 
 Business profiles.
 
-| Parameter         | Type | Required | Description             |
-| ----------------- | ---- | -------- | ----------------------- |
-| `entrepreneur_id` | uuid | No       | Filter by entrepreneur  |
+| Parameter         | Type | Required | Description            |
+| ----------------- | ---- | -------- | ---------------------- |
+| `entrepreneur_id` | uuid | No       | Filter by entrepreneur |
 
 **Model fields (`BusinessProfile`):**
 
@@ -187,9 +187,9 @@ Individual business profile.
 
 Profile snapshots.
 
-| Parameter         | Type    | Required | Description            |
-| ----------------- | ------- | -------- | ---------------------- |
-| `entrepreneur_id` | uuid    | No       | Filter by entrepreneur |
+| Parameter         | Type    | Required | Description              |
+| ----------------- | ------- | -------- | ------------------------ |
+| `entrepreneur_id` | uuid    | No       | Filter by entrepreneur   |
 | `is_latest`       | boolean | No       | Only the latest snapshot |
 
 **Model fields (`EntrepreneurProfileSnapshot`):**
@@ -207,10 +207,10 @@ Individual snapshot.
 
 Financial profiles.
 
-| Parameter         | Type   | Required | Description                                     |
-| ----------------- | ------ | -------- | ----------------------------------------------- |
-| `entrepreneur_id` | uuid   | No       | Filter by entrepreneur                          |
-| `credit_level`    | string | No       | Filter by level (bajo/medio/alto/excelente)     |
+| Parameter         | Type   | Required | Description                                 |
+| ----------------- | ------ | -------- | ------------------------------------------- |
+| `entrepreneur_id` | uuid   | No       | Filter by entrepreneur                      |
+| `credit_level`    | string | No       | Filter by level (bajo/medio/alto/excelente) |
 
 **Model fields (`FinancialProfile`):**
 
@@ -322,9 +322,9 @@ Individual source.
 
 Raw form responses.
 
-| Parameter        | Type | Required | Description            |
-| ---------------- | ---- | -------- | ---------------------- |
-| `form_source_id` | uuid | No       | Filter by form source  |
+| Parameter        | Type | Required | Description           |
+| ---------------- | ---- | -------- | --------------------- |
+| `form_source_id` | uuid | No       | Filter by form source |
 
 **Model fields (`FormSubmissionRaw`):**
 
@@ -365,10 +365,10 @@ Individual run.
 
 Credential verification records.
 
-| Parameter             | Type   | Required | Description            |
-| --------------------- | ------ | -------- | ---------------------- |
-| `credential_id`       | uuid   | No       | Filter by credential   |
-| `verification_result` | string | No       | success / failed       |
+| Parameter             | Type   | Required | Description          |
+| --------------------- | ------ | -------- | -------------------- |
+| `credential_id`       | uuid   | No       | Filter by credential |
+| `verification_result` | string | No       | success / failed     |
 
 **Model fields (`VerificationRecord`):**
 
@@ -437,9 +437,7 @@ No parameters.
       "average_variation_pct": 0
     }
   ],
-  "by_ally": [
-    { "ally": "Actec", "participants": 200, "new_jobs": 0 }
-  ],
+  "by_ally": [{ "ally": "Actec", "participants": 200, "new_jobs": 0 }],
   "by_age": [{ "range": "25-34", "participants": 150 }],
   "monthly_sales": [{ "month": "Jan", "average_cop": 58267857, "n": 92 }],
   "portfolio": {
@@ -464,14 +462,14 @@ No parameters.
 
 Denormalized list of entrepreneurs with all measurement fields.
 
-| Parameter          | Type    | Required | Description                                          |
-| ------------------ | ------- | -------- | ---------------------------------------------------- |
-| `program`          | string  | No       | "Entrepreneurial MBA" / "Agribusiness MBA"           |
-| `gender`           | string  | No       | "Woman" / "Man"                                      |
-| `requested_credit` | string  | No       | "Yes" / "No"                                         |
-| `overdue`          | string  | No       | "Yes" / "No"                                         |
-| `page`             | integer | No       | Page (default 1)                                     |
-| `page_size`        | integer | No       | Page size (default 100, max 500)                     |
+| Parameter          | Type    | Required | Description                                |
+| ------------------ | ------- | -------- | ------------------------------------------ |
+| `program`          | string  | No       | "Entrepreneurial MBA" / "Agribusiness MBA" |
+| `gender`           | string  | No       | "Woman" / "Man"                            |
+| `requested_credit` | string  | No       | "Yes" / "No"                               |
+| `overdue`          | string  | No       | "Yes" / "No"                               |
+| `page`             | integer | No       | Page (default 1)                           |
+| `page_size`        | integer | No       | Page size (default 100, max 500)           |
 
 ```bash
 GET /api/analytics/entrepreneurs?gender=Woman&page_size=10
@@ -505,33 +503,33 @@ Credentials that generate derived indicators from impact measurement data.
 
 > Does the business grow, sustain, or deteriorate?
 
-| What it shows | What it answers | Minimum condition |
-| --- | --- | --- |
+| What it shows                                                                                                                                   | What it answers                                  | Minimum condition                                |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------ |
 | Business, sector, years in operation, previous year sales, current year sales, sales variation, current jobs, new jobs generated and formalized | Does the business grow, sustain, or deteriorate? | Business, sales, and employment data must exist. |
 
 **Endpoint:** `GET /api/credentials/impact`
 
 **Parameters:**
 
-| Parameter         | Type   | Required | Description                                                                      |
-| ----------------- | ------ | -------- | -------------------------------------------------------------------------------- |
-| `entrepreneur_id` | uuid   | No       | Entrepreneur ID. If omitted, returns all (with pagination).                      |
-| `year`            | number | No       | Measurement year. If omitted, uses the most recent.                              |
-| `verdict`         | string | No       | Filter by: `growing` \| `sustaining` \| `deteriorating` \| `insufficient_data`   |
-| `has_business`    | bool   | No       | `true` = only with business, `false` = only without business                     |
-| `has_sales`       | bool   | No       | `true` = only with sales, `false` = only without sales                           |
-| `has_employees`   | bool   | No       | `true` = only with employees, `false` = only without employees                   |
-| `page`            | number | No       | Page number (default 1)                                                          |
-| `page_size`       | number | No       | Records per page (default 50, max 200)                                           |
+| Parameter         | Type   | Required | Description                                                                    |
+| ----------------- | ------ | -------- | ------------------------------------------------------------------------------ |
+| `entrepreneur_id` | uuid   | No       | Entrepreneur ID. If omitted, returns all (with pagination).                    |
+| `year`            | number | No       | Measurement year. If omitted, uses the most recent.                            |
+| `verdict`         | string | No       | Filter by: `growing` \| `sustaining` \| `deteriorating` \| `insufficient_data` |
+| `has_business`    | bool   | No       | `true` = only with business, `false` = only without business                   |
+| `has_sales`       | bool   | No       | `true` = only with sales, `false` = only without sales                         |
+| `has_employees`   | bool   | No       | `true` = only with employees, `false` = only without employees                 |
+| `page`            | number | No       | Page number (default 1)                                                        |
+| `page_size`       | number | No       | Records per page (default 50, max 200)                                         |
 
 **Status codes:**
 
-| Code  | Description                                                    |
-| ----- | -------------------------------------------------------------- |
-| `200` | Successful request (individual or list)                        |
-| `400` | `entrepreneur_id` is not a valid UUID or invalid parameter     |
-| `404` | Entrepreneur or measurement not found                          |
-| `500` | Internal server error                                          |
+| Code  | Description                                                |
+| ----- | ---------------------------------------------------------- |
+| `200` | Successful request (individual or list)                    |
+| `400` | `entrepreneur_id` is not a valid UUID or invalid parameter |
+| `404` | Entrepreneur or measurement not found                      |
+| `500` | Internal server error                                      |
 
 **Examples:**
 
@@ -576,8 +574,8 @@ GET /api/credentials/impact?verdict=growing&has_sales=true&has_employees=true
 ```json
 {
   "data": [
-    { "entrepreneur_id": "...", "full_name": "...", "..." : "..." },
-    { "entrepreneur_id": "...", "full_name": "...", "..." : "..." }
+    { "entrepreneur_id": "...", "full_name": "...", "...": "..." },
+    { "entrepreneur_id": "...", "full_name": "...", "...": "..." }
   ],
   "meta": { "total": 100, "page": 1, "page_size": 50, "has_next": true }
 }
@@ -585,11 +583,11 @@ GET /api/credentials/impact?verdict=growing&has_sales=true&has_employees=true
 
 **Derived fields:**
 
-| Field                 | Calculation                                                              |
-| --------------------- | ------------------------------------------------------------------------ |
+| Field                 | Calculation                                                             |
+| --------------------- | ----------------------------------------------------------------------- |
 | `sales_variation_pct` | `((current_sales - previous_sales) / previous_sales) × 100`             |
-| `new_jobs_generated`  | `current_employees - previous_employees`                                 |
-| `new_jobs_formalized` | `current_social_security - previous_social_security`                     |
+| `new_jobs_generated`  | `current_employees - previous_employees`                                |
+| `new_jobs_formalized` | `current_social_security - previous_social_security`                    |
 | `verdict`             | `>5%` → `growing`, `-5% to 5%` → `sustaining`, `<-5%` → `deteriorating` |
 
 ---
@@ -598,25 +596,25 @@ GET /api/credentials/impact?verdict=growing&has_sales=true&has_employees=true
 
 > Does the entrepreneur show signs of financial stability and payment capacity?
 
-| What it shows | What it answers | Minimum condition |
-| --- | --- | --- |
+| What it shows                                                                                                                                                                                   | What it answers                                                               | Minimum condition                                          |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | Credit segment start and end, active credit, average sales, costs and expenses, assets and liabilities, operating margin, debt-to-asset ratio, income stability, record validation and new jobs | Does the entrepreneur show signs of financial stability and payment capacity? | Sufficient financial data must exist to derive indicators. |
 
 **Endpoint:** `GET /api/credentials/behavior`
 
 **Parameters:**
 
-| Parameter            | Type   | Required | Description                                                               |
-| -------------------- | ------ | -------- | ------------------------------------------------------------------------- |
-| `entrepreneur_id`    | uuid   | No       | Entrepreneur ID. If omitted, returns all (with pagination).               |
-| `year`               | number | No       | Measurement year. If omitted, uses the most recent.                       |
-| `financial_trend`    | string | No       | Filter by: `positive` \| `neutral` \| `negative` \| `insufficient_data`  |
-| `operating_capacity` | string | No       | Filter by: `high` \| `medium` \| `low` \| `insufficient_data`            |
-| `leverage_level`     | string | No       | Filter by: `healthy` \| `moderate` \| `high` \| `insufficient_data`      |
-| `credit_active`      | bool   | No       | `true` = with active credit, `false` = without credit                    |
-| `has_financial_data` | bool   | No       | `true` = only with complete financial data                               |
-| `page`               | number | No       | Page number (default 1)                                                  |
-| `page_size`          | number | No       | Records per page (default 50, max 200)                                   |
+| Parameter            | Type   | Required | Description                                                             |
+| -------------------- | ------ | -------- | ----------------------------------------------------------------------- |
+| `entrepreneur_id`    | uuid   | No       | Entrepreneur ID. If omitted, returns all (with pagination).             |
+| `year`               | number | No       | Measurement year. If omitted, uses the most recent.                     |
+| `financial_trend`    | string | No       | Filter by: `positive` \| `neutral` \| `negative` \| `insufficient_data` |
+| `operating_capacity` | string | No       | Filter by: `high` \| `medium` \| `low` \| `insufficient_data`           |
+| `leverage_level`     | string | No       | Filter by: `healthy` \| `moderate` \| `high` \| `insufficient_data`     |
+| `credit_active`      | bool   | No       | `true` = with active credit, `false` = without credit                   |
+| `has_financial_data` | bool   | No       | `true` = only with complete financial data                              |
+| `page`               | number | No       | Page number (default 1)                                                 |
+| `page_size`          | number | No       | Records per page (default 50, max 200)                                  |
 
 **Status codes:** (200/400/404/500 — same as Impact Credential)
 
@@ -665,23 +663,23 @@ GET /api/credentials/behavior?financial_trend=positive&operating_capacity=high&c
 
 **Derived fields:**
 
-| Field                          | Calculation                                                                    |
-| ------------------------------ | ------------------------------------------------------------------------------ |
-| `estimated_operating_margin`   | `((sales - costs) / sales) × 100`                                             |
-| `leverage_ratio`               | `liabilities / assets`                                                         |
-| `monthly_income_stability`     | `1 - coefficient_of_variation(monthly_sales)` (closer to 1 = more stable)      |
-| `estimated_operating_capacity` | Margin ≥20% → `high`, ≥10% → `medium`, <10% → `low`                           |
-| `leverage_level`               | Ratio ≤0.4 → `healthy`, ≤0.7 → `moderate`, >0.7 → `high`                      |
-| `commercial_stability`         | CV ≤0.15 → `stable`, ≤0.35 → `moderate`, >0.35 → `volatile`                   |
-| `financial_trend`              | Combines operating margin and leverage (see table below)                       |
+| Field                          | Calculation                                                               |
+| ------------------------------ | ------------------------------------------------------------------------- |
+| `estimated_operating_margin`   | `((sales - costs) / sales) × 100`                                         |
+| `leverage_ratio`               | `liabilities / assets`                                                    |
+| `monthly_income_stability`     | `1 - coefficient_of_variation(monthly_sales)` (closer to 1 = more stable) |
+| `estimated_operating_capacity` | Margin ≥20% → `high`, ≥10% → `medium`, <10% → `low`                       |
+| `leverage_level`               | Ratio ≤0.4 → `healthy`, ≤0.7 → `moderate`, >0.7 → `high`                  |
+| `commercial_stability`         | CV ≤0.15 → `stable`, ≤0.35 → `moderate`, >0.35 → `volatile`               |
+| `financial_trend`              | Combines operating margin and leverage (see table below)                  |
 
 **`financial_trend` logic:**
 
-| Condition                             | Result     |
-| ------------------------------------- | ---------- |
-| Margin ≥15% **and** Leverage ≤0.5     | `positive` |
-| Margin ≥5% **and** Leverage ≤0.8      | `neutral`  |
-| Any other case                        | `negative` |
+| Condition                         | Result     |
+| --------------------------------- | ---------- |
+| Margin ≥15% **and** Leverage ≤0.5 | `positive` |
+| Margin ≥5% **and** Leverage ≤0.8  | `neutral`  |
+| Any other case                    | `negative` |
 
 ---
 
@@ -689,23 +687,23 @@ GET /api/credentials/behavior?financial_trend=positive&operating_capacity=high&c
 
 > What is the formalization level and socioeconomic context of the entrepreneur?
 
-| What it shows | What it answers | Minimum condition |
-| --- | --- | --- |
+| What it shows                                                                                                                                                                                                                       | What it answers                                                                | Minimum condition                           |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------- |
 | Validated identity, education level, municipality and zone, household provider, household income, formalized business, NIT, years in operation, legal figure, business size, internet access, social security and job formalization | What is the formalization level and socioeconomic context of the entrepreneur? | Identity and formalization data must exist. |
 
 **Endpoint:** `GET /api/credentials/profile`
 
 **Parameters:**
 
-| Parameter             | Type   | Required | Description                                                          |
-| --------------------- | ------ | -------- | -------------------------------------------------------------------- |
-| `entrepreneur_id`     | uuid   | No       | Entrepreneur ID. If omitted, returns all (with pagination).          |
-| `is_formalized`       | bool   | No       | `true` = only formalized businesses, `false` = only non-formalized   |
-| `identity_validated`  | bool   | No       | `true` = only with validated identity, `false` = not validated       |
-| `has_internet`        | bool   | No       | `true` = only with internet, `false` = without internet              |
-| `contributes_pension` | bool   | No       | `true` = only pension contributors, `false` = non-contributors       |
-| `page`                | number | No       | Page number (default 1)                                              |
-| `page_size`           | number | No       | Records per page (default 50, max 200)                               |
+| Parameter             | Type   | Required | Description                                                        |
+| --------------------- | ------ | -------- | ------------------------------------------------------------------ |
+| `entrepreneur_id`     | uuid   | No       | Entrepreneur ID. If omitted, returns all (with pagination).        |
+| `is_formalized`       | bool   | No       | `true` = only formalized businesses, `false` = only non-formalized |
+| `identity_validated`  | bool   | No       | `true` = only with validated identity, `false` = not validated     |
+| `has_internet`        | bool   | No       | `true` = only with internet, `false` = without internet            |
+| `contributes_pension` | bool   | No       | `true` = only pension contributors, `false` = non-contributors     |
+| `page`                | number | No       | Page number (default 1)                                            |
+| `page_size`           | number | No       | Records per page (default 50, max 200)                             |
 
 **Status codes:** (200/400/404/500 — same as Impact Credential)
 
@@ -758,8 +756,8 @@ GET /api/credentials/profile?has_internet=true&contributes_pension=true&page_siz
 ```json
 {
   "data": [
-    { "entrepreneur_id": "...", "full_name": "...", "..." : "..." },
-    { "entrepreneur_id": "...", "full_name": "...", "..." : "..." }
+    { "entrepreneur_id": "...", "full_name": "...", "...": "..." },
+    { "entrepreneur_id": "...", "full_name": "...", "...": "..." }
   ],
   "meta": { "total": 100, "page": 1, "page_size": 50, "has_next": true }
 }
@@ -792,17 +790,17 @@ Content-Type: application/json
 
 Catalog and master list data.
 
-| Endpoint                          | Description              | Records |
-| --------------------------------- | ------------------------ | ------- |
-| `/rest/v1/im_allies`              | Program allies           | 10      |
-| `/rest/v1/im_consultants`         | Assigned consultants     | 34      |
-| `/rest/v1/im_levels`              | Program levels           | 4       |
-| `/rest/v1/im_economic_sectors`    | Economic sectors         | 7       |
-| `/rest/v1/im_economic_activities` | Economic activities      | 141     |
-| `/rest/v1/im_legal_figures`       | Legal figures            | 5       |
-| `/rest/v1/im_education_levels`    | Education levels         | 9       |
-| `/rest/v1/im_marital_statuses`    | Marital statuses         | 6       |
-| `/rest/v1/im_compensation_funds`  | Compensation funds       | 7       |
+| Endpoint                          | Description          | Records |
+| --------------------------------- | -------------------- | ------- |
+| `/rest/v1/im_allies`              | Program allies       | 10      |
+| `/rest/v1/im_consultants`         | Assigned consultants | 34      |
+| `/rest/v1/im_levels`              | Program levels       | 4       |
+| `/rest/v1/im_economic_sectors`    | Economic sectors     | 7       |
+| `/rest/v1/im_economic_activities` | Economic activities  | 141     |
+| `/rest/v1/im_legal_figures`       | Legal figures        | 5       |
+| `/rest/v1/im_education_levels`    | Education levels     | 9       |
+| `/rest/v1/im_marital_statuses`    | Marital statuses     | 6       |
+| `/rest/v1/im_compensation_funds`  | Compensation funds   | 7       |
 
 **Example — list all economic sectors:**
 
@@ -817,12 +815,12 @@ curl "http://localhost:54321/rest/v1/im_economic_sectors?select=id,name" \
 
 Entrepreneur, cohort, and business data.
 
-| Endpoint                                        | Description               | Records |
-| ----------------------------------------------- | ------------------------- | ------- |
-| `/rest/v1/im_cohorts`                           | Cohorts/groups            | 101     |
-| `/rest/v1/im_entrepreneur_demographics`         | Entrepreneur demographics | 1,403   |
-| `/rest/v1/im_entrepreneur_self_identifications` | Ethnic self-identification | 56     |
-| `/rest/v1/im_businesses`                        | Business data             | 1,403   |
+| Endpoint                                        | Description                | Records |
+| ----------------------------------------------- | -------------------------- | ------- |
+| `/rest/v1/im_cohorts`                           | Cohorts/groups             | 101     |
+| `/rest/v1/im_entrepreneur_demographics`         | Entrepreneur demographics  | 1,403   |
+| `/rest/v1/im_entrepreneur_self_identifications` | Ethnic self-identification | 56      |
+| `/rest/v1/im_businesses`                        | Business data              | 1,403   |
 
 **Example — entrepreneurs with demographics (join):**
 
@@ -851,13 +849,13 @@ curl "http://localhost:54321/rest/v1/im_cohorts?select=name,cohort_year,program,
 
 Impact measurement process data.
 
-| Endpoint                           | Description                       | Records |
-| ---------------------------------- | --------------------------------- | ------- |
-| `/rest/v1/im_measurements`         | Measurements (fact table)         | 1,460   |
-| `/rest/v1/im_monthly_sales`        | Monthly sales                     | 15,232  |
-| `/rest/v1/im_monthly_costs`        | Monthly costs                     | 14,903  |
-| `/rest/v1/im_quarterly_balances`   | Quarterly balances                | 3,658   |
-| `/rest/v1/im_employment_snapshots` | Employment (prev_year / current)  | 2,232   |
+| Endpoint                           | Description                      | Records |
+| ---------------------------------- | -------------------------------- | ------- |
+| `/rest/v1/im_measurements`         | Measurements (fact table)        | 1,460   |
+| `/rest/v1/im_monthly_sales`        | Monthly sales                    | 15,232  |
+| `/rest/v1/im_monthly_costs`        | Monthly costs                    | 14,903  |
+| `/rest/v1/im_quarterly_balances`   | Quarterly balances               | 3,658   |
+| `/rest/v1/im_employment_snapshots` | Employment (prev_year / current) | 2,232   |
 
 **Example — 2024 measurements with cohort and consultant:**
 
@@ -886,12 +884,12 @@ curl "http://localhost:54321/rest/v1/im_employment_snapshots?period=eq.current_y
 
 Overdue credit and collection tracking data.
 
-| Endpoint                                 | Description                  | Records |
-| ---------------------------------------- | ---------------------------- | ------- |
-| `/rest/v1/im_overdue_credits`            | Overdue credits              | 587     |
-| `/rest/v1/im_collection_responses`       | Collection responses         | 1,474   |
-| `/rest/v1/im_collection_monthly_figures` | Collection sales/costs       | 2,427   |
-| `/rest/v1/im_collection_balances`        | Collection balances          | 463     |
+| Endpoint                                 | Description            | Records |
+| ---------------------------------------- | ---------------------- | ------- |
+| `/rest/v1/im_overdue_credits`            | Overdue credits        | 587     |
+| `/rest/v1/im_collection_responses`       | Collection responses   | 1,474   |
+| `/rest/v1/im_collection_monthly_figures` | Collection sales/costs | 2,427   |
+| `/rest/v1/im_collection_balances`        | Collection balances    | 463     |
 
 **Example — overdue credits with entrepreneur data:**
 
@@ -911,19 +909,19 @@ curl "http://localhost:54321/rest/v1/im_collection_responses?collection_period=e
 
 ### Useful PostgREST Operators
 
-| Operator    | Usage                     | Example                          |
-| ----------- | ------------------------- | -------------------------------- |
-| `eq`        | Equal to                  | `?field=eq.value`                |
-| `neq`       | Not equal to              | `?field=neq.value`               |
-| `gt`/`lt`   | Greater/less than         | `?amount=gt.1000000`             |
-| `gte`/`lte` | Greater/less or equal     | `?measurement_year=gte.2023`     |
-| `like`      | Partial match             | `?full_name=like.*Restrepo*`     |
-| `ilike`     | Case-insensitive match    | `?municipality=ilike.*medellin*` |
-| `in`        | In list                   | `?classification=in.(A,B)`       |
-| `is`        | Is null / not null        | `?nit=not.is.null`               |
-| `order`     | Order results             | `?order=amount.desc`             |
-| `limit`     | Limit results             | `?limit=10`                      |
-| `offset`    | Paginate from             | `?offset=20&limit=10`            |
+| Operator    | Usage                  | Example                          |
+| ----------- | ---------------------- | -------------------------------- |
+| `eq`        | Equal to               | `?field=eq.value`                |
+| `neq`       | Not equal to           | `?field=neq.value`               |
+| `gt`/`lt`   | Greater/less than      | `?amount=gt.1000000`             |
+| `gte`/`lte` | Greater/less or equal  | `?measurement_year=gte.2023`     |
+| `like`      | Partial match          | `?full_name=like.*Restrepo*`     |
+| `ilike`     | Case-insensitive match | `?municipality=ilike.*medellin*` |
+| `in`        | In list                | `?classification=in.(A,B)`       |
+| `is`        | Is null / not null     | `?nit=not.is.null`               |
+| `order`     | Order results          | `?order=amount.desc`             |
+| `limit`     | Limit results          | `?limit=10`                      |
+| `offset`    | Paginate from          | `?offset=20&limit=10`            |
 
 ---
 
@@ -934,49 +932,49 @@ for analysis or future endpoints.
 
 ### 3.1 Indicators by Cohort / Ally
 
-| Indicator                        | Source                                   | Description                                                  |
-| -------------------------------- | ---------------------------------------- | ------------------------------------------------------------ |
-| Growth rate by cohort            | `im_measurements` + `im_monthly_sales`   | Average % sales variation grouped by cohort                  |
-| Job generation by ally           | `im_employment_snapshots` + `im_cohorts` | Total new jobs generated, grouped by ally                    |
-| Formalization rate by cohort     | `im_businesses`                          | % of businesses with NIT and formal legal figure per cohort  |
-| Default rate by ally             | `im_overdue_credits`                     | Total overdue balance and credit count per ally              |
+| Indicator                    | Source                                   | Description                                                 |
+| ---------------------------- | ---------------------------------------- | ----------------------------------------------------------- |
+| Growth rate by cohort        | `im_measurements` + `im_monthly_sales`   | Average % sales variation grouped by cohort                 |
+| Job generation by ally       | `im_employment_snapshots` + `im_cohorts` | Total new jobs generated, grouped by ally                   |
+| Formalization rate by cohort | `im_businesses`                          | % of businesses with NIT and formal legal figure per cohort |
+| Default rate by ally         | `im_overdue_credits`                     | Total overdue balance and credit count per ally             |
 
 ### 3.2 Longitudinal Indicators (across years)
 
-| Indicator                   | Source                                     | Description                                                          |
-| --------------------------- | ------------------------------------------ | -------------------------------------------------------------------- |
-| Sales evolution             | `im_monthly_sales` across years            | Compare monthly curves year vs. year for an entrepreneur             |
-| Employment evolution        | `im_employment_snapshots`                  | Trend of formal vs. informal employees over time                     |
-| Segment transition          | `im_measurements.credit_segment_start/end` | How many entrepreneurs migrated segments (e.g. self-employed → growth) |
-| Leverage progression        | `im_quarterly_balances`                    | How debt-to-asset ratio evolves over time                            |
+| Indicator            | Source                                     | Description                                                            |
+| -------------------- | ------------------------------------------ | ---------------------------------------------------------------------- |
+| Sales evolution      | `im_monthly_sales` across years            | Compare monthly curves year vs. year for an entrepreneur               |
+| Employment evolution | `im_employment_snapshots`                  | Trend of formal vs. informal employees over time                       |
+| Segment transition   | `im_measurements.credit_segment_start/end` | How many entrepreneurs migrated segments (e.g. self-employed → growth) |
+| Leverage progression | `im_quarterly_balances`                    | How debt-to-asset ratio evolves over time                              |
 
 ### 3.3 Demographic Profile Indicators
 
-| Indicator                              | Source                                | Description                                                          |
-| -------------------------------------- | ------------------------------------- | -------------------------------------------------------------------- |
-| Gender distribution                    | `im_entrepreneur_demographics`        | % men vs. women in the program                                       |
-| Per capita income vs. poverty line     | `im_entrepreneur_demographics`        | How many entrepreneurs are below the poverty line                    |
-| Social security coverage               | `im_entrepreneur_demographics`        | % with pension, contributory health, compensation fund               |
-| Municipality map                       | `im_entrepreneur_demographics`        | Geographic distribution of served entrepreneurs                      |
-| Education level vs. impact             | Cross `demographics` + `measurements` | Correlation between education level and growth indicators            |
+| Indicator                          | Source                                | Description                                               |
+| ---------------------------------- | ------------------------------------- | --------------------------------------------------------- |
+| Gender distribution                | `im_entrepreneur_demographics`        | % men vs. women in the program                            |
+| Per capita income vs. poverty line | `im_entrepreneur_demographics`        | How many entrepreneurs are below the poverty line         |
+| Social security coverage           | `im_entrepreneur_demographics`        | % with pension, contributory health, compensation fund    |
+| Municipality map                   | `im_entrepreneur_demographics`        | Geographic distribution of served entrepreneurs           |
+| Education level vs. impact         | Cross `demographics` + `measurements` | Correlation between education level and growth indicators |
 
 ### 3.4 Portfolio Indicators
 
-| Indicator                       | Source                            | Description                                                  |
-| ------------------------------- | --------------------------------- | ------------------------------------------------------------ |
-| Risk concentration              | `im_overdue_credits`              | % of total overdue balance concentrated in top 10 debtors    |
-| Distribution by classification  | `im_overdue_credits`              | Count and amount by classification (A, B, E)                 |
-| Average days overdue by ally    | `im_overdue_credits`              | Average `days_overdue` grouped by ally                       |
-| Default vs. sales relationship  | Cross `overdue` + `monthly_sales` | Whether defaulters have lower sales than average             |
+| Indicator                      | Source                            | Description                                               |
+| ------------------------------ | --------------------------------- | --------------------------------------------------------- |
+| Risk concentration             | `im_overdue_credits`              | % of total overdue balance concentrated in top 10 debtors |
+| Distribution by classification | `im_overdue_credits`              | Count and amount by classification (A, B, E)              |
+| Average days overdue by ally   | `im_overdue_credits`              | Average `days_overdue` grouped by ally                    |
+| Default vs. sales relationship | Cross `overdue` + `monthly_sales` | Whether defaulters have lower sales than average          |
 
 ### 3.5 Collection Indicators
 
-| Indicator                    | Source                    | Description                                                          |
-| ---------------------------- | ------------------------- | -------------------------------------------------------------------- |
-| Practice adoption rate       | `im_collection_responses` | % that implemented practices taught in the program                   |
-| Credit need                  | `im_collection_responses` | % expressing credit need and average requested amount                |
-| Investment destination       | `im_collection_responses` | Distribution of destinations (working capital, machinery, etc.)      |
-| Accounting tracking          | `im_collection_responses` | % with accountant and financial recording method                     |
+| Indicator              | Source                    | Description                                                     |
+| ---------------------- | ------------------------- | --------------------------------------------------------------- |
+| Practice adoption rate | `im_collection_responses` | % that implemented practices taught in the program              |
+| Credit need            | `im_collection_responses` | % expressing credit need and average requested amount           |
+| Investment destination | `im_collection_responses` | Distribution of destinations (working capital, machinery, etc.) |
+| Accounting tracking    | `im_collection_responses` | % with accountant and financial recording method                |
 
 ---
 

@@ -362,7 +362,10 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
           ? entrepreneursWithCredit.size
           : entrepreneursInDefaultSet.size;
       const entrepreneursInDefault = entrepreneursInDefaultSet.size;
-      const currentCount = Math.max(0, totalWithCredit - entrepreneursInDefault);
+      const currentCount = Math.max(
+        0,
+        totalWithCredit - entrepreneursInDefault,
+      );
       let totalOverdueBalance = 0;
       const clasMap = new Map<string, { cases: number; balance: number }>();
       for (const o of overdueList) {

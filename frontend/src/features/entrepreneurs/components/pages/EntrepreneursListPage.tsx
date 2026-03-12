@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -39,6 +40,9 @@ type SortField = 'name' | 'stage' | 'delinquent' | 'funding';
 type SortDirection = 'asc' | 'desc';
 
 export function EntrepreneursListPage() {
+  const t = useTranslations('entrepreneurs');
+  const tc = useTranslations('common');
+  const td = useTranslations('dashboard');
   const entrepreneurs = MOCK_ENTREPRENEURS;
   const [search, setSearch] = useState('');
   const [filterStage, setFilterStage] = useState<string>('all');
@@ -148,10 +152,8 @@ export function EntrepreneursListPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Empresarios</h1>
-          <p className="text-muted-foreground mt-1">
-            Gestiona los empresarios y su progreso en el programa
-          </p>
+          <h1 className="text-2xl font-bold text-foreground">{t('title')}</h1>
+          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
         </div>
         <NewEntrepreneurDialog />
       </div>
@@ -163,7 +165,7 @@ export function EntrepreneursListPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nombre, negocio o email..."
+                placeholder={t('search')}
                 className="pl-9"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -173,13 +175,13 @@ export function EntrepreneursListPage() {
             <div className="flex flex-wrap gap-3">
               <Select value={filterStage} onValueChange={handleFilterStage}>
                 <SelectTrigger className="w-[160px]">
-                  <SelectValue placeholder="Filtrar por etapa" />
+                  <SelectValue placeholder={t('filterByStage')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todas las etapas</SelectItem>
+                  <SelectItem value="all">{t('allStages')}</SelectItem>
                   {STAGES.map((stage) => (
                     <SelectItem key={stage.id} value={stage.id.toString()}>
-                      Etapa {stage.id}: {stage.name}
+                      {t('table.stage')} {stage.id}: {t(`stages.${stage.id}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -187,13 +189,19 @@ export function EntrepreneursListPage() {
 
               <Select value={filterStatus} onValueChange={handleFilterStatus}>
                 <SelectTrigger className="w-[160px]">
-                  <SelectValue placeholder="Filtrar por estado" />
+                  <SelectValue placeholder={t('filterByStatus')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="funded">Financiados</SelectItem>
-                  <SelectItem value="not-funded">Sin financiar</SelectItem>
-                  <SelectItem value="delinquent">Morosos</SelectItem>
+                  <SelectItem value="all">
+                    {td('filters.allStatuses')}
+                  </SelectItem>
+                  <SelectItem value="funded">{td('filters.funded')}</SelectItem>
+                  <SelectItem value="not-funded">
+                    {td('filters.notFunded')}
+                  </SelectItem>
+                  <SelectItem value="delinquent">
+                    {td('filters.delinquent')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
 
@@ -201,7 +209,7 @@ export function EntrepreneursListPage() {
                 <div className="flex items-center gap-2 pl-2 border-l">
                   <Badge variant="secondary" className="gap-1">
                     <CheckCircle className="h-3 w-3" />
-                    {selectedIds.size} seleccionados
+                    {tc('selected', { count: selectedIds.size })}
                   </Badge>
                   <Select
                     onValueChange={(value: string | null) =>
@@ -210,12 +218,13 @@ export function EntrepreneursListPage() {
                   >
                     <SelectTrigger className="w-[200px]">
                       <Shield className="h-4 w-4 mr-2" />
-                      <SelectValue placeholder="Certificar etapa..." />
+                      <SelectValue placeholder={t('certifyStageAction')} />
                     </SelectTrigger>
                     <SelectContent>
                       {STAGES.map((stage) => (
                         <SelectItem key={stage.id} value={stage.id.toString()}>
-                          Etapa {stage.id}: {stage.name}
+                          {t('table.stage')} {stage.id}:{' '}
+                          {t(`stages.${stage.id}`)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -249,19 +258,19 @@ export function EntrepreneursListPage() {
                       onClick={() => toggleSort('name')}
                       className="flex items-center gap-1 hover:text-foreground transition-colors font-medium"
                     >
-                      Empresario
+                      {t('table.entrepreneur')}
                       <ArrowUpDown
                         className={`h-3 w-3 ${sortField === 'name' ? 'text-primary' : 'text-muted-foreground'}`}
                       />
                     </button>
                   </TableHead>
-                  <TableHead>Negocio</TableHead>
+                  <TableHead>{t('table.business')}</TableHead>
                   <TableHead>
                     <button
                       onClick={() => toggleSort('stage')}
                       className="flex items-center gap-1 hover:text-foreground transition-colors font-medium"
                     >
-                      Etapa
+                      {t('table.stage')}
                       <ArrowUpDown
                         className={`h-3 w-3 ${sortField === 'stage' ? 'text-primary' : 'text-muted-foreground'}`}
                       />
@@ -272,7 +281,7 @@ export function EntrepreneursListPage() {
                       onClick={() => toggleSort('delinquent')}
                       className="flex items-center gap-1 hover:text-foreground transition-colors font-medium"
                     >
-                      Estado
+                      {t('table.status')}
                       <ArrowUpDown
                         className={`h-3 w-3 ${sortField === 'delinquent' ? 'text-primary' : 'text-muted-foreground'}`}
                       />
@@ -286,7 +295,7 @@ export function EntrepreneursListPage() {
                   <TableRow>
                     <TableCell colSpan={6} className="h-32 text-center">
                       <p className="text-muted-foreground">
-                        No se encontraron empresarios
+                        {t('table.noResults')}
                       </p>
                     </TableCell>
                   </TableRow>
@@ -346,7 +355,9 @@ export function EntrepreneursListPage() {
                             {entrepreneur.isDelinquent ? (
                               <Badge variant="danger" className="gap-1">
                                 <AlertTriangle className="h-3 w-3" />
-                                Moroso ({entrepreneur.delinquentDays}d)
+                                {t('table.delinquent', {
+                                  days: entrepreneur.delinquentDays ?? 0,
+                                })}
                               </Badge>
                             ) : entrepreneur.hasFunding ? (
                               <Badge variant="success" className="gap-1">
@@ -361,7 +372,7 @@ export function EntrepreneursListPage() {
                                 className="text-muted-foreground gap-1"
                               >
                                 <CheckCircle className="h-3 w-3" />
-                                Al día
+                                {t('table.upToDate')}
                               </Badge>
                             )}
                           </div>
@@ -385,8 +396,10 @@ export function EntrepreneursListPage() {
 
           <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
             <p>
-              Mostrando {filteredAndSortedEntrepreneurs.length} de{' '}
-              {entrepreneurs.length} empresarios
+              {tc('showing', {
+                count: filteredAndSortedEntrepreneurs.length,
+                total: entrepreneurs.length,
+              })}
             </p>
             {selectedIds.size > 0 && (
               <Button
@@ -394,7 +407,7 @@ export function EntrepreneursListPage() {
                 size="sm"
                 onClick={() => setSelectedIds(new Set())}
               >
-                Limpiar selección
+                {t('clearSelection')}
               </Button>
             )}
           </div>

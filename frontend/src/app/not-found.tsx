@@ -1,6 +1,9 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function NotFound() {
+  const t = useTranslations('errors');
+
   return (
     <main
       className="min-h-screen flex flex-col items-center justify-center px-6"
@@ -29,7 +32,7 @@ export default function NotFound() {
         className="text-2xl sm:text-3xl font-bold text-white text-center"
         style={{ fontFamily: 'var(--font-display)' }}
       >
-        Página no encontrada
+        {t('notFound.title')}
       </h1>
 
       {/* Description */}
@@ -37,8 +40,7 @@ export default function NotFound() {
         className="mt-3 text-base text-center max-w-sm"
         style={{ color: '#000000' }}
       >
-        La ruta que estás buscando no existe o fue movida. Volvé al inicio para
-        continuar.
+        {t('notFound.description')}
       </p>
 
       {/* CTA */}
@@ -50,7 +52,7 @@ export default function NotFound() {
           fontFamily: 'var(--font-display)',
         }}
       >
-        Volver al dashboard
+        {t('notFound.backToDashboard')}
       </Link>
 
       {/* Brand watermark */}

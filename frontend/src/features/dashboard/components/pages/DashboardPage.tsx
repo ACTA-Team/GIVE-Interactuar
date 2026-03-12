@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import {
   Card,
   CardContent,
@@ -57,6 +58,8 @@ type SortField = 'name' | 'stage' | 'delinquent' | 'funding';
 type SortDirection = 'asc' | 'desc';
 
 export function DashboardPage() {
+  const t = useTranslations('dashboard');
+  const tc = useTranslations('common');
   const entrepreneurs = MOCK_ENTREPRENEURS;
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortField, setSortField] = useState<SortField>('delinquent');
@@ -81,18 +84,22 @@ export function DashboardPage() {
   ).length;
 
   const stageDistribution = STAGES.map((stage) => ({
-    name: stage.name,
+    name: t(`stages.${stage.id}`),
     value: entrepreneurs.filter((e) => e.currentStage === stage.id).length,
     id: stage.id,
   })).filter((s) => s.value > 0);
 
   const monthlyData = [
-    { month: 'Ene', empresarios: 45, financiados: 12 },
-    { month: 'Feb', empresarios: 52, financiados: 15 },
-    { month: 'Mar', empresarios: 61, financiados: 18 },
-    { month: 'Abr', empresarios: 67, financiados: 22 },
-    { month: 'May', empresarios: 78, financiados: 28 },
-    { month: 'Jun', empresarios: totalEntrepreneurs, financiados: fundedCount },
+    { month: t('months.jan'), empresarios: 45, financiados: 12 },
+    { month: t('months.feb'), empresarios: 52, financiados: 15 },
+    { month: t('months.mar'), empresarios: 61, financiados: 18 },
+    { month: t('months.apr'), empresarios: 67, financiados: 22 },
+    { month: t('months.may'), empresarios: 78, financiados: 28 },
+    {
+      month: t('months.jun'),
+      empresarios: totalEntrepreneurs,
+      financiados: fundedCount,
+    },
   ];
 
   const COLORS = [
@@ -185,10 +192,8 @@ export function DashboardPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
-          Bienvenido. Resumen de tu cartera de empresarios.
-        </p>
+        <h1 className="text-2xl font-bold text-foreground">{t('title')}</h1>
+        <p className="text-muted-foreground mt-1">{t('welcome')}</p>
       </div>
 
       {/* Stats Grid */}
@@ -196,7 +201,7 @@ export function DashboardPage() {
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Empresarios
+              {t('stats.totalEntrepreneurs')}
             </CardTitle>
             <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
               <Users className="h-4 w-4 text-primary" />
@@ -206,7 +211,7 @@ export function DashboardPage() {
             <div className="text-3xl font-bold">{totalEntrepreneurs}</div>
             <div className="flex items-center gap-1 mt-1 text-sm text-success">
               <ArrowUpRight className="h-4 w-4" />
-              <span>+12% este mes</span>
+              <span>{t('stats.thisMonth')}</span>
             </div>
           </CardContent>
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary/20">
@@ -217,7 +222,7 @@ export function DashboardPage() {
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Financiamiento Total
+              {t('stats.totalFunding')}
             </CardTitle>
             <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center">
               <DollarSign className="h-4 w-4 text-accent" />
@@ -228,7 +233,9 @@ export function DashboardPage() {
               {formatCurrency(totalFunding)}
             </div>
             <div className="flex items-center gap-1 mt-1 text-sm text-muted-foreground">
-              <span>{fundedCount} empresarios financiados</span>
+              <span>
+                {t('stats.entrepreneursFunded', { count: fundedCount })}
+              </span>
             </div>
           </CardContent>
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-accent/20">
@@ -244,7 +251,7 @@ export function DashboardPage() {
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              En Formación
+              {t('stats.inTraining')}
             </CardTitle>
             <div className="h-8 w-8 rounded-full bg-[#ADD8E6]/30 flex items-center justify-center">
               <GraduationCap className="h-4 w-4 text-primary" />
@@ -253,7 +260,7 @@ export function DashboardPage() {
           <CardContent>
             <div className="text-3xl font-bold">{inTraining}</div>
             <div className="flex items-center gap-1 mt-1 text-sm text-muted-foreground">
-              <span>Etapas 1-3 del proceso</span>
+              <span>{t('stats.stages1to3')}</span>
             </div>
           </CardContent>
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#ADD8E6]/40">
@@ -271,7 +278,7 @@ export function DashboardPage() {
         >
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Morosos
+              {t('stats.delinquent')}
             </CardTitle>
             <div
               className={`h-8 w-8 rounded-full ${delinquentCount > 0 ? 'bg-destructive/10' : 'bg-muted'} flex items-center justify-center`}
@@ -291,12 +298,12 @@ export function DashboardPage() {
               {delinquentCount > 0 ? (
                 <span className="text-destructive flex items-center gap-1">
                   <ArrowDownRight className="h-4 w-4" />
-                  Requieren atención
+                  {t('stats.needsAttention')}
                 </span>
               ) : (
                 <span className="text-success flex items-center gap-1">
                   <CheckCircle2 className="h-4 w-4" />
-                  Todo al día
+                  {t('stats.allUpToDate')}
                 </span>
               )}
             </div>
@@ -316,10 +323,8 @@ export function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Tendencia de Crecimiento</CardTitle>
-            <CardDescription>
-              Empresarios y financiamientos por mes
-            </CardDescription>
+            <CardTitle>{t('charts.growthTrend')}</CardTitle>
+            <CardDescription>{t('charts.growthTrendDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[280px]">
@@ -370,7 +375,7 @@ export function DashboardPage() {
                   <Area
                     type="monotone"
                     dataKey="empresarios"
-                    name="Empresarios"
+                    name={t('charts.entrepreneurs')}
                     stroke="#002E5C"
                     strokeWidth={2}
                     fillOpacity={1}
@@ -379,7 +384,7 @@ export function DashboardPage() {
                   <Area
                     type="monotone"
                     dataKey="financiados"
-                    name="Financiados"
+                    name={t('charts.funded')}
                     stroke="#F15A24"
                     strokeWidth={2}
                     fillOpacity={1}
@@ -393,9 +398,9 @@ export function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Distribución por Etapa</CardTitle>
+            <CardTitle>{t('charts.stageDistribution')}</CardTitle>
             <CardDescription>
-              Estado actual de empresarios en el proceso
+              {t('charts.stageDistributionDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -426,7 +431,7 @@ export function DashboardPage() {
                       boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                     }}
                     formatter={(value, name) => [
-                      `${value} empresarios`,
+                      t('charts.entrepreneursCount', { count: Number(value) }),
                       `${name}`,
                     ]}
                   />
@@ -448,21 +453,19 @@ export function DashboardPage() {
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <CardTitle>Empresarios</CardTitle>
-              <CardDescription>
-                Selecciona empresarios para verificar etapas en lote
-              </CardDescription>
+              <CardTitle>{t('table.title')}</CardTitle>
+              <CardDescription>{t('table.description')}</CardDescription>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Select value={filterStage} onValueChange={handleFilterStage}>
                 <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Etapa" />
+                  <SelectValue placeholder={t('filters.stage')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value="all">{t('filters.all')}</SelectItem>
                   {STAGES.map((stage) => (
                     <SelectItem key={stage.id} value={stage.id.toString()}>
-                      Etapa {stage.id}
+                      {t('table.stageLabel', { id: stage.id })}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -470,20 +473,26 @@ export function DashboardPage() {
 
               <Select value={filterStatus} onValueChange={handleFilterStatus}>
                 <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Estado" />
+                  <SelectValue placeholder={t('filters.status')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="delinquent">Morosos</SelectItem>
-                  <SelectItem value="funded">Financiados</SelectItem>
-                  <SelectItem value="not-funded">Sin financiar</SelectItem>
+                  <SelectItem value="all">
+                    {t('filters.allStatuses')}
+                  </SelectItem>
+                  <SelectItem value="delinquent">
+                    {t('filters.delinquent')}
+                  </SelectItem>
+                  <SelectItem value="funded">{t('filters.funded')}</SelectItem>
+                  <SelectItem value="not-funded">
+                    {t('filters.notFunded')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
 
               {selectedIds.size > 0 && (
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-muted-foreground">
-                    {selectedIds.size} seleccionados
+                    {tc('selected', { count: selectedIds.size })}
                   </span>
                   <Select
                     onValueChange={(value: string | null) =>
@@ -492,12 +501,15 @@ export function DashboardPage() {
                   >
                     <SelectTrigger className="w-[180px]">
                       <Shield className="h-4 w-4 mr-2" />
-                      <SelectValue placeholder="Certificar etapa" />
+                      <SelectValue placeholder={t('table.certifyStage')} />
                     </SelectTrigger>
                     <SelectContent>
                       {STAGES.map((stage) => (
                         <SelectItem key={stage.id} value={stage.id.toString()}>
-                          Etapa {stage.id}: {stage.name}
+                          {t('table.stageWithName', {
+                            id: stage.id,
+                            name: t(`stages.${stage.id}`),
+                          })}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -527,7 +539,7 @@ export function DashboardPage() {
                       onClick={() => toggleSort('name')}
                       className="flex items-center gap-1 hover:text-foreground transition-colors"
                     >
-                      Empresario
+                      {t('table.entrepreneur')}
                       {sortField === 'name' && (
                         <span className="text-primary">
                           {sortDirection === 'asc' ? '↑' : '↓'}
@@ -535,13 +547,13 @@ export function DashboardPage() {
                       )}
                     </button>
                   </TableHead>
-                  <TableHead>Negocio</TableHead>
+                  <TableHead>{t('table.business')}</TableHead>
                   <TableHead>
                     <button
                       onClick={() => toggleSort('stage')}
                       className="flex items-center gap-1 hover:text-foreground transition-colors"
                     >
-                      Etapa
+                      {t('table.stage')}
                       {sortField === 'stage' && (
                         <span className="text-primary">
                           {sortDirection === 'asc' ? '↑' : '↓'}
@@ -554,7 +566,7 @@ export function DashboardPage() {
                       onClick={() => toggleSort('delinquent')}
                       className="flex items-center gap-1 hover:text-foreground transition-colors"
                     >
-                      Estado
+                      {t('table.status')}
                       {sortField === 'delinquent' && (
                         <span className="text-primary">
                           {sortDirection === 'asc' ? '↑' : '↓'}
@@ -567,7 +579,7 @@ export function DashboardPage() {
                       onClick={() => toggleSort('funding')}
                       className="flex items-center gap-1 hover:text-foreground transition-colors"
                     >
-                      Financiamiento
+                      {t('table.funding')}
                       {sortField === 'funding' && (
                         <span className="text-primary">
                           {sortDirection === 'asc' ? '↑' : '↓'}
@@ -583,7 +595,7 @@ export function DashboardPage() {
                   <TableRow>
                     <TableCell colSpan={7} className="h-32 text-center">
                       <p className="text-muted-foreground">
-                        No se encontraron empresarios
+                        {t('table.noResults')}
                       </p>
                     </TableCell>
                   </TableRow>
@@ -641,19 +653,21 @@ export function DashboardPage() {
                           {entrepreneur.isDelinquent ? (
                             <Badge variant="danger" className="gap-1">
                               <AlertTriangle className="h-3 w-3" />
-                              Moroso ({entrepreneur.delinquentDays}d)
+                              {t('table.delinquent', {
+                                days: entrepreneur.delinquentDays ?? 0,
+                              })}
                             </Badge>
                           ) : entrepreneur.hasFunding ? (
                             <Badge variant="success" className="gap-1">
                               <CheckCircle2 className="h-3 w-3" />
-                              Al día
+                              {t('table.upToDate')}
                             </Badge>
                           ) : (
                             <Badge
                               variant="default"
                               className="text-muted-foreground"
                             >
-                              Sin financiar
+                              {t('table.notFunded')}
                             </Badge>
                           )}
                         </TableCell>
@@ -685,12 +699,14 @@ export function DashboardPage() {
 
           <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
             <p>
-              Mostrando {filteredAndSortedEntrepreneurs.length} de{' '}
-              {entrepreneurs.length} empresarios
+              {tc('showing', {
+                count: filteredAndSortedEntrepreneurs.length,
+                total: entrepreneurs.length,
+              })}
             </p>
             <Link href="/dashboard/entrepreneurs">
               <Button variant="link" className="gap-1 p-0">
-                Ver todos
+                {tc('buttons.viewAll')}
                 <ArrowUpRight className="h-4 w-4" />
               </Button>
             </Link>

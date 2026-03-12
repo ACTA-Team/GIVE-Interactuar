@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,6 +25,8 @@ import { Plus } from 'lucide-react';
 import { BUSINESS_TYPES } from '../../types/stages';
 
 export function NewEntrepreneurDialog() {
+  const t = useTranslations('entrepreneurs');
+  const tc = useTranslations('common');
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -57,63 +60,67 @@ export function NewEntrepreneurDialog() {
         render={
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Nuevo Empresario
+            {t('newEntrepreneur')}
           </Button>
         }
       />
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Registrar Nuevo Empresario</DialogTitle>
-          <DialogDescription>
-            El empresario comenzará en la Etapa 0 (Registro) automáticamente.
-          </DialogDescription>
+          <DialogTitle>{t('newDialog.title')}</DialogTitle>
+          <DialogDescription>{t('newDialog.description')}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="new-name">Nombre completo</Label>
+            <Label htmlFor="new-name">{t('newDialog.fullName')}</Label>
             <Input
               id="new-name"
-              placeholder="Ej: María García López"
+              placeholder={t('newDialog.fullNamePlaceholder')}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="new-email">Correo electrónico</Label>
+            <Label htmlFor="new-email">{t('newDialog.email')}</Label>
             <Input
               id="new-email"
               type="email"
-              placeholder="correo@ejemplo.com"
+              placeholder={t('newDialog.emailPlaceholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="new-phone">Teléfono</Label>
+            <Label htmlFor="new-phone">{t('newDialog.phone')}</Label>
             <Input
               id="new-phone"
-              placeholder="+57 300 123 4567"
+              placeholder={t('newDialog.phonePlaceholder')}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="new-business-name">Nombre del negocio</Label>
+            <Label htmlFor="new-business-name">
+              {t('newDialog.businessName')}
+            </Label>
             <Input
               id="new-business-name"
-              placeholder="Ej: Empanadas Doña María"
+              placeholder={t('newDialog.businessNamePlaceholder')}
               value={businessName}
               onChange={(e) => setBusinessName(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="new-business-type">Tipo de negocio</Label>
+            <Label htmlFor="new-business-type">
+              {t('newDialog.businessType')}
+            </Label>
             <Select
               value={businessType}
               onValueChange={(v: string | null) => setBusinessType(v ?? '')}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona un tipo" />
+                <SelectValue
+                  placeholder={t('newDialog.businessTypePlaceholder')}
+                />
               </SelectTrigger>
               <SelectContent>
                 {BUSINESS_TYPES.map((type) => (
@@ -127,7 +134,7 @@ export function NewEntrepreneurDialog() {
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => setIsOpen(false)}>
-            Cancelar
+            {tc('buttons.cancel')}
           </Button>
           <Button
             onClick={handleCreate}
@@ -135,7 +142,7 @@ export function NewEntrepreneurDialog() {
               !name || !email || !phone || !businessName || !businessType
             }
           >
-            Registrar Empresario
+            {t('newDialog.submit')}
           </Button>
         </DialogFooter>
       </DialogContent>

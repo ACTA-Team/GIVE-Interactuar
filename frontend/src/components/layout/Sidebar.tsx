@@ -90,7 +90,9 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
 
   const isDashboardActive = pathname === ROUTES.dashboard;
   const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);
-  const isCredentialsActive = pathname.startsWith(ROUTES.credentials.list);
+  const isCredentialsActive =
+    pathname.startsWith(ROUTES.entrepreneurs.storage) ||
+    pathname.startsWith('/dashboard/entrepreneurs/credentials/details/');
 
   const content = (
     <div className="flex h-full flex-col">
@@ -142,10 +144,12 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
           <NavItem
             icon={<IconList className="h-4 w-4" />}
             label={t('nav.list')}
-            href={ROUTES.credentials.list}
+            href={ROUTES.entrepreneurs.storage}
             isActive={
-              pathname === ROUTES.credentials.list ||
-              pathname.startsWith(ROUTES.credentials.list + '/client/')
+              pathname === ROUTES.entrepreneurs.storage ||
+              pathname.startsWith(
+                '/dashboard/entrepreneurs/credentials/details/',
+              )
             }
             onClick={onMobileClose}
           />

@@ -32,6 +32,7 @@ import {
   Shield,
   ArrowUpDown,
 } from 'lucide-react';
+import { ROUTES } from '@/lib/constants/routes';
 import { STAGES } from '../../types/stages';
 import { MOCK_ENTREPRENEURS } from '../../data/mock-entrepreneurs';
 import { NewEntrepreneurDialog } from '../ui/NewEntrepreneurDialog';
@@ -379,7 +380,7 @@ export function EntrepreneursListPage() {
                         </TableCell>
                         <TableCell>
                           <Link
-                            href={`/dashboard/entrepreneurs/${entrepreneur.id}`}
+                            href={ROUTES.credentials.client(entrepreneur.id)}
                           >
                             <Button variant="ghost" size="icon">
                               <ChevronRight className="h-4 w-4" />

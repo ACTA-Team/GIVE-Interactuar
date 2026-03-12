@@ -6,14 +6,6 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -28,25 +20,15 @@ import {
   ArrowLeft,
   CheckCircle,
   Shield,
-  Award,
   Clock,
   Mail,
   Phone,
   Building2,
   Banknote,
   AlertTriangle,
-  Plus,
-  X,
-  Lock,
 } from 'lucide-react';
-import { STAGES, AVAILABLE_BADGES } from '../../types/stages';
+import { STAGES } from '../../types/stages';
 import { MOCK_ENTREPRENEURS } from '../../data/mock-entrepreneurs';
-import { BadgeDetailDialog } from '../ui/BadgeDetailDialog';
-import {
-  BADGE_ICONS,
-  BADGE_ICONS_LARGE,
-  getBadgeColors,
-} from '../../constants/badge-ui';
 import { CredentialIssuanceModal } from '@/features/credentials/components/ui/CredentialIssuanceModal';
 import { IconCertificate } from '@tabler/icons-react';
 
@@ -61,7 +43,6 @@ export function EntrepreneurDetailPage({
   const t = useTranslations('entrepreneurs');
   const tc = useTranslations('common');
   const locale = useLocale();
-  const [isBadgeDialogOpen, setIsBadgeDialogOpen] = useState(false);
   const [certifyDialogOpen, setCertifyDialogOpen] = useState(false);
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
   const [isCredentialModalOpen, setIsCredentialModalOpen] = useState(false);
@@ -84,10 +65,6 @@ export function EntrepreneurDetailPage({
   }
 
   const completedStages = new Set(entrepreneur.stages.map((s) => s.stageId));
-  const earnedBadgeIds = new Set(entrepreneur.badges.map((b) => b.id));
-  const availableBadgesToAward = AVAILABLE_BADGES.filter(
-    (b) => !earnedBadgeIds.has(b.id),
-  );
   const nextStageToCertify = STAGES.find((s) => !completedStages.has(s.id));
 
   const formatCurrency = (amount: number) => {
@@ -104,17 +81,6 @@ export function EntrepreneurDetailPage({
     console.log('Certify stage', stageId, 'for', entrepreneur.id);
     setCertifyDialogOpen(false);
     setSelectedStageId(null);
-  };
-
-  const handleAwardBadge = (badgeId: string) => {
-    // TODO: wire to badge service
-    console.log('Award badge', badgeId, 'to', entrepreneur.id);
-    setIsBadgeDialogOpen(false);
-  };
-
-  const handleRemoveBadge = (badgeId: string) => {
-    // TODO: wire to badge service
-    console.log('Remove badge', badgeId, 'from', entrepreneur.id);
   };
 
   return (
@@ -240,9 +206,9 @@ export function EntrepreneurDetailPage({
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 grid grid-cols-5 gap-6 min-h-0">
-        {/* Left: Stages Timeline */}
-        <div className="col-span-2 bg-card rounded-xl border p-5 overflow-auto">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 min-h-0">
+        {/* Stages Timeline */}
+        <div className="bg-card rounded-xl border p-5 overflow-auto">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-semibold flex items-center gap-2">
               <Shield className="h-4 w-4 text-primary" />
@@ -267,7 +233,7 @@ export function EntrepreneurDetailPage({
                 <div key={stage.id} className="relative flex gap-4">
                   <div className="flex flex-col items-center">
                     <div
-                      className={`relative z-10 flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center border-2 transition-all ${
+                      className={`relative z-10 shrink-0 h-8 w-8 rounded-full flex items-center justify-center border-2 transition-all ${
                         isCompleted
                           ? 'bg-[#10B981] border-[#10B981]'
                           : isCurrent
@@ -285,7 +251,7 @@ export function EntrepreneurDetailPage({
                     </div>
                     {!isLast && (
                       <div
-                        className={`w-0.5 flex-1 min-h-[3rem] ${
+                        className={`w-0.5 flex-1 min-h-12 ${
                           isCompleted
                             ? 'bg-[#10B981]'
                             : 'bg-muted-foreground/20'

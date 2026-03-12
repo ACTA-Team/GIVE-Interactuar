@@ -194,7 +194,7 @@ export function ClientCredentialsPage({
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3">
-          <Link href={ROUTES.credentials.list}>
+          <Link href={ROUTES.entrepreneurs.list}>
             <button className="mt-1 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
               <ArrowLeft className="h-5 w-5" />
             </button>

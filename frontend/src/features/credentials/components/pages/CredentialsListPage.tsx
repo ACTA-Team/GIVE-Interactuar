@@ -64,11 +64,9 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          Vault de Credenciales
-        </h1>
+        <h1 className="text-2xl font-bold text-foreground">Empresarios</h1>
         <p className="text-muted-foreground mt-0.5">
-          Registro de credenciales verificables por cliente
+          Registro de credenciales verificables por empresario
         </p>
       </div>
 

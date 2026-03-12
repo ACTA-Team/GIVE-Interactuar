@@ -3,12 +3,13 @@ export const ROUTES = {
   entrepreneurs: {
     list: '/dashboard/entrepreneurs',
     detail: (id: string) => `/dashboard/entrepreneurs/${id}`,
+    storage: '/dashboard/entrepreneurs/credentials',
   },
   credentials: {
     list: '/dashboard/credentials',
     new: '/dashboard/credentials/new',
     client: (entrepreneurId: string) =>
-      `/dashboard/credentials/client/${entrepreneurId}`,
+      `/dashboard/entrepreneurs/credentials/details/${entrepreneurId}`,
     detail: (id: string) => `/dashboard/credentials/${id}`,
   },
   verify: (credentialId: string) => `/verify/${credentialId}`,

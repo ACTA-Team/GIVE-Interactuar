@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/Button';
 import { IconTrendingUp } from '@tabler/icons-react';
+import { useTranslations } from 'next-intl';
 import {
   impactCredentialFormSchema,
   computeImpactDerivedFields,
@@ -43,6 +44,8 @@ export function ImpactCredentialForm({
   onBack,
   defaultValues,
 }: ImpactCredentialFormProps) {
+  const t = useTranslations('credentials');
+  const tc = useTranslations('common');
   const {
     register,
     control,
@@ -87,13 +90,16 @@ export function ImpactCredentialForm({
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-50 text-orange-500">
           <IconTrendingUp className="h-5 w-5" />
         </div>
-        <h3 className="text-base font-semibold">Credencial de Impacto</h3>
+        <h3 className="text-base font-semibold">{t('forms.impactTitle')}</h3>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label htmlFor="companyName">Nombre de la empresa *</Label>
-          <Input {...register('companyName')} placeholder="Ej: Tienda Verde" />
+          <Label htmlFor="companyName">{t('forms.companyName')}</Label>
+          <Input
+            {...register('companyName')}
+            placeholder={t('forms.companyNamePlaceholder')}
+          />
           {errors.companyName && (
             <p className="text-xs text-destructive">
               {errors.companyName.message}
@@ -102,7 +108,7 @@ export function ImpactCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label>Sector *</Label>
+          <Label>{t('forms.sector')}</Label>
           <Controller
             control={control}
             name="sector"
@@ -112,7 +118,7 @@ export function ImpactCredentialForm({
                 onValueChange={(v: string | null) => field.onChange(v ?? '')}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
                   {SECTORS.map((s) => (
@@ -132,7 +138,9 @@ export function ImpactCredentialForm({
 
       <div className="grid grid-cols-3 gap-4">
         <div className="space-y-1.5">
-          <Label htmlFor="yearsInOperation">Años en operación</Label>
+          <Label htmlFor="yearsInOperation">
+            {t('forms.yearsInOperation')}
+          </Label>
           <Input
             type="number"
             {...register('yearsInOperation', { valueAsNumber: true })}
@@ -145,7 +153,7 @@ export function ImpactCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="salesPreviousYear">Ventas año anterior (COP)</Label>
+          <Label htmlFor="salesPreviousYear">{t('forms.salesPrevYear')}</Label>
           <Input
             type="number"
             {...register('salesPreviousYear', { valueAsNumber: true })}
@@ -158,7 +166,7 @@ export function ImpactCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="salesCurrentYear">Ventas año actual (COP)</Label>
+          <Label htmlFor="salesCurrentYear">{t('forms.salesCurrYear')}</Label>
           <Input
             type="number"
             {...register('salesCurrentYear', { valueAsNumber: true })}
@@ -172,7 +180,7 @@ export function ImpactCredentialForm({
       </div>
 
       <div className="space-y-1.5">
-        <Label>Variación de ventas</Label>
+        <Label>{t('forms.salesVariation')}</Label>
         <div className="flex h-8 items-center rounded-lg bg-muted px-3 text-sm text-muted-foreground">
           {formatPercent(derived.salesVariationPercent)}
         </div>
@@ -180,7 +188,9 @@ export function ImpactCredentialForm({
 
       <div className="grid grid-cols-3 gap-4">
         <div className="space-y-1.5">
-          <Label htmlFor="currentEmployees">Empleados actuales</Label>
+          <Label htmlFor="currentEmployees">
+            {t('forms.currentEmployees')}
+          </Label>
           <Input
             type="number"
             {...register('currentEmployees', { valueAsNumber: true })}
@@ -193,7 +203,7 @@ export function ImpactCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="newJobsCreated">Nuevos empleos</Label>
+          <Label htmlFor="newJobsCreated">{t('forms.newJobsCreated')}</Label>
           <Input
             type="number"
             {...register('newJobsCreated', { valueAsNumber: true })}
@@ -206,7 +216,7 @@ export function ImpactCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="newFormalJobsCreated">Empleos formales</Label>
+          <Label htmlFor="newFormalJobsCreated">{t('forms.formalJobs')}</Label>
           <Input
             type="number"
             {...register('newFormalJobsCreated', { valueAsNumber: true })}
@@ -221,7 +231,7 @@ export function ImpactCredentialForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label>Tendencia del negocio</Label>
+          <Label>{t('forms.businessTrend')}</Label>
           <Controller
             control={control}
             name="businessTrend"
@@ -233,12 +243,14 @@ export function ImpactCredentialForm({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="growing">En crecimiento</SelectItem>
-                  <SelectItem value="stable">Estable</SelectItem>
-                  <SelectItem value="deteriorating">En deterioro</SelectItem>
+                  <SelectItem value="growing">{t('forms.growing')}</SelectItem>
+                  <SelectItem value="stable">{t('forms.stable')}</SelectItem>
+                  <SelectItem value="deteriorating">
+                    {t('forms.inDeterioration')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -248,15 +260,19 @@ export function ImpactCredentialForm({
 
       <div className="space-y-2">
         <Label className="text-muted-foreground">
-          Período de evaluación (opcional)
+          {t('forms.assessmentPeriod')}
         </Label>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label htmlFor="assessmentPeriod.startDate">Fecha inicio</Label>
+            <Label htmlFor="assessmentPeriod.startDate">
+              {t('forms.startDate')}
+            </Label>
             <Input type="date" {...register('assessmentPeriod.startDate')} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="assessmentPeriod.endDate">Fecha fin</Label>
+            <Label htmlFor="assessmentPeriod.endDate">
+              {t('forms.endDate')}
+            </Label>
             <Input type="date" {...register('assessmentPeriod.endDate')} />
           </div>
         </div>
@@ -264,13 +280,13 @@ export function ImpactCredentialForm({
 
       <div className="flex items-center justify-between border-t border-border pt-4">
         <Button type="button" variant="outline" onClick={onBack}>
-          &larr; Atrás
+          &larr; {tc('buttons.back')}
         </Button>
         <Button
           type="submit"
           className="bg-accent hover:bg-accent/90 text-accent-foreground"
         >
-          Generar Credencial &rarr;
+          {t('issuance.generateCredential')} &rarr;
         </Button>
       </div>
     </form>

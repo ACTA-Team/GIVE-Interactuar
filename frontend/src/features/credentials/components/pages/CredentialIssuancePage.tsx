@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -15,6 +16,7 @@ interface CredentialIssuancePageProps {
 }
 
 export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
+  const t = useTranslations('credentials');
   const [search, setSearch] = useState('');
   const [selectedEntrepreneur, setSelectedEntrepreneur] = useState<{
     id: string;
@@ -44,11 +46,9 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">
-          Emitir Credencial
+          {t('issuance.title')}
         </h1>
-        <p className="text-muted-foreground mt-0.5">
-          Selecciona un empresario para emitir una credencial verificable.
-        </p>
+        <p className="text-muted-foreground mt-0.5">{t('issuance.subtitle')}</p>
       </div>
 
       <Card>
@@ -56,7 +56,7 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
           <div className="relative">
             <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Buscar por nombre o negocio..."
+              placeholder={t('issuance.searchPlaceholder')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9"
@@ -100,7 +100,7 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
             </div>
             <Button size="sm" variant="outline" className="gap-1.5 shrink-0">
               <IconCertificate className="h-4 w-4" />
-              Emitir
+              {t('issuance.issue')}
             </Button>
           </div>
         ))}
@@ -110,7 +110,7 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
             <CardContent className="flex flex-col items-center justify-center py-12">
               <IconSearch className="h-8 w-8 text-muted-foreground/40" />
               <p className="mt-2 text-sm text-muted-foreground">
-                No se encontraron empresarios con ese criterio.
+                {t('issuance.noEntrepreneursFound')}
               </p>
             </CardContent>
           </Card>

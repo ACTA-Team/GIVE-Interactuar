@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/Button';
 import { IconShieldCheck } from '@tabler/icons-react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import {
   behaviorCredentialFormSchema,
@@ -26,11 +27,11 @@ interface BehaviorCredentialFormProps {
   defaultValues?: Partial<BehaviorCredentialFormInput>;
 }
 
-const CREDIT_SEGMENTS = [
-  'Microcrédito',
-  'Crédito individual',
-  'Grupo solidario',
-  'Banca comunal',
+const CREDIT_SEGMENT_KEYS = [
+  'microcredit',
+  'individual',
+  'solidary',
+  'communal',
 ] as const;
 
 function ToggleField({
@@ -40,6 +41,7 @@ function ToggleField({
   value: boolean;
   onChange: (v: boolean) => void;
 }) {
+  const tc = useTranslations('common');
   return (
     <div className="flex gap-0">
       <button
@@ -52,7 +54,7 @@ function ToggleField({
             : 'border-border bg-card text-muted-foreground hover:bg-muted',
         )}
       >
-        Sí
+        {tc('toggle.yes')}
       </button>
       <button
         type="button"
@@ -64,7 +66,7 @@ function ToggleField({
             : 'border-border bg-card text-muted-foreground hover:bg-muted',
         )}
       >
-        No
+        {tc('toggle.no')}
       </button>
     </div>
   );
@@ -75,6 +77,8 @@ export function BehaviorCredentialForm({
   onBack,
   defaultValues,
 }: BehaviorCredentialFormProps) {
+  const t = useTranslations('credentials');
+  const tc = useTranslations('common');
   const {
     register,
     control,
@@ -128,14 +132,12 @@ export function BehaviorCredentialForm({
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
           <IconShieldCheck className="h-5 w-5" />
         </div>
-        <h3 className="text-base font-semibold">
-          Credencial de Comportamiento
-        </h3>
+        <h3 className="text-base font-semibold">{t('forms.behaviorTitle')}</h3>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label htmlFor="creditSegmentStart">Segmento inicio</Label>
+          <Label htmlFor="creditSegmentStart">{t('forms.segmentStart')}</Label>
           <Controller
             control={control}
             name="creditSegmentStart"
@@ -145,12 +147,12 @@ export function BehaviorCredentialForm({
                 onValueChange={(v: string | null) => field.onChange(v ?? '')}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  {CREDIT_SEGMENTS.map((seg) => (
-                    <SelectItem key={seg} value={seg}>
-                      {seg}
+                  {CREDIT_SEGMENT_KEYS.map((key) => (
+                    <SelectItem key={key} value={key}>
+                      {t(`forms.creditSegments.${key}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -165,7 +167,7 @@ export function BehaviorCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="creditSegmentEnd">Segmento final</Label>
+          <Label htmlFor="creditSegmentEnd">{t('forms.segmentEnd')}</Label>
           <Controller
             control={control}
             name="creditSegmentEnd"
@@ -175,12 +177,12 @@ export function BehaviorCredentialForm({
                 onValueChange={(v: string | null) => field.onChange(v ?? '')}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  {CREDIT_SEGMENTS.map((seg) => (
-                    <SelectItem key={seg} value={seg}>
-                      {seg}
+                  {CREDIT_SEGMENT_KEYS.map((key) => (
+                    <SelectItem key={key} value={key}>
+                      {t(`forms.creditSegments.${key}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -197,7 +199,7 @@ export function BehaviorCredentialForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label>Crédito vigente</Label>
+          <Label>{t('forms.activeCredit')}</Label>
           <Controller
             control={control}
             name="activeCredit.exists"
@@ -211,7 +213,7 @@ export function BehaviorCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="averageSales">Ventas mensuales (COP) *</Label>
+          <Label htmlFor="averageSales">{t('forms.monthlySales')}</Label>
           <Input
             type="number"
             {...register('averageSales', { valueAsNumber: true })}
@@ -227,18 +229,18 @@ export function BehaviorCredentialForm({
       {activeCreditExists && (
         <div className="grid grid-cols-3 gap-4 rounded-lg border border-border bg-muted/30 p-3">
           <div className="space-y-1.5">
-            <Label>Monto</Label>
+            <Label>{t('forms.amount')}</Label>
             <Input
               type="number"
               {...register('activeCredit.amount', { valueAsNumber: true })}
             />
           </div>
           <div className="space-y-1.5">
-            <Label>Moneda</Label>
+            <Label>{t('forms.currency')}</Label>
             <Input {...register('activeCredit.currency')} placeholder="COP" />
           </div>
           <div className="space-y-1.5">
-            <Label>Estado</Label>
+            <Label>{t('forms.creditStatus')}</Label>
             <Controller
               control={control}
               name="activeCredit.status"
@@ -248,13 +250,21 @@ export function BehaviorCredentialForm({
                   onValueChange={(v: string | null) => field.onChange(v)}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Seleccionar" />
+                    <SelectValue placeholder={t('forms.select')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="current">Al día</SelectItem>
-                    <SelectItem value="late">Mora</SelectItem>
-                    <SelectItem value="restructured">Reestructurado</SelectItem>
-                    <SelectItem value="closed">Cerrado</SelectItem>
+                    <SelectItem value="current">
+                      {t('forms.creditCurrent')}
+                    </SelectItem>
+                    <SelectItem value="late">
+                      {t('forms.creditLate')}
+                    </SelectItem>
+                    <SelectItem value="restructured">
+                      {t('forms.creditRestructured')}
+                    </SelectItem>
+                    <SelectItem value="closed">
+                      {t('forms.creditClosed')}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               )}
@@ -265,7 +275,7 @@ export function BehaviorCredentialForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label htmlFor="costsAndExpenses">Costos mensuales (COP) *</Label>
+          <Label htmlFor="costsAndExpenses">{t('forms.monthlyCosts')}</Label>
           <Input
             type="number"
             {...register('costsAndExpenses', { valueAsNumber: true })}
@@ -278,7 +288,7 @@ export function BehaviorCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label>Margen operativo estimado</Label>
+          <Label>{t('forms.estimatedMargin')}</Label>
           <div className="flex h-8 items-center rounded-lg bg-muted px-3 text-sm text-muted-foreground">
             {formatPercent(derived.estimatedOperatingMargin)}
           </div>
@@ -287,7 +297,7 @@ export function BehaviorCredentialForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label htmlFor="assets">Activos totales (COP)</Label>
+          <Label htmlFor="assets">{t('forms.totalAssets')}</Label>
           <Input
             type="number"
             {...register('assets', { valueAsNumber: true })}
@@ -298,7 +308,7 @@ export function BehaviorCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="liabilities">Pasivos totales (COP)</Label>
+          <Label htmlFor="liabilities">{t('forms.totalLiabilities')}</Label>
           <Input
             type="number"
             {...register('liabilities', { valueAsNumber: true })}
@@ -313,14 +323,14 @@ export function BehaviorCredentialForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label>Relación pasivos/activos</Label>
+          <Label>{t('forms.liabilitiesRatio')}</Label>
           <div className="flex h-8 items-center rounded-lg bg-muted px-3 text-sm text-muted-foreground">
             {formatRatio(derived.liabilitiesToAssetsRatio)}
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <Label>Estabilidad del negocio</Label>
+          <Label>{t('forms.businessStability')}</Label>
           <Controller
             control={control}
             name="commercialStability"
@@ -332,12 +342,16 @@ export function BehaviorCredentialForm({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="stable">Estable</SelectItem>
-                  <SelectItem value="seasonal">Estacional</SelectItem>
-                  <SelectItem value="volatile">Volátil</SelectItem>
+                  <SelectItem value="stable">{t('forms.stable')}</SelectItem>
+                  <SelectItem value="seasonal">
+                    {t('forms.seasonal')}
+                  </SelectItem>
+                  <SelectItem value="volatile">
+                    {t('forms.volatile')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -347,7 +361,7 @@ export function BehaviorCredentialForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label>Validación de registro</Label>
+          <Label>{t('forms.registryValidation')}</Label>
           <Controller
             control={control}
             name="registryValidation"
@@ -359,14 +373,18 @@ export function BehaviorCredentialForm({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="validated">Validado</SelectItem>
-                  <SelectItem value="partially_validated">
-                    Parcialmente validado
+                  <SelectItem value="validated">
+                    {t('forms.validated')}
                   </SelectItem>
-                  <SelectItem value="not_validated">No validado</SelectItem>
+                  <SelectItem value="partially_validated">
+                    {t('forms.partiallyValidated')}
+                  </SelectItem>
+                  <SelectItem value="not_validated">
+                    {t('forms.notValidated')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -374,7 +392,7 @@ export function BehaviorCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="newJobs">Nuevos empleos</Label>
+          <Label htmlFor="newJobs">{t('forms.newJobs')}</Label>
           <Input
             type="number"
             {...register('newJobs', { valueAsNumber: true })}
@@ -387,7 +405,7 @@ export function BehaviorCredentialForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label>Estabilidad de ingresos</Label>
+          <Label>{t('forms.incomeStability')}</Label>
           <Controller
             control={control}
             name="monthlyIncomeStability"
@@ -399,13 +417,15 @@ export function BehaviorCredentialForm({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="high">Alta</SelectItem>
-                  <SelectItem value="medium">Media</SelectItem>
-                  <SelectItem value="low">Baja</SelectItem>
-                  <SelectItem value="volatile">Volátil</SelectItem>
+                  <SelectItem value="high">{t('forms.high')}</SelectItem>
+                  <SelectItem value="medium">{t('forms.medium')}</SelectItem>
+                  <SelectItem value="low">{t('forms.low')}</SelectItem>
+                  <SelectItem value="volatile">
+                    {t('forms.volatile')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -413,7 +433,7 @@ export function BehaviorCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label>Tendencia financiera</Label>
+          <Label>{t('forms.financialTrend')}</Label>
           <Controller
             control={control}
             name="financialTrend"
@@ -425,12 +445,16 @@ export function BehaviorCredentialForm({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="improving">Mejorando</SelectItem>
-                  <SelectItem value="stable">Estable</SelectItem>
-                  <SelectItem value="deteriorating">Deteriorándose</SelectItem>
+                  <SelectItem value="improving">
+                    {t('forms.improving')}
+                  </SelectItem>
+                  <SelectItem value="stable">{t('forms.stable')}</SelectItem>
+                  <SelectItem value="deteriorating">
+                    {t('forms.deteriorating')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -440,13 +464,13 @@ export function BehaviorCredentialForm({
 
       <div className="flex items-center justify-between border-t border-border pt-4">
         <Button type="button" variant="outline" onClick={onBack}>
-          &larr; Atrás
+          &larr; {tc('buttons.back')}
         </Button>
         <Button
           type="submit"
           className="bg-accent hover:bg-accent/90 text-accent-foreground"
         >
-          Generar Credencial &rarr;
+          {t('issuance.generateCredential')} &rarr;
         </Button>
       </div>
     </form>

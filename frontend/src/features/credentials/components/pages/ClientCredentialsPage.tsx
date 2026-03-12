@@ -350,9 +350,10 @@ export function ClientCredentialsPage({
               )}
               {(empresario.strata || empresario.residenceZone) && (
                 <p className="text-xs text-muted-foreground">
-                  {[empresario.residenceZone, empresario.strata
-                    ? `Estrato ${empresario.strata}`
-                    : null]
+                  {[
+                    empresario.residenceZone,
+                    empresario.strata ? `Estrato ${empresario.strata}` : null,
+                  ]
                     .filter(Boolean)
                     .join(' · ')}
                 </p>

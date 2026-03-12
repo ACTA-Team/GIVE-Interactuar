@@ -1,4 +1,4 @@
- 'use client';
+'use client';
 
 import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -124,12 +124,8 @@ export function FormResponsesPage() {
     <div className="space-y-6">
       <header className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">
-            {t('title')}
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            {t('subtitle')}
-          </p>
+          <h1 className="text-2xl font-semibold text-gray-900">{t('title')}</h1>
+          <p className="mt-1 text-sm text-gray-500">{t('subtitle')}</p>
         </div>
       </header>
 

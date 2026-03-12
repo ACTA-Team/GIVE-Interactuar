@@ -86,7 +86,7 @@ export function EntrepreneurDetailPage({
   return (
     <div className="h-[calc(100vh-6rem)] flex flex-col">
       {/* Header */}
-      <div className="flex-shrink-0 pb-4 border-b mb-4">
+      <div className="shrink-0 pb-4 border-b mb-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <Button
@@ -338,137 +338,6 @@ export function EntrepreneurDetailPage({
                 </div>
               );
             })}
-          </div>
-        </div>
-
-        {/* Right: Reputation Badges */}
-        <div className="col-span-3 bg-card rounded-xl border p-5 overflow-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold flex items-center gap-2">
-              <Award className="h-4 w-4 text-[#F15A24]" />
-              {t('detail.reputationBadges')}
-            </h2>
-            <Dialog
-              open={isBadgeDialogOpen}
-              onOpenChange={setIsBadgeDialogOpen}
-            >
-              <DialogTrigger
-                render={
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={availableBadgesToAward.length === 0}
-                    className="gap-1"
-                  >
-                    <Plus className="h-3 w-3" />
-                    {t('detail.award')}
-                  </Button>
-                }
-              />
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>{t('detail.awardBadge')}</DialogTitle>
-                  <DialogDescription>
-                    {t('detail.awardBadgeDesc', { name: entrepreneur.name })}
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-2 py-4">
-                  {availableBadgesToAward.map((badge) => (
-                    <button
-                      key={badge.id}
-                      onClick={() => handleAwardBadge(badge.id)}
-                      className="flex items-center gap-3 p-3 rounded-xl border-2 border-dashed hover:border-primary hover:bg-primary/5 transition-all text-left"
-                    >
-                      <div
-                        className={`h-10 w-10 rounded-xl bg-gradient-to-br ${getBadgeColors(badge.id).bg} flex items-center justify-center`}
-                      >
-                        {BADGE_ICONS[badge.id]}
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">{badge.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {badge.description}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {/* Badges Grid */}
-          <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
-            {/* Earned Badges */}
-            {entrepreneur.badges.map((badge) => {
-              const colors = getBadgeColors(badge.id);
-              return (
-                <BadgeDetailDialog
-                  key={badge.id}
-                  badge={badge}
-                  entrepreneurName={entrepreneur.name}
-                >
-                  <div
-                    className={`group relative p-4 rounded-2xl bg-gradient-to-br ${colors.bg} border-2 ${colors.border} hover:shadow-xl ${colors.glow} transition-all duration-300 hover:scale-[1.03] text-center cursor-pointer`}
-                  >
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                    <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary flex items-center justify-center shadow-lg">
-                      <CheckCircle className="h-3 w-3 text-primary-foreground" />
-                    </div>
-
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveBadge(badge.id);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.stopPropagation();
-                          handleRemoveBadge(badge.id);
-                        }
-                      }}
-                      className="absolute top-1 left-1 p-1 rounded-full bg-background/80 opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive hover:text-destructive-foreground"
-                    >
-                      <X className="h-3 w-3" />
-                    </div>
-
-                    <div
-                      className={`mx-auto h-16 w-16 rounded-2xl bg-gradient-to-br ${colors.bg} border ${colors.border} flex items-center justify-center shadow-inner mb-2`}
-                    >
-                      {BADGE_ICONS_LARGE[badge.id]}
-                    </div>
-                    <p className="font-semibold text-sm">{badge.name}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">
-                      {t('detail.verified')}
-                    </p>
-                  </div>
-                </BadgeDetailDialog>
-              );
-            })}
-
-            {/* Locked Badges */}
-            {availableBadgesToAward.map((badge) => (
-              <div
-                key={badge.id}
-                className="relative p-4 rounded-2xl bg-muted/30 border-2 border-dashed border-muted-foreground/20 text-center opacity-50"
-              >
-                <div className="absolute top-2 right-2">
-                  <Lock className="h-3 w-3 text-muted-foreground" />
-                </div>
-                <div className="mx-auto h-16 w-16 rounded-2xl bg-muted/50 flex items-center justify-center mb-2">
-                  {BADGE_ICONS_LARGE[badge.id]}
-                </div>
-                <p className="font-medium text-sm text-muted-foreground">
-                  {badge.name}
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">
-                  {t('detail.toUnlock')}
-                </p>
-              </div>
-            ))}
           </div>
         </div>
       </div>

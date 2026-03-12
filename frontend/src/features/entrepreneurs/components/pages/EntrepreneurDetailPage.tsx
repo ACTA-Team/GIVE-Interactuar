@@ -46,6 +46,8 @@ import {
   BADGE_ICONS_LARGE,
   getBadgeColors,
 } from '../../constants/badge-ui';
+import { CredentialIssuanceModal } from '@/features/credentials/components/ui/CredentialIssuanceModal';
+import { IconCertificate } from '@tabler/icons-react';
 
 interface EntrepreneurDetailPageProps {
   entrepreneurId: string;
@@ -58,6 +60,7 @@ export function EntrepreneurDetailPage({
   const [isBadgeDialogOpen, setIsBadgeDialogOpen] = useState(false);
   const [certifyDialogOpen, setCertifyDialogOpen] = useState(false);
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
+  const [isCredentialModalOpen, setIsCredentialModalOpen] = useState(false);
 
   const entrepreneur = MOCK_ENTREPRENEURS.find((e) => e.id === entrepreneurId);
 
@@ -164,7 +167,17 @@ export function EntrepreneurDetailPage({
             </div>
           </div>
 
-          {/* Main CTA */}
+          {/* Main CTAs */}
+          <div className="flex items-center gap-2">
+            <Button
+              size="lg"
+              variant="outline"
+              className="gap-2"
+              onClick={() => setIsCredentialModalOpen(true)}
+            >
+              <IconCertificate className="h-5 w-5" />
+              Emitir Credencial
+            </Button>
           <AlertDialog
             open={certifyDialogOpen}
             onOpenChange={setCertifyDialogOpen}
@@ -213,6 +226,7 @@ export function EntrepreneurDetailPage({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+          </div>
         </div>
       </div>
 
@@ -475,6 +489,14 @@ export function EntrepreneurDetailPage({
           </div>
         </div>
       </div>
+
+      <CredentialIssuanceModal
+        open={isCredentialModalOpen}
+        onOpenChange={setIsCredentialModalOpen}
+        entrepreneurId={entrepreneur.id}
+        entrepreneurName={entrepreneur.name}
+        businessName={entrepreneur.businessName}
+      />
     </div>
   );
 }

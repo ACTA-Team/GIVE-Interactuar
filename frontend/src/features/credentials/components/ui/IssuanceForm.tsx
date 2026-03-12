@@ -52,8 +52,8 @@ export function IssuanceForm({
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
         >
           <option value="impact">Impacto</option>
-          <option value="verification">Verificación</option>
-          <option value="endorsement">Endorsement</option>
+          <option value="behavior">Comportamiento</option>
+          <option value="profile">Perfil y Formalización</option>
         </select>
       </div>
 

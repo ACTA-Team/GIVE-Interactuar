@@ -1,0 +1,57 @@
+{
+  "title": "Dashboard",
+  "welcome": "Bienvenido. Resumen de tu cartera de empresarios.",
+  "stats": {
+    "totalEntrepreneurs": "Total Empresarios",
+    "totalFunding": "Financiamiento Total",
+    "inTraining": "En Formación",
+    "delinquent": "Morosos",
+    "thisMonth": "+12% este mes",
+    "entrepreneursFunded": "{count} empresarios financiados",
+    "stages1to3": "Etapas 1-3 del proceso",
+    "needsAttention": "Requieren atención",
+    "allUpToDate": "Todo al día"
+  },
+  "charts": {
+    "growthTrend": "Tendencia de Crecimiento",
+    "growthTrendDesc": "Empresarios y financiamientos por mes",
+    "stageDistribution": "Distribución por Etapa",
+    "stageDistributionDesc": "Estado actual de empresarios en el proceso",
+    "entrepreneurs": "Empresarios",
+    "funded": "Financiados",
+    "entrepreneursCount": "{count} empresarios"
+  },
+  "table": {
+    "title": "Empresarios",
+    "description": "Selecciona empresarios para verificar etapas en lote",
+    "entrepreneur": "Empresario",
+    "business": "Negocio",
+    "stage": "Etapa",
+    "status": "Estado",
+    "funding": "Financiamiento",
+    "delinquent": "Moroso ({days}d)",
+    "upToDate": "Al día",
+    "notFunded": "Sin financiar",
+    "noResults": "No se encontraron empresarios",
+    "certifyStage": "Certificar etapa",
+    "stageLabel": "Etapa {id}",
+    "stageWithName": "Etapa {id}: {name}"
+  },
+  "filters": {
+    "stage": "Etapa",
+    "status": "Estado",
+    "all": "Todas",
+    "allStatuses": "Todos",
+    "delinquent": "Morosos",
+    "funded": "Financiados",
+    "notFunded": "Sin financiar"
+  },
+  "months": {
+    "jan": "Ene",
+    "feb": "Feb",
+    "mar": "Mar",
+    "apr": "Abr",
+    "may": "May",
+    "jun": "Jun"
+  }
+}

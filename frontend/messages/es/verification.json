@@ -1,0 +1,8 @@
+{
+  "portalTitle": "GIVE Interactuar — Portal de verificación",
+  "validCredential": "Credencial válida",
+  "invalidCredential": "Credencial inválida",
+  "issuedOn": "Emitida el {date}",
+  "publicData": "Datos públicos",
+  "verifiedOn": "Verificado el {date}"
+}

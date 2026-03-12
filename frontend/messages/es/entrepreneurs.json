@@ -1,0 +1,96 @@
+{
+  "title": "Empresarios",
+  "subtitle": "Gestiona los empresarios y su progreso en el programa",
+  "search": "Buscar por nombre, negocio o email...",
+  "filterByStage": "Filtrar por etapa",
+  "filterByStatus": "Filtrar por estado",
+  "allStages": "Todas las etapas",
+  "certifyStageAction": "Certificar etapa...",
+  "clearSelection": "Limpiar selección",
+  "newEntrepreneur": "Nuevo Empresario",
+  "notFound": "Empresario no encontrado",
+  "backToList": "Volver a la lista",
+  "table": {
+    "entrepreneur": "Empresario",
+    "business": "Negocio",
+    "stage": "Etapa",
+    "status": "Estado",
+    "delinquent": "Moroso ({days}d)",
+    "upToDate": "Al día",
+    "noResults": "No se encontraron empresarios"
+  },
+  "detail": {
+    "supportPath": "Ruta de Apoyo",
+    "reputationBadges": "Insignias de Reputación",
+    "issueCredential": "Emitir Credencial",
+    "approveStage": "Aprobar Etapa {id}",
+    "allStagesCertified": "Todas las etapas certificadas",
+    "certify": "Certificar",
+    "certifyStageTitle": "Certificar Etapa {id}",
+    "certifyStageApproveTitle": "Aprobar Certificación - Etapa {id}",
+    "certifyStageDesc": "Esta acción emitirá una credencial verificable en blockchain certificando que {name} ha completado \"{stageName}\". Esta acción no se puede deshacer.",
+    "certifyStageDescShort": "Esta acción emitirá una credencial verificable certificando que {name} ha completado \"{stageName}\".",
+    "completed": "Completado",
+    "inProgress": "En progreso",
+    "pending": "Pendiente",
+    "award": "Otorgar",
+    "awardBadge": "Otorgar Insignia",
+    "awardBadgeDesc": "Selecciona una insignia para {name}",
+    "verified": "Verificado",
+    "toUnlock": "Por desbloquear",
+    "grantedTo": "Otorgado a {name}"
+  },
+  "newDialog": {
+    "title": "Registrar Nuevo Empresario",
+    "description": "El empresario comenzará en la Etapa 0 (Registro) automáticamente.",
+    "fullName": "Nombre completo",
+    "fullNamePlaceholder": "Ej: María García López",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "correo@ejemplo.com",
+    "phone": "Teléfono",
+    "phonePlaceholder": "+57 300 123 4567",
+    "businessName": "Nombre del negocio",
+    "businessNamePlaceholder": "Ej: Empanadas Doña María",
+    "businessType": "Tipo de negocio",
+    "businessTypePlaceholder": "Selecciona un tipo",
+    "submit": "Registrar Empresario"
+  },
+  "badgeDetail": {
+    "issuer": "Emisor",
+    "issuedDate": "Fecha de emisión",
+    "status": "Estado",
+    "transactionAddress": "Dirección de transacción"
+  },
+  "stages": {
+    "0": "Registro",
+    "1": "Formación Básica",
+    "2": "Plan de Negocio",
+    "3": "Capacitación Financiera",
+    "4": "Apto para Financiamiento",
+    "5": "Financiado"
+  },
+  "stageDescriptions": {
+    "0": "Empresario registrado en el sistema",
+    "1": "Completó cursos de fundamentos empresariales",
+    "2": "Presentó y aprobó su plan de negocio",
+    "3": "Completó módulos de educación financiera",
+    "4": "Cumple requisitos para recibir microcrédito",
+    "5": "Recibió financiamiento activo"
+  },
+  "badges": {
+    "punctual": "Pago Puntual",
+    "growth": "Negocio en Crecimiento",
+    "community": "Líder Comunitario",
+    "training": "Formación Completa",
+    "innovation": "Innovador",
+    "sustainable": "Sostenible"
+  },
+  "badgeDescriptions": {
+    "punctual": "Nunca ha tenido retrasos en pagos",
+    "growth": "Demostró crecimiento sostenido",
+    "community": "Participa activamente en la comunidad",
+    "training": "Completó todos los cursos disponibles",
+    "innovation": "Implementó prácticas innovadoras",
+    "sustainable": "Prácticas ambientalmente responsables"
+  }
+}

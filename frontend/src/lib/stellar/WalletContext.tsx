@@ -1,17 +1,20 @@
 'use client';
 
-import React, {
+import {
   createContext,
   useContext,
   useState,
+  useEffect,
   type ReactNode,
 } from 'react';
 import {
   StellarWalletsKit,
-  WalletNetwork,
+  Networks,
+} from '@creit.tech/stellar-wallets-kit';
+import {
   FREIGHTER_ID,
   FreighterModule,
-} from '@creit.tech/stellar-wallets-kit';
+} from '@creit.tech/stellar-wallets-kit/modules/freighter';
 
 type WalletContextType = {
   walletAddress: string | null;
@@ -23,57 +26,52 @@ type WalletContextType = {
     xdr: string,
     options: { networkPassphrase: string },
   ) => Promise<string>;
-  walletKit: StellarWalletsKit | null;
+  walletKit: typeof StellarWalletsKit | null;
 };
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
-function getNetwork(): WalletNetwork {
+function getNetwork(): Networks {
   const env = process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? 'testnet';
-  return env === 'mainnet' ? WalletNetwork.PUBLIC : WalletNetwork.TESTNET;
+  return env === 'mainnet' ? Networks.PUBLIC : Networks.TESTNET;
 }
 
 export function WalletProvider({ children }: { children: ReactNode }) {
-  const [walletAddress, setWalletAddress] = useState<string | null>(() => {
-    return typeof window !== 'undefined'
-      ? localStorage.getItem('walletAddress')
-      : null;
-  });
-  const [walletName, setWalletName] = useState<string | null>(() => {
-    return typeof window !== 'undefined'
-      ? localStorage.getItem('walletName')
-      : null;
-  });
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [walletName, setWalletName] = useState<string | null>(null);
 
-  const walletKit = React.useMemo(() => {
-    if (typeof window === 'undefined') return null;
+  useEffect(() => {
+    setWalletAddress(localStorage.getItem('walletAddress'));
+    setWalletName(localStorage.getItem('walletName'));
+  }, []);
+
+  const [walletKit, setWalletKit] = useState<typeof StellarWalletsKit | null>(null);
+
+  useEffect(() => {
     try {
-      return new StellarWalletsKit({
+      StellarWalletsKit.init({
         network: getNetwork(),
         selectedWalletId: FREIGHTER_ID,
         modules: [new FreighterModule()],
       });
+      setWalletKit(() => StellarWalletsKit);
     } catch {
-      return null;
+      setWalletKit(null);
     }
   }, []);
 
   const setWalletInfo = (address: string, name: string) => {
     setWalletAddress(address);
     setWalletName(name);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('walletAddress', address);
-      localStorage.setItem('walletName', name);
-    }
+    localStorage.setItem('walletAddress', address);
+    localStorage.setItem('walletName', name);
   };
 
   const clearWalletInfo = () => {
     setWalletAddress(null);
     setWalletName(null);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('walletAddress');
-      localStorage.removeItem('walletName');
-    }
+    localStorage.removeItem('walletAddress');
+    localStorage.removeItem('walletName');
   };
 
   const signTransaction = async (
@@ -81,7 +79,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     options: { networkPassphrase: string },
   ): Promise<string> => {
     if (!walletKit) throw new Error('WalletKit no disponible');
-    const { signedTxXdr } = await walletKit.signTransaction(xdr, {
+    const { signedTxXdr } = await StellarWalletsKit.signTransaction(xdr, {
       address: walletAddress || undefined,
       networkPassphrase: options.networkPassphrase,
     });

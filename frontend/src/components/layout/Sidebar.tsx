@@ -12,12 +12,14 @@ import {
   IconPlus,
   IconX,
   IconWallet,
+  IconPlugOff,
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
 import { SidebarNavGroup } from './SidebarNavGroup';
 import { useWalletContext } from '@/lib/stellar/WalletContext';
-import { useSyncExternalStore, type ReactNode } from 'react';
+import { useWalletKit } from '@/lib/stellar/useWalletKit';
+import { useSyncExternalStore, useState, type ReactNode } from 'react';
 
 const subscribe = () => () => {};
 function useIsMounted() {
@@ -71,6 +73,17 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
   const wallet = useWalletContext();
   const mounted = useIsMounted();
+  const { disconnectWalletKit } = useWalletKit();
+  const [disconnecting, setDisconnecting] = useState(false);
+
+  const handleDisconnect = async () => {
+    setDisconnecting(true);
+    try {
+      await disconnectWalletKit();
+    } finally {
+      setDisconnecting(false);
+    }
+  };
 
   const isDashboardActive = pathname === ROUTES.dashboard;
   const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);
@@ -148,7 +161,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
         {mounted && wallet.connected && wallet.walletAddress && (
           <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2">
             <IconWallet className="h-4 w-4 text-emerald-600 shrink-0" />
-            <div className="flex flex-col min-w-0">
+            <div className="flex flex-col min-w-0 flex-1">
               <span className="text-[11px] font-medium text-emerald-700">
                 {wallet.walletName ?? 'Wallet conectada'}
               </span>
@@ -156,6 +169,14 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
                 {truncateAddress(wallet.walletAddress)}
               </span>
             </div>
+            <button
+              onClick={handleDisconnect}
+              disabled={disconnecting}
+              title="Desconectar wallet"
+              className="shrink-0 rounded p-1 text-emerald-500 transition-colors hover:bg-emerald-100 hover:text-red-500 disabled:opacity-50"
+            >
+              <IconPlugOff className="h-3.5 w-3.5" />
+            </button>
           </div>
         )}
         <div className="flex items-center gap-3">

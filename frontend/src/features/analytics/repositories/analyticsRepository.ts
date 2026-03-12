@@ -1,12 +1,12 @@
 import type {
   DashboardData,
-  DashboardResumen,
-  DashboardPorPrograma,
-  DashboardPorGenero,
-  DashboardPorAliado,
-  DashboardPorEdad,
-  DashboardVentasMensuales,
-  DashboardCartera,
+  DashboardSummary,
+  DashboardByProgram,
+  DashboardByGender,
+  DashboardByAlly,
+  DashboardByAge,
+  DashboardMonthlySales,
+  DashboardPortfolio,
   EntrepreneurRecord,
 } from '../types';
 import type { SupabaseLikeClient } from '@/@types/supabase';
@@ -34,19 +34,29 @@ function ageRange(age: number | null): string | null {
 }
 
 const PROGRAM_LABEL: Record<string, string> = {
-  mba_empresarial: 'MBA Empresarial',
-  mba_agroempresarial: 'MBA Agroempresarial',
+  mba_empresarial: 'Entrepreneurial MBA',
+  mba_agroempresarial: 'Agribusiness MBA',
 };
 
 const CLASSIFICATION_LABELS: Record<string, string> = {
   A: 'Normal (A)',
-  B: 'Aceptable (B)',
-  E: 'Incobrable (E)',
+  B: 'Acceptable (B)',
+  E: 'Uncollectible (E)',
 };
 
 const MONTH_NAMES: Record<number, string> = {
-  1: 'Ene', 2: 'Feb', 3: 'Mar', 4: 'Abr', 5: 'May', 6: 'Jun',
-  7: 'Jul', 8: 'Ago', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dic',
+  1: 'Jan',
+  2: 'Feb',
+  3: 'Mar',
+  4: 'Apr',
+  5: 'May',
+  6: 'Jun',
+  7: 'Jul',
+  8: 'Aug',
+  9: 'Sep',
+  10: 'Oct',
+  11: 'Nov',
+  12: 'Dec',
 };
 
 export function createAnalyticsRepository(client: SupabaseLikeClient) {
@@ -111,12 +121,12 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
       // Aggregate
       const mList = measurements ?? [];
       const total = mList.length;
-      const activos = mList.filter(
+      const activeCount = mList.filter(
         (m: Record<string, unknown>) => m.enrollment_status === 'activo',
       ).length;
 
-      let mujeres = 0;
-      let hombres = 0;
+      let women = 0;
+      let men = 0;
       let totalSalesN1 = 0;
       let totalSalesN = 0;
       let salesCount = 0;
@@ -139,10 +149,7 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
         string,
         { count: number; salesN1: number; salesN: number; salesCnt: number }
       >();
-      const allyStats = new Map<
-        string,
-        { count: number; newJobs: number }
-      >();
+      const allyStats = new Map<string, { count: number; newJobs: number }>();
       const ageStats = new Map<string, number>();
       const monthlySalesAgg = new Map<
         number,
@@ -151,9 +158,9 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
 
       for (const m of mList) {
         const demo = demoMap.get(m.entrepreneur_id);
-        const gender = (demo?.gender as string) ?? 'desconocido';
-        if (gender === 'mujer') mujeres++;
-        else if (gender === 'hombre') hombres++;
+        const gender = (demo?.gender as string) ?? 'unknown';
+        if (gender === 'mujer') women++;
+        else if (gender === 'hombre') men++;
 
         const cohort = m.im_cohorts as Record<string, unknown> | null;
         const program = cohort?.program as string;
@@ -183,11 +190,14 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
         let currFormalized = 0;
         for (const e of emps) {
           if ((e.period as string) === 'prev_year') {
-            prevFT += (Number(e.full_time_men) || 0) + (Number(e.full_time_women) || 0);
+            prevFT +=
+              (Number(e.full_time_men) || 0) + (Number(e.full_time_women) || 0);
           } else {
-            currFT += (Number(e.full_time_men) || 0) + (Number(e.full_time_women) || 0);
+            currFT +=
+              (Number(e.full_time_men) || 0) + (Number(e.full_time_women) || 0);
             currFormalized +=
-              (Number(e.formalized_men) || 0) + (Number(e.formalized_women) || 0);
+              (Number(e.formalized_men) || 0) +
+              (Number(e.formalized_women) || 0);
           }
         }
         totalEmplN1 += prevFT;
@@ -247,151 +257,166 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
 
       const avgSalesN1 = salesCount > 0 ? totalSalesN1 / salesCount : 0;
       const avgSalesN = salesCount > 0 ? totalSalesN / salesCount : 0;
-      const variacion =
+      const variation =
         avgSalesN1 > 0 ? ((avgSalesN - avgSalesN1) / avgSalesN1) * 100 : 0;
 
-      const resumen: DashboardResumen = {
-        total_participantes: total,
-        activos,
-        tasa_retencion_pct: total > 0 ? Math.round((activos / total) * 10000) / 100 : 0,
-        mujeres,
-        hombres,
-        pct_mujeres:
-          total > 0 ? Math.round((mujeres / total) * 10000) / 100 : 0,
-        ventas_total_n1_cop: totalSalesN1,
-        ventas_total_n_cop: totalSalesN,
-        ventas_promedio_n1_cop: Math.round(avgSalesN1),
-        ventas_promedio_n_cop: Math.round(avgSalesN),
-        variacion_promedio_pct: Math.round(variacion * 100) / 100,
-        empleos_tc_n1: totalEmplN1,
-        empleos_tc_n: totalEmplN,
-        nuevos_empleos: totalNewJobs,
-        empleos_formalizados: totalFormalized,
+      const summary: DashboardSummary = {
+        total_participants: total,
+        active_count: activeCount,
+        retention_rate_pct:
+          total > 0 ? Math.round((activeCount / total) * 10000) / 100 : 0,
+        women,
+        men,
+        women_percentage:
+          total > 0 ? Math.round((women / total) * 10000) / 100 : 0,
+        previous_year_sales_total_cop: totalSalesN1,
+        current_year_sales_total_cop: totalSalesN,
+        average_previous_year_sales_cop: Math.round(avgSalesN1),
+        average_current_year_sales_cop: Math.round(avgSalesN),
+        average_variation_pct: Math.round(variation * 100) / 100,
+        full_time_jobs_previous_year: totalEmplN1,
+        full_time_jobs_current_year: totalEmplN,
+        new_jobs: totalNewJobs,
+        formalized_jobs: totalFormalized,
       };
 
-      const por_programa: DashboardPorPrograma[] = [];
-      for (const [programa, ps] of programStats) {
+      const by_program: DashboardByProgram[] = [];
+      for (const [programName, ps] of programStats) {
         const avgN1 = ps.salesCnt > 0 ? ps.salesN1 / ps.salesCnt : 0;
         const avgN = ps.salesCnt > 0 ? ps.salesN / ps.salesCnt : 0;
         const pctVar = avgN1 > 0 ? ((avgN - avgN1) / avgN1) * 100 : 0;
-        por_programa.push({
-          programa,
-          participantes: ps.count,
-          ventas_promedio_n1_cop: Math.round(avgN1),
-          ventas_promedio_n_cop: Math.round(avgN),
-          variacion_promedio_pct: Math.round(pctVar * 100) / 100,
-          nuevos_empleos: ps.newJobs,
+        by_program.push({
+          program: programName,
+          participants: ps.count,
+          average_previous_year_sales_cop: Math.round(avgN1),
+          average_current_year_sales_cop: Math.round(avgN),
+          average_variation_pct: Math.round(pctVar * 100) / 100,
+          new_jobs: ps.newJobs,
         });
       }
 
-      const por_genero: DashboardPorGenero[] = [];
-      for (const [genero, gs] of genderStats) {
+      const by_gender: DashboardByGender[] = [];
+      for (const [genderKey, gs] of genderStats) {
         const avgN1 = gs.salesCnt > 0 ? gs.salesN1 / gs.salesCnt : 0;
         const avgN = gs.salesCnt > 0 ? gs.salesN / gs.salesCnt : 0;
         const pctVar = avgN1 > 0 ? ((avgN - avgN1) / avgN1) * 100 : 0;
-        por_genero.push({
-          genero: genero === 'mujer' ? 'Mujer' : genero === 'hombre' ? 'Hombre' : genero,
-          participantes: gs.count,
-          ventas_promedio_n1_cop: Math.round(avgN1),
-          ventas_promedio_n_cop: Math.round(avgN),
-          variacion_promedio_pct: Math.round(pctVar * 100) / 100,
+        by_gender.push({
+          gender:
+            genderKey === 'mujer'
+              ? 'Woman'
+              : genderKey === 'hombre'
+                ? 'Man'
+                : genderKey,
+          participants: gs.count,
+          average_previous_year_sales_cop: Math.round(avgN1),
+          average_current_year_sales_cop: Math.round(avgN),
+          average_variation_pct: Math.round(pctVar * 100) / 100,
         });
       }
 
-      const por_aliado: DashboardPorAliado[] = [];
-      for (const [aliado, as_] of allyStats) {
-        por_aliado.push({ aliado, participantes: as_.count, nuevos_empleos: as_.newJobs });
+      const by_ally: DashboardByAlly[] = [];
+      for (const [allyName, as_] of allyStats) {
+        by_ally.push({
+          ally: allyName,
+          participants: as_.count,
+          new_jobs: as_.newJobs,
+        });
       }
-      por_aliado.sort((a, b) => b.participantes - a.participantes);
+      by_ally.sort((a, b) => b.participants - a.participants);
 
-      const por_edad: DashboardPorEdad[] = [];
+      const by_age: DashboardByAge[] = [];
       for (const range of ['18-24', '25-34', '35-44', '45-54', '55+']) {
         const count = ageStats.get(range) ?? 0;
-        if (count > 0) por_edad.push({ rango: range, participantes: count });
+        if (count > 0) by_age.push({ range, participants: count });
       }
 
-      const ventas_mensuales: DashboardVentasMensuales[] = [];
+      const monthly_sales: DashboardMonthlySales[] = [];
       for (let m = 1; m <= 12; m++) {
         const agg = monthlySalesAgg.get(m);
         if (agg && agg.count > 0) {
-          ventas_mensuales.push({
-            mes: MONTH_NAMES[m] ?? String(m),
-            promedio_cop: Math.round(agg.total / agg.count),
+          monthly_sales.push({
+            month: MONTH_NAMES[m] ?? String(m),
+            average_cop: Math.round(agg.total / agg.count),
             n: agg.count,
           });
         }
       }
 
-      // Cartera
+      // Portfolio
       const overdueList = overdue ?? [];
       const entrepreneursWithCredit = new Set(
         mList
-          .filter((m: Record<string, unknown>) =>
-            m.credit_active_12m === true || m.credit_segment_start !== null || m.credit_segment_end !== null,
+          .filter(
+            (m: Record<string, unknown>) =>
+              m.credit_active_12m === true ||
+              m.credit_segment_start !== null ||
+              m.credit_segment_end !== null,
           )
           .map((m: Record<string, unknown>) => m.entrepreneur_id),
       );
-      const entrepreneursEnMoraSet = new Set(
+      const entrepreneursInDefaultSet = new Set(
         overdueList.map((o: Record<string, unknown>) => o.entrepreneur_id),
       );
-      const totalConCredito = entrepreneursWithCredit.size > 0
-        ? entrepreneursWithCredit.size
-        : entrepreneursEnMoraSet.size;
-      const entrepreneursEnMora = entrepreneursEnMoraSet.size;
-      const alDia = Math.max(0, totalConCredito - entrepreneursEnMora);
-      let saldoTotal = 0;
-      const clasMap = new Map<string, { casos: number; saldo: number }>();
+      const totalWithCredit =
+        entrepreneursWithCredit.size > 0
+          ? entrepreneursWithCredit.size
+          : entrepreneursInDefaultSet.size;
+      const entrepreneursInDefault = entrepreneursInDefaultSet.size;
+      const currentCount = Math.max(0, totalWithCredit - entrepreneursInDefault);
+      let totalOverdueBalance = 0;
+      const clasMap = new Map<string, { cases: number; balance: number }>();
       for (const o of overdueList) {
-        const saldo = Number(o.overdue_balance) || 0;
-        saldoTotal += saldo;
+        const balance = Number(o.overdue_balance) || 0;
+        totalOverdueBalance += balance;
         const clas = (o.classification as string) ?? 'A';
-        const c = clasMap.get(clas) ?? { casos: 0, saldo: 0 };
-        c.casos++;
-        c.saldo += saldo;
+        const c = clasMap.get(clas) ?? { cases: 0, balance: 0 };
+        c.cases++;
+        c.balance += balance;
         clasMap.set(clas, c);
       }
 
-      const cartera: DashboardCartera = {
-        total_con_credito: totalConCredito,
-        al_dia: alDia,
-        en_mora: entrepreneursEnMora,
-        pct_mora:
-          totalConCredito > 0
-            ? Math.round((entrepreneursEnMora / totalConCredito) * 10000) / 100
+      const portfolio: DashboardPortfolio = {
+        total_with_credit: totalWithCredit,
+        current: currentCount,
+        in_default: entrepreneursInDefault,
+        default_rate_pct:
+          totalWithCredit > 0
+            ? Math.round((entrepreneursInDefault / totalWithCredit) * 10000) /
+              100
             : 0,
-        saldo_mora_total_cop: saldoTotal,
-        por_clasificacion: Array.from(clasMap.entries()).map(
-          ([clasificacion, c]) => ({
-            clasificacion,
-            label: CLASSIFICATION_LABELS[clasificacion] ?? clasificacion,
-            casos: c.casos,
-            saldo_mora_cop: c.saldo,
+        total_overdue_balance_cop: totalOverdueBalance,
+        by_classification: Array.from(clasMap.entries()).map(
+          ([classification, c]) => ({
+            classification,
+            label: CLASSIFICATION_LABELS[classification] ?? classification,
+            cases: c.cases,
+            overdue_balance_cop: c.balance,
           }),
         ),
       };
 
       return {
         metadata: {
-          programa: 'MicroMBA GIVE Colombia',
-          periodo: 'Medición de Impacto',
-          nota: 'Datos agregados de im_measurements y tablas relacionadas',
-          fuente: 'Medición de Impacto MicroMBA',
+          program: 'MicroMBA GIVE Colombia',
+          period: 'Impact Measurement',
+          note: 'Aggregated data from im_measurements and related tables',
+          source: 'Impact Measurement MicroMBA',
         },
-        resumen,
-        por_programa,
-        por_genero,
-        por_aliado,
-        por_edad,
-        ventas_mensuales,
-        cartera,
+        summary,
+        by_program,
+        by_gender,
+        by_ally,
+        by_age,
+        monthly_sales,
+        portfolio,
       };
     },
 
-    async getEmpresarios(filters?: {
-      programa?: string;
-      genero?: string;
-      solicitoCredito?: string;
-      enMora?: string;
+    async getEntrepreneurs(filters?: {
+      program?: string;
+      gender?: string;
+      requestedCredit?: string;
+      overdue?: string;
     }): Promise<EntrepreneurRecord[]> {
       // Fetch measurements with joins
       const { data: measurements, error: mErr } = await db
@@ -408,7 +433,9 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
 
       const { data: businesses, error: bErr } = await db
         .from('im_businesses')
-        .select('*, im_legal_figures(name), im_economic_activities(im_economic_sectors(name))');
+        .select(
+          '*, im_legal_figures(name), im_economic_activities(im_economic_sectors(name))',
+        );
       if (bErr) throw bErr;
 
       const { data: monthlySalesData, error: sErr } = await db
@@ -463,7 +490,9 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
       }
 
       const overdueSet = new Set(
-        (overdueData ?? []).map((o: Record<string, unknown>) => o.entrepreneur_id),
+        (overdueData ?? []).map(
+          (o: Record<string, unknown>) => o.entrepreneur_id,
+        ),
       );
 
       const costsByM = new Map<string, number>();
@@ -474,7 +503,10 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
         );
       }
 
-      const balancesByM = new Map<string, { assets: number; liabilities: number }>();
+      const balancesByM = new Map<
+        string,
+        { assets: number; liabilities: number }
+      >();
       for (const b of balancesData ?? []) {
         const existing = balancesByM.get(b.measurement_id);
         const bQuarter = Number(b.quarter) || 0;
@@ -487,7 +519,10 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
         }
       }
 
-      const bizProfileMap = new Map<string, { formalized: boolean | null; employeeCount: number | null }>();
+      const bizProfileMap = new Map<
+        string,
+        { formalized: boolean | null; employeeCount: number | null }
+      >();
       for (const bp of bizProfiles ?? []) {
         bizProfileMap.set(bp.entrepreneur_id, {
           formalized: (bp.formalized as boolean | null) ?? null,
@@ -502,19 +537,24 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
         const cohort = m.im_cohorts as Record<string, unknown> | null;
         const program = cohort?.program as string;
         const programLabel = PROGRAM_LABEL[program] ?? program;
-        const ally = (cohort?.im_allies as Record<string, unknown>)?.name as string;
-        const level = (cohort?.im_levels as Record<string, unknown>)?.name as string | null;
+        const ally = (cohort?.im_allies as Record<string, unknown>)
+          ?.name as string;
+        const level = (cohort?.im_levels as Record<string, unknown>)?.name as
+          | string
+          | null;
         const demo = demoMap.get(m.entrepreneur_id);
         const biz = bizMap.get(m.entrepreneur_id);
         const gender = (demo?.gender as string) ?? null;
-        const genderLabel = gender === 'mujer' ? 'Mujer' : gender === 'hombre' ? 'Hombre' : null;
+        const genderLabel =
+          gender === 'mujer' ? 'Woman' : gender === 'hombre' ? 'Man' : null;
 
         // Sales
         const salesN = salesByM.get(m.id) ?? null;
         const salesN1 = Number(m.total_sales_prev_year) || null;
-        let variacion: number | null = null;
+        let salesVariation: number | null = null;
         if (salesN1 && salesN !== null) {
-          variacion = Math.round(((salesN - salesN1) / salesN1) * 10000) / 100;
+          salesVariation =
+            Math.round(((salesN - salesN1) / salesN1) * 10000) / 100;
         }
 
         // Employment
@@ -523,35 +563,38 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
         let currFT = 0;
         for (const e of emps) {
           if ((e.period as string) === 'prev_year') {
-            prevFT += (Number(e.full_time_men) || 0) + (Number(e.full_time_women) || 0);
+            prevFT +=
+              (Number(e.full_time_men) || 0) + (Number(e.full_time_women) || 0);
           } else {
-            currFT += (Number(e.full_time_men) || 0) + (Number(e.full_time_women) || 0);
+            currFT +=
+              (Number(e.full_time_men) || 0) + (Number(e.full_time_women) || 0);
           }
         }
         const newJobs = currFT - prevFT;
 
         const age = ageFromBirthDate(demo?.birth_date as string | null);
         const creditActive = m.credit_active_12m as boolean | null;
-        const enMora = overdueSet.has(m.entrepreneur_id);
+        const isOverdue = overdueSet.has(m.entrepreneur_id);
 
         const sector = (
           (biz?.im_economic_activities as Record<string, unknown>)
             ?.im_economic_sectors as Record<string, unknown>
         )?.name as string | null;
-        const legalFig = (biz?.im_legal_figures as Record<string, unknown>)?.name as string | null;
+        const legalFig = (biz?.im_legal_figures as Record<string, unknown>)
+          ?.name as string | null;
 
         // Apply filters
-        if (filters?.programa && programLabel !== filters.programa) continue;
-        if (filters?.genero && genderLabel !== filters.genero) continue;
-        if (filters?.solicitoCredito) {
-          const wantsYes = filters.solicitoCredito === 'Sí';
+        if (filters?.program && programLabel !== filters.program) continue;
+        if (filters?.gender && genderLabel !== filters.gender) continue;
+        if (filters?.requestedCredit) {
+          const wantsYes = filters.requestedCredit === 'Yes';
           if (wantsYes && !creditActive) continue;
           if (!wantsYes && creditActive) continue;
         }
-        if (filters?.enMora) {
-          const wantsYes = filters.enMora === 'Sí';
-          if (wantsYes && !enMora) continue;
-          if (!wantsYes && enMora) continue;
+        if (filters?.overdue) {
+          const wantsYes = filters.overdue === 'Yes';
+          if (wantsYes && !isOverdue) continue;
+          if (!wantsYes && isOverdue) continue;
         }
 
         const bizProfile = bizProfileMap.get(m.entrepreneur_id);
@@ -559,8 +602,12 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
         const costs = costsByM.get(m.id);
 
         // Calculate years in operation from founded_date
-        const foundedDate = biz?.founded_date ? new Date(biz.founded_date as string) : null;
-        const yearsInOperation = foundedDate ? new Date().getFullYear() - foundedDate.getFullYear() : null;
+        const foundedDate = biz?.founded_date
+          ? new Date(biz.founded_date as string)
+          : null;
+        const yearsInOperation = foundedDate
+          ? new Date().getFullYear() - foundedDate.getFullYear()
+          : null;
 
         records.push({
           document_number: (ent?.document_number as string) ?? '',
@@ -574,21 +621,34 @@ export function createAnalyticsRepository(client: SupabaseLikeClient) {
           sector,
           sales_prev_year_cop: salesN1,
           sales_current_year_cop: salesN,
-          sales_variation_pct: variacion,
+          sales_variation_pct: salesVariation,
           new_jobs: newJobs,
           level: level,
           cohort_name: (cohort?.name as string) ?? '',
           cohort_year: (cohort?.cohort_year as number) ?? 0,
-          active_credit: creditActive === true ? 'Sí' : creditActive === false ? 'No' : null,
-          education_level: (demo?.im_education_levels as Record<string, unknown>)?.name as string | null ?? null,
-          socioeconomic_stratum: (demo?.socioeconomic_stratum as number) ?? null,
+          active_credit:
+            creditActive === true
+              ? 'Yes'
+              : creditActive === false
+                ? 'No'
+                : null,
+          education_level:
+            ((demo?.im_education_levels as Record<string, unknown>)?.name as
+              | string
+              | null) ?? null,
+          socioeconomic_stratum:
+            (demo?.socioeconomic_stratum as number) ?? null,
           home_zone: (demo?.home_zone as string) ?? null,
           legal_figure: legalFig,
           business_size: (biz?.business_size as string) ?? null,
           age: age,
           age_range: ageRange(age),
-          requested_credit: creditActive ? 'Sí' : creditActive === false ? 'No' : null,
-          overdue: enMora ? 'Sí' : 'No',
+          requested_credit: creditActive
+            ? 'Yes'
+            : creditActive === false
+              ? 'No'
+              : null,
+          overdue: isOverdue ? 'Yes' : 'No',
           years_in_operation: yearsInOperation,
           total_costs_cop: costs ?? null,
           total_assets_cop: balance?.assets ?? null,

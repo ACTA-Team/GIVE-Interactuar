@@ -25,8 +25,7 @@ export function createFinancialProfileRepository(client: SupabaseLikeClient) {
       let q = (client as any).from('financial_profiles').select('*');
       if (filters?.entrepreneurId)
         q = q.eq('entrepreneur_id', filters.entrepreneurId);
-      if (filters?.creditLevel)
-        q = q.eq('credit_level', filters.creditLevel);
+      if (filters?.creditLevel) q = q.eq('credit_level', filters.creditLevel);
       const { data, error } = await q.order('created_at', { ascending: false });
       if (error) throw error;
       return (data as RawRow[]).map(mapFinancialProfile);

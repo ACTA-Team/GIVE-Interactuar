@@ -124,9 +124,11 @@ export function createFormsSyncRepository(client: SupabaseLikeClient) {
       if (error) throw error;
     },
 
-    async findAllSources(
-      filters?: { organizationId?: string; provider?: string; active?: boolean },
-    ): Promise<FormSource[]> {
+    async findAllSources(filters?: {
+      organizationId?: string;
+      provider?: string;
+      active?: boolean;
+    }): Promise<FormSource[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query = (client as any).from('form_sources').select('*');
       if (filters?.organizationId) {
@@ -158,9 +160,9 @@ export function createFormsSyncRepository(client: SupabaseLikeClient) {
       return mapFormSource(data as RawRow);
     },
 
-    async findAllSubmissions(
-      filters?: { formSourceId?: string },
-    ): Promise<FormSubmissionRaw[]> {
+    async findAllSubmissions(filters?: {
+      formSourceId?: string;
+    }): Promise<FormSubmissionRaw[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query = (client as any).from('form_submissions_raw').select('*');
       if (filters?.formSourceId) {
@@ -186,9 +188,10 @@ export function createFormsSyncRepository(client: SupabaseLikeClient) {
       return mapFormSubmission(data as RawRow);
     },
 
-    async findAllSyncRuns(
-      filters?: { formSourceId?: string; status?: string },
-    ): Promise<FormSyncRun[]> {
+    async findAllSyncRuns(filters?: {
+      formSourceId?: string;
+      status?: string;
+    }): Promise<FormSyncRun[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query = (client as any).from('form_sync_runs').select('*');
       if (filters?.formSourceId) {

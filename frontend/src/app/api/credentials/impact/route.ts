@@ -1,8 +1,18 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createImpactMeasurementRepository } from '@/features/impact-measurement/repositories/impactMeasurementRepository';
-import { isValidUuid, badRequest, notFound, serverError, validatePaginationParams } from '@/lib/api/errors';
+import {
+  isValidUuid,
+  badRequest,
+  notFound,
+  serverError,
+  validatePaginationParams,
+} from '@/lib/api/errors';
 import { transformKeys } from '@/lib/api/transform';
-import { parsePagination, buildMeta, paginationRange } from '@/lib/api/pagination';
+import {
+  parsePagination,
+  buildMeta,
+  paginationRange,
+} from '@/lib/api/pagination';
 
 /**
  * GET /api/credentials/impact?entrepreneur_id=<uuid>&year=<optional>&verdict=<filter>&has_sales=<filter>&page=<num>&page_size=<num>
@@ -56,16 +66,25 @@ export async function GET(request: Request) {
 
     // Apply filters
     if (verdict) all = all.filter((r: any) => r.verdict === verdict);
-    if (hasBusiness === 'true') all = all.filter((r: any) => r.businessName != null);
-    if (hasBusiness === 'false') all = all.filter((r: any) => r.businessName == null);
-    if (hasSales === 'true') all = all.filter((r: any) => r.totalSalesCurrentYear != null);
-    if (hasSales === 'false') all = all.filter((r: any) => r.totalSalesCurrentYear == null);
-    if (hasEmployees === 'true') all = all.filter((r: any) => r.currentFullTimeEmployees != null);
-    if (hasEmployees === 'false') all = all.filter((r: any) => r.currentFullTimeEmployees == null);
+    if (hasBusiness === 'true')
+      all = all.filter((r: any) => r.businessName != null);
+    if (hasBusiness === 'false')
+      all = all.filter((r: any) => r.businessName == null);
+    if (hasSales === 'true')
+      all = all.filter((r: any) => r.totalSalesCurrentYear != null);
+    if (hasSales === 'false')
+      all = all.filter((r: any) => r.totalSalesCurrentYear == null);
+    if (hasEmployees === 'true')
+      all = all.filter((r: any) => r.currentFullTimeEmployees != null);
+    if (hasEmployees === 'false')
+      all = all.filter((r: any) => r.currentFullTimeEmployees == null);
 
     const { from, to } = paginationRange(pagination);
     const data = all.slice(from, to + 1);
-    return Response.json({ data: transformKeys(data), meta: buildMeta(all.length, pagination) });
+    return Response.json({
+      data: transformKeys(data),
+      meta: buildMeta(all.length, pagination),
+    });
   } catch (err) {
     console.error('[credentials/impact] Error:', err);
     return serverError();

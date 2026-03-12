@@ -28,9 +28,7 @@ function coefficientOfVariation(values: number[]): number | null {
 
 // ─── Repository ──────────────────────────────────────────────────────────────
 
-export function createImpactMeasurementRepository(
-  client: SupabaseLikeClient,
-) {
+export function createImpactMeasurementRepository(client: SupabaseLikeClient) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = client as any;
 
@@ -53,9 +51,7 @@ export function createImpactMeasurementRepository(
       // Get measurement (latest year if not specified)
       let mq = db
         .from('im_measurements')
-        .select(
-          '*, im_cohorts(name, program), im_consultants(full_name)',
-        )
+        .select('*, im_cohorts(name, program), im_consultants(full_name)')
         .eq('entrepreneur_id', entrepreneurId);
       if (measurementYear) {
         mq = mq.eq('measurement_year', measurementYear);
@@ -68,7 +64,9 @@ export function createImpactMeasurementRepository(
       // Get business info
       const { data: biz } = await db
         .from('im_businesses')
-        .select('business_name, founded_date, im_economic_activities(name, im_economic_sectors(name))')
+        .select(
+          'business_name, founded_date, im_economic_activities(name, im_economic_sectors(name))',
+        )
         .eq('entrepreneur_id', entrepreneurId)
         .single();
 
@@ -77,10 +75,11 @@ export function createImpactMeasurementRepository(
         .from('im_monthly_sales')
         .select('month, amount')
         .eq('measurement_id', m.id);
-      const totalSalesCurrent = sales?.reduce(
-        (sum: number, s: { amount: number }) => sum + (s.amount || 0),
-        0,
-      ) ?? null;
+      const totalSalesCurrent =
+        sales?.reduce(
+          (sum: number, s: { amount: number }) => sum + (s.amount || 0),
+          0,
+        ) ?? null;
 
       // Get employment snapshots
       const { data: employment } = await db
@@ -118,7 +117,8 @@ export function createImpactMeasurementRepository(
         else verdict = 'deteriorating';
       }
 
-      const sectorName = biz?.im_economic_activities?.im_economic_sectors?.name ?? null;
+      const sectorName =
+        biz?.im_economic_activities?.im_economic_sectors?.name ?? null;
 
       return {
         entrepreneurId,
@@ -129,7 +129,8 @@ export function createImpactMeasurementRepository(
         yearsInOperation: yearsFromDate(biz?.founded_date),
         totalSalesPrevYear: totalPrev,
         totalSalesCurrentYear: totalSalesCurrent,
-        salesVariationPct: variationPct !== null ? Math.round(variationPct * 100) / 100 : null,
+        salesVariationPct:
+          variationPct !== null ? Math.round(variationPct * 100) / 100 : null,
         currentFullTimeEmployees: currentFT,
         newJobsGenerated: newJobs,
         newJobsFormalized: newFormalized,
@@ -149,7 +150,9 @@ export function createImpactMeasurementRepository(
       if (!rows?.length) return [];
 
       const uniqueIds = [
-        ...new Set(rows.map((r: { entrepreneur_id: string }) => r.entrepreneur_id)),
+        ...new Set(
+          rows.map((r: { entrepreneur_id: string }) => r.entrepreneur_id),
+        ),
       ] as string[];
 
       const results = await Promise.all(
@@ -195,10 +198,12 @@ export function createImpactMeasurementRepository(
         .order('month');
 
       const salesAmounts: number[] =
-        sales?.filter((s: { amount: number | null }) => s.amount != null)
+        sales
+          ?.filter((s: { amount: number | null }) => s.amount != null)
           .map((s: { amount: number }) => s.amount) ?? [];
       const costsAmounts: number[] =
-        costs?.filter((c: { amount: number | null }) => c.amount != null)
+        costs
+          ?.filter((c: { amount: number | null }) => c.amount != null)
           .map((c: { amount: number }) => c.amount) ?? [];
 
       const totalSales = salesAmounts.reduce((a, b) => a + b, 0);
@@ -224,9 +229,7 @@ export function createImpactMeasurementRepository(
 
       // Derived indicators
       const operatingMargin =
-        totalSales > 0
-          ? ((totalSales - totalCosts) / totalSales) * 100
-          : null;
+        totalSales > 0 ? ((totalSales - totalCosts) / totalSales) * 100 : null;
 
       const leverageRatio =
         totalAssets && totalAssets > 0 && totalLiabilities != null
@@ -318,7 +321,9 @@ export function createImpactMeasurementRepository(
       if (!rows?.length) return [];
 
       const uniqueIds = [
-        ...new Set(rows.map((r: { entrepreneur_id: string }) => r.entrepreneur_id)),
+        ...new Set(
+          rows.map((r: { entrepreneur_id: string }) => r.entrepreneur_id),
+        ),
       ] as string[];
 
       const results = await Promise.all(
@@ -343,9 +348,7 @@ export function createImpactMeasurementRepository(
       // Demographics
       const { data: demo } = await db
         .from('im_entrepreneur_demographics')
-        .select(
-          '*, im_education_levels(name), im_compensation_funds(name)',
-        )
+        .select('*, im_education_levels(name), im_compensation_funds(name)')
         .eq('entrepreneur_id', entrepreneurId)
         .single();
 
@@ -376,7 +379,8 @@ export function createImpactMeasurementRepository(
         fullName: ent.full_name,
         documentNumber: ent.document_number,
         documentType: ent.document_type,
-        identityValidated: ent.document_number != null && ent.document_number !== '',
+        identityValidated:
+          ent.document_number != null && ent.document_number !== '',
         educationLevel: demo?.im_education_levels?.name ?? null,
         municipality: demo?.home_municipality ?? null,
         residenceZone: demo?.home_zone ?? null,

@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createCredentialRepository } from '@/features/credentials/repositories/credentialRepository';
-import { badRequest, notFound, serverError, isValidUuid } from '@/lib/api/errors';
+import {
+  badRequest,
+  notFound,
+  serverError,
+  isValidUuid,
+} from '@/lib/api/errors';
 import { transformKeys } from '@/lib/api/transform';
 
 export async function GET(

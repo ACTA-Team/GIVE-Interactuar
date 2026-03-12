@@ -89,13 +89,11 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
       if (error) throw error;
     },
 
-    async findAllTemplates(
-      filters?: {
-        organizationId?: string;
-        credentialType?: string;
-        active?: boolean;
-      },
-    ): Promise<CredentialTemplate[]> {
+    async findAllTemplates(filters?: {
+      organizationId?: string;
+      credentialType?: string;
+      active?: boolean;
+    }): Promise<CredentialTemplate[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let q = (client as any).from('credential_templates').select('*');
 
@@ -125,9 +123,10 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
       return mapCredentialTemplate(data);
     },
 
-    async findAllDrafts(
-      filters?: { entrepreneurId?: string; status?: string },
-    ): Promise<IssuanceDraft[]> {
+    async findAllDrafts(filters?: {
+      entrepreneurId?: string;
+      status?: string;
+    }): Promise<IssuanceDraft[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let q = (client as any).from('issuance_drafts').select('*');
 

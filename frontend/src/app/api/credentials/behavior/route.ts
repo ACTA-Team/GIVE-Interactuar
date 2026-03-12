@@ -1,8 +1,18 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createImpactMeasurementRepository } from '@/features/impact-measurement/repositories/impactMeasurementRepository';
-import { isValidUuid, badRequest, notFound, serverError, validatePaginationParams } from '@/lib/api/errors';
+import {
+  isValidUuid,
+  badRequest,
+  notFound,
+  serverError,
+  validatePaginationParams,
+} from '@/lib/api/errors';
 import { transformKeys } from '@/lib/api/transform';
-import { parsePagination, buildMeta, paginationRange } from '@/lib/api/pagination';
+import {
+  parsePagination,
+  buildMeta,
+  paginationRange,
+} from '@/lib/api/pagination';
 
 /**
  * GET /api/credentials/behavior?entrepreneur_id=<uuid>&year=<optional>&financial_trend=<filter>&operating_capacity=<filter>&page=<num>&page_size=<num>
@@ -49,7 +59,8 @@ export async function GET(request: Request) {
     if (pErr) return badRequest(pErr);
 
     const financialTrend = searchParams.get('financial_trend') ?? undefined;
-    const operatingCapacity = searchParams.get('operating_capacity') ?? undefined;
+    const operatingCapacity =
+      searchParams.get('operating_capacity') ?? undefined;
     const leverageLevel = searchParams.get('leverage_level') ?? undefined;
     const creditActive = searchParams.get('credit_active');
     const hasFinancialData = searchParams.get('has_financial_data') === 'true';
@@ -58,11 +69,18 @@ export async function GET(request: Request) {
     let all = await repo.getAllBehaviorCredentials(year);
 
     // Apply filters
-    if (financialTrend) all = all.filter((r: any) => r.financialTrend === financialTrend);
-    if (operatingCapacity) all = all.filter((r: any) => r.estimatedOperatingCapacity === operatingCapacity);
-    if (leverageLevel) all = all.filter((r: any) => r.leverageLevel === leverageLevel);
-    if (creditActive === 'true') all = all.filter((r: any) => r.creditActive12m === true);
-    if (creditActive === 'false') all = all.filter((r: any) => r.creditActive12m === false);
+    if (financialTrend)
+      all = all.filter((r: any) => r.financialTrend === financialTrend);
+    if (operatingCapacity)
+      all = all.filter(
+        (r: any) => r.estimatedOperatingCapacity === operatingCapacity,
+      );
+    if (leverageLevel)
+      all = all.filter((r: any) => r.leverageLevel === leverageLevel);
+    if (creditActive === 'true')
+      all = all.filter((r: any) => r.creditActive12m === true);
+    if (creditActive === 'false')
+      all = all.filter((r: any) => r.creditActive12m === false);
     if (hasFinancialData) {
       all = all.filter(
         (r: any) =>
@@ -74,7 +92,10 @@ export async function GET(request: Request) {
 
     const { from, to } = paginationRange(pagination);
     const data = all.slice(from, to + 1);
-    return Response.json({ data: transformKeys(data), meta: buildMeta(all.length, pagination) });
+    return Response.json({
+      data: transformKeys(data),
+      meta: buildMeta(all.length, pagination),
+    });
   } catch (err) {
     console.error('[credentials/behavior] Error:', err);
     return serverError();

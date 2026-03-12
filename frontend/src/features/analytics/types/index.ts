@@ -1,85 +1,85 @@
-export interface DashboardResumen {
-  total_participantes: number;
-  activos: number;
-  tasa_retencion_pct: number;
-  mujeres: number;
-  hombres: number;
-  pct_mujeres: number;
-  ventas_total_n1_cop: number;
-  ventas_total_n_cop: number;
-  ventas_promedio_n1_cop: number;
-  ventas_promedio_n_cop: number;
-  variacion_promedio_pct: number;
-  empleos_tc_n1: number;
-  empleos_tc_n: number;
-  nuevos_empleos: number;
-  empleos_formalizados: number;
+export interface DashboardSummary {
+  total_participants: number;
+  active_count: number;
+  retention_rate_pct: number;
+  women: number;
+  men: number;
+  women_percentage: number;
+  previous_year_sales_total_cop: number;
+  current_year_sales_total_cop: number;
+  average_previous_year_sales_cop: number;
+  average_current_year_sales_cop: number;
+  average_variation_pct: number;
+  full_time_jobs_previous_year: number;
+  full_time_jobs_current_year: number;
+  new_jobs: number;
+  formalized_jobs: number;
 }
 
-export interface DashboardPorPrograma {
-  programa: string;
-  participantes: number;
-  ventas_promedio_n1_cop: number;
-  ventas_promedio_n_cop: number;
-  variacion_promedio_pct: number;
-  nuevos_empleos: number;
+export interface DashboardByProgram {
+  program: string;
+  participants: number;
+  average_previous_year_sales_cop: number;
+  average_current_year_sales_cop: number;
+  average_variation_pct: number;
+  new_jobs: number;
 }
 
-export interface DashboardPorGenero {
-  genero: string;
-  participantes: number;
-  ventas_promedio_n1_cop: number;
-  ventas_promedio_n_cop: number;
-  variacion_promedio_pct: number;
+export interface DashboardByGender {
+  gender: string;
+  participants: number;
+  average_previous_year_sales_cop: number;
+  average_current_year_sales_cop: number;
+  average_variation_pct: number;
 }
 
-export interface DashboardPorAliado {
-  aliado: string;
-  participantes: number;
-  nuevos_empleos: number;
+export interface DashboardByAlly {
+  ally: string;
+  participants: number;
+  new_jobs: number;
 }
 
-export interface DashboardPorEdad {
-  rango: string;
-  participantes: number;
+export interface DashboardByAge {
+  range: string;
+  participants: number;
 }
 
-export interface DashboardVentasMensuales {
-  mes: string;
-  promedio_cop: number;
+export interface DashboardMonthlySales {
+  month: string;
+  average_cop: number;
   n: number;
 }
 
-export interface DashboardCarteraClasificacion {
-  clasificacion: string;
+export interface DashboardPortfolioClassification {
+  classification: string;
   label: string;
-  casos: number;
-  saldo_mora_cop: number;
+  cases: number;
+  overdue_balance_cop: number;
 }
 
-export interface DashboardCartera {
-  total_con_credito: number;
-  al_dia: number;
-  en_mora: number;
-  pct_mora: number;
-  saldo_mora_total_cop: number;
-  por_clasificacion: DashboardCarteraClasificacion[];
+export interface DashboardPortfolio {
+  total_with_credit: number;
+  current: number;
+  in_default: number;
+  default_rate_pct: number;
+  total_overdue_balance_cop: number;
+  by_classification: DashboardPortfolioClassification[];
 }
 
 export interface DashboardData {
   metadata: {
-    programa: string;
-    periodo: string;
-    nota: string;
-    fuente: string;
+    program: string;
+    period: string;
+    note: string;
+    source: string;
   };
-  resumen: DashboardResumen;
-  por_programa: DashboardPorPrograma[];
-  por_genero: DashboardPorGenero[];
-  por_aliado: DashboardPorAliado[];
-  por_edad: DashboardPorEdad[];
-  ventas_mensuales: DashboardVentasMensuales[];
-  cartera: DashboardCartera;
+  summary: DashboardSummary;
+  by_program: DashboardByProgram[];
+  by_gender: DashboardByGender[];
+  by_ally: DashboardByAlly[];
+  by_age: DashboardByAge[];
+  monthly_sales: DashboardMonthlySales[];
+  portfolio: DashboardPortfolio;
 }
 
 export interface EntrepreneurRecord {

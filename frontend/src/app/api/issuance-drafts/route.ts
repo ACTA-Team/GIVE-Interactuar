@@ -1,8 +1,17 @@
 import { NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createCredentialRepository } from '@/features/credentials/repositories/credentialRepository';
-import { parsePagination, buildMeta, paginationRange } from '@/lib/api/pagination';
-import { badRequest, serverError, validatePaginationParams, validateUuidParam } from '@/lib/api/errors';
+import {
+  parsePagination,
+  buildMeta,
+  paginationRange,
+} from '@/lib/api/pagination';
+import {
+  badRequest,
+  serverError,
+  validatePaginationParams,
+  validateUuidParam,
+} from '@/lib/api/errors';
 import { transformKeys } from '@/lib/api/transform';
 
 export async function GET(request: Request) {
@@ -21,7 +30,10 @@ export async function GET(request: Request) {
     const all = await repo.findAllDrafts({ entrepreneurId, status });
     const { from, to } = paginationRange(pagination);
     const data = all.slice(from, to + 1);
-    return NextResponse.json({ data: transformKeys(data), meta: buildMeta(all.length, pagination) });
+    return NextResponse.json({
+      data: transformKeys(data),
+      meta: buildMeta(all.length, pagination),
+    });
   } catch (err) {
     console.error('[issuance-drafts] Error:', err);
     return serverError();

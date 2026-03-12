@@ -1,8 +1,17 @@
 import { NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createEntrepreneurRepository } from '@/features/entrepreneurs/repositories/entrepreneurRepository';
-import { parsePagination, buildMeta, paginationRange } from '@/lib/api/pagination';
-import { badRequest, serverError, validatePaginationParams, validateUuidParam } from '@/lib/api/errors';
+import {
+  parsePagination,
+  buildMeta,
+  paginationRange,
+} from '@/lib/api/pagination';
+import {
+  badRequest,
+  serverError,
+  validatePaginationParams,
+  validateUuidParam,
+} from '@/lib/api/errors';
 import { transformKeys } from '@/lib/api/transform';
 
 export async function GET(request: Request) {
@@ -20,7 +29,10 @@ export async function GET(request: Request) {
     const all = await repo.findAllBusinessProfiles({ entrepreneurId });
     const { from, to } = paginationRange(pagination);
     const data = all.slice(from, to + 1);
-    return NextResponse.json({ data: transformKeys(data), meta: buildMeta(all.length, pagination) });
+    return NextResponse.json({
+      data: transformKeys(data),
+      meta: buildMeta(all.length, pagination),
+    });
   } catch (err) {
     console.error('[business-profiles] Error:', err);
     return serverError();

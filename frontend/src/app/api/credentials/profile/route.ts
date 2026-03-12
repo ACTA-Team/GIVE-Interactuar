@@ -1,8 +1,18 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createImpactMeasurementRepository } from '@/features/impact-measurement/repositories/impactMeasurementRepository';
-import { isValidUuid, badRequest, notFound, serverError, validatePaginationParams } from '@/lib/api/errors';
+import {
+  isValidUuid,
+  badRequest,
+  notFound,
+  serverError,
+  validatePaginationParams,
+} from '@/lib/api/errors';
 import { transformKeys } from '@/lib/api/transform';
-import { parsePagination, buildMeta, paginationRange } from '@/lib/api/pagination';
+import {
+  parsePagination,
+  buildMeta,
+  paginationRange,
+} from '@/lib/api/pagination';
 
 /**
  * GET /api/credentials/profile?entrepreneur_id=<uuid>&is_formalized=<filter>&identity_validated=<filter>&page=<num>&page_size=<num>
@@ -53,18 +63,29 @@ export async function GET(request: Request) {
     let all = await repo.getAllProfileCredentials();
 
     // Apply filters
-    if (isFormalized === 'true') all = all.filter((r: any) => r.businessFormalized === true);
-    if (isFormalized === 'false') all = all.filter((r: any) => r.businessFormalized === false);
-    if (identityValidated === 'true') all = all.filter((r: any) => r.identityValidated === true);
-    if (identityValidated === 'false') all = all.filter((r: any) => r.identityValidated === false);
-    if (hasInternet === 'true') all = all.filter((r: any) => r.hasInternet === true);
-    if (hasInternet === 'false') all = all.filter((r: any) => r.hasInternet === false);
-    if (contributesPension === 'true') all = all.filter((r: any) => r.contributesPension === true);
-    if (contributesPension === 'false') all = all.filter((r: any) => r.contributesPension === false);
+    if (isFormalized === 'true')
+      all = all.filter((r: any) => r.businessFormalized === true);
+    if (isFormalized === 'false')
+      all = all.filter((r: any) => r.businessFormalized === false);
+    if (identityValidated === 'true')
+      all = all.filter((r: any) => r.identityValidated === true);
+    if (identityValidated === 'false')
+      all = all.filter((r: any) => r.identityValidated === false);
+    if (hasInternet === 'true')
+      all = all.filter((r: any) => r.hasInternet === true);
+    if (hasInternet === 'false')
+      all = all.filter((r: any) => r.hasInternet === false);
+    if (contributesPension === 'true')
+      all = all.filter((r: any) => r.contributesPension === true);
+    if (contributesPension === 'false')
+      all = all.filter((r: any) => r.contributesPension === false);
 
     const { from, to } = paginationRange(pagination);
     const data = all.slice(from, to + 1);
-    return Response.json({ data: transformKeys(data), meta: buildMeta(all.length, pagination) });
+    return Response.json({
+      data: transformKeys(data),
+      meta: buildMeta(all.length, pagination),
+    });
   } catch (err) {
     console.error('[credentials/profile] Error:', err);
     return serverError();

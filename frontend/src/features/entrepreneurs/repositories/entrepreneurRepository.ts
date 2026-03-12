@@ -50,9 +50,9 @@ export function createEntrepreneurRepository(client: SupabaseLikeClient) {
       return mapEntrepreneur(data);
     },
 
-    async findAllBusinessProfiles(
-      filters?: { entrepreneurId?: string },
-    ): Promise<BusinessProfile[]> {
+    async findAllBusinessProfiles(filters?: {
+      entrepreneurId?: string;
+    }): Promise<BusinessProfile[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let q = (client as any)
         .from('entrepreneur_business_profiles')
@@ -69,9 +69,7 @@ export function createEntrepreneurRepository(client: SupabaseLikeClient) {
       return (data ?? []).map((row: any) => mapBusinessProfile(row));
     },
 
-    async findBusinessProfileById(
-      id: string,
-    ): Promise<BusinessProfile | null> {
+    async findBusinessProfileById(id: string): Promise<BusinessProfile | null> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (client as any)
         .from('entrepreneur_business_profiles')
@@ -86,9 +84,10 @@ export function createEntrepreneurRepository(client: SupabaseLikeClient) {
       return mapBusinessProfile(data);
     },
 
-    async findAllSnapshots(
-      filters?: { entrepreneurId?: string; isLatest?: boolean },
-    ): Promise<EntrepreneurProfileSnapshot[]> {
+    async findAllSnapshots(filters?: {
+      entrepreneurId?: string;
+      isLatest?: boolean;
+    }): Promise<EntrepreneurProfileSnapshot[]> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let q = (client as any)
         .from('entrepreneur_profile_snapshots')

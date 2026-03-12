@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 import { ROUTES } from '@/lib/constants/routes';
 import { STAGES } from '../../types/stages';
-import { MOCK_ENTREPRENEURS } from '../../data/mock-entrepreneurs';
+import { useDashboardEntrepreneurs } from '../../hooks/useDashboardEntrepreneurs';
 import { NewEntrepreneurDialog } from '../ui/NewEntrepreneurDialog';
 
 type SortField = 'name' | 'stage' | 'delinquent' | 'funding';
@@ -44,7 +44,7 @@ export function EntrepreneursListPage() {
   const t = useTranslations('entrepreneurs');
   const tc = useTranslations('common');
   const td = useTranslations('dashboard');
-  const entrepreneurs = MOCK_ENTREPRENEURS;
+  const { data: entrepreneurs = [] } = useDashboardEntrepreneurs();
   const [search, setSearch] = useState('');
   const [filterStage, setFilterStage] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');

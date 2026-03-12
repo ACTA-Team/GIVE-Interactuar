@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { IconCertificate, IconSearch } from '@tabler/icons-react';
 import { Building2 } from 'lucide-react';
-import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
+import { useDashboardEntrepreneurs } from '@/features/entrepreneurs/hooks/useDashboardEntrepreneurs';
 import { CredentialIssuanceModal } from '../ui/CredentialIssuanceModal';
 
 interface CredentialIssuancePageProps {
@@ -17,7 +17,10 @@ interface CredentialIssuancePageProps {
 
 export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
   const t = useTranslations('credentials');
+  const { data: entrepreneurs = [] } = useDashboardEntrepreneurs();
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
   const [selectedEntrepreneur, setSelectedEntrepreneur] = useState<{
     id: string;
     name: string;
@@ -25,15 +28,35 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
   } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const filtered = MOCK_ENTREPRENEURS.filter((e) => {
-    const term = search.toLowerCase();
-    return (
-      e.name.toLowerCase().includes(term) ||
-      e.businessName.toLowerCase().includes(term)
-    );
-  });
+  const filtered = useMemo(() => {
+    const term = search.toLowerCase().trim();
+    const base = term
+      ? entrepreneurs.filter((e) => {
+      return (
+        e.name.toLowerCase().includes(term) ||
+        e.businessName.toLowerCase().includes(term)
+      );
+      })
+      : entrepreneurs;
 
-  const handleSelect = (entrepreneur: (typeof MOCK_ENTREPRENEURS)[number]) => {
+    return base;
+  }, [entrepreneurs, search]);
+
+  const totalPages = filtered.length
+    ? Math.ceil(filtered.length / pageSize)
+    : 1;
+
+  const currentPage = Math.min(page, totalPages);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const pageItems = filtered.slice(startIndex, endIndex);
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
+
+  const handleSelect = (entrepreneur: (typeof entrepreneurs)[number]) => {
     setSelectedEntrepreneur({
       id: entrepreneur.id,
       name: entrepreneur.name,
@@ -58,7 +81,7 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
             <Input
               placeholder={t('issuance.searchPlaceholder')}
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="pl-9"
             />
           </div>
@@ -66,7 +89,7 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
       </Card>
 
       <div className="space-y-2">
-        {filtered.map((entrepreneur) => (
+        {pageItems.map((entrepreneur) => (
           <div
             key={entrepreneur.id}
             role="button"
@@ -116,6 +139,41 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
           </Card>
         )}
       </div>
+
+      {filtered.length > 0 && (
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div>
+            Mostrando {startIndex + 1}-
+            {Math.min(endIndex, filtered.length)} de {filtered.length}{' '}
+            emprendedores
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="xs"
+              disabled={currentPage === 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+            >
+              Anterior
+            </Button>
+            <span>
+              Página {currentPage} de {totalPages}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="xs"
+              disabled={currentPage === totalPages}
+              onClick={() =>
+                setPage((p) => Math.min(totalPages, p + 1))
+              }
+            >
+              Siguiente
+            </Button>
+          </div>
+        </div>
+      )}
 
       {selectedEntrepreneur && (
         <CredentialIssuanceModal

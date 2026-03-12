@@ -1,8 +1,11 @@
 import { notFound } from 'next/navigation';
 import { ClientCredentialsPage } from '@/features/credentials/components/pages/ClientCredentialsPage';
-import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createCredentialRepository } from '@/features/credentials/repositories/credentialRepository';
+import {
+  mapEmpresarioToDashboardEntrepreneur,
+  type EmpresarioRow,
+} from '@/features/entrepreneurs/mappers/empresariosDashboardMapper';
 
 interface PageProps {
   params: Promise<{ entrepreneurId: string }>;
@@ -11,10 +14,26 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const { entrepreneurId } = await params;
 
-  const entrepreneur = MOCK_ENTREPRENEURS.find((e) => e.id === entrepreneurId);
-  if (!entrepreneur) notFound();
-
   const supabase = await createServerSupabaseClient();
+
+  const { data: empresario, error } = await supabase
+    .from('empresarios')
+    .select(
+      'id, name, company, sector, active_credit, delinquent, created_at',
+    )
+    .eq('id', entrepreneurId)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error loading empresario for client credentials page', error);
+  }
+
+  if (!empresario) notFound();
+
+  const entrepreneur = mapEmpresarioToDashboardEntrepreneur(
+    empresario as EmpresarioRow,
+  );
+
   const repo = createCredentialRepository(supabase);
   const credentials = await repo.findAll({ entrepreneurId });
 

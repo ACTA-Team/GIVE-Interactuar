@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/Button';
@@ -17,6 +17,7 @@ import type { IssuanceStatus } from '../../hooks/useIssueCredential';
 import type { BehaviorCredentialFormInput } from '../../schemas/behaviorCredentialSchema';
 import type { ImpactCredentialFormInput } from '../../schemas/impactCredentialSchema';
 import type { ProfileCredentialFormInput } from '../../schemas/profileCredentialSchema';
+import { useEmpresarioPrefill } from '../../hooks/useEmpresarioPrefill';
 
 type FormData =
   | BehaviorCredentialFormInput
@@ -121,6 +122,7 @@ export function CredentialIssuanceModal({
   const tc = useTranslations('common');
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState<CredentialType | null>(null);
+  const { data: empresarioPrefill } = useEmpresarioPrefill(entrepreneurId);
 
   const {
     issueCredential,
@@ -190,6 +192,107 @@ export function CredentialIssuanceModal({
     resetIssuance();
   };
 
+  const impactDefaults = useMemo<Partial<ImpactCredentialFormInput> | undefined>(
+    () => {
+      if (!empresarioPrefill) return undefined;
+
+      const sectorText = empresarioPrefill.sector ?? '';
+      const normalizedSector = sectorText.toLowerCase();
+
+      let mappedSector = '';
+      if (normalizedSector.includes('alimento')) mappedSector = 'Alimentos y bebidas';
+      else if (normalizedSector.includes('comercio')) mappedSector = 'Comercio';
+      else if (normalizedSector.includes('manufactura')) mappedSector = 'Manufactura';
+      else if (normalizedSector.includes('servicio')) mappedSector = 'Servicios';
+      else if (normalizedSector.includes('tecno')) mappedSector = 'Tecnología';
+      else if (normalizedSector.includes('agro')) mappedSector = 'Agropecuario';
+      else if (normalizedSector.includes('textil')) mappedSector = 'Textil y confecciones';
+      else if (normalizedSector.includes('turismo')) mappedSector = 'Turismo';
+      else mappedSector = '';
+
+      return {
+        companyName: empresarioPrefill.company ?? '',
+        sector: mappedSector,
+        salesPreviousYear: empresarioPrefill.salesPrevYearCop ?? 0,
+        salesCurrentYear: empresarioPrefill.salesCop ?? 0,
+        newJobsCreated: empresarioPrefill.newJobs ?? 0,
+      };
+    },
+    [empresarioPrefill],
+  );
+
+  const behaviorDefaults = useMemo<
+    Partial<BehaviorCredentialFormInput> | undefined
+  >(() => {
+    if (!empresarioPrefill) return undefined;
+
+    const activeCreditValue = (empresarioPrefill.activeCredit ?? '').toLowerCase();
+    const hasActiveCredit =
+      activeCreditValue === 'si' ||
+      activeCreditValue === 'sí' ||
+      activeCreditValue === 'yes';
+
+    return {
+      activeCredit: {
+        exists: hasActiveCredit,
+      },
+      averageSales: empresarioPrefill.salesCop ?? 0,
+      newJobs: empresarioPrefill.newJobs ?? 0,
+    };
+  }, [empresarioPrefill]);
+
+  const profileDefaults = useMemo<
+    Partial<ProfileCredentialFormInput> | undefined
+  >(() => {
+    if (!empresarioPrefill) return undefined;
+
+    const zoneText = (empresarioPrefill.residenceZone ?? '').toLowerCase();
+    let zone: ProfileCredentialFormInput['zone'] = 'urban';
+    if (zoneText.includes('rural')) zone = 'rural';
+    else if (zoneText.includes('peri')) zone = 'periurban';
+
+    const educationText = (empresarioPrefill.education ?? '').toLowerCase();
+    let educationLevel: ProfileCredentialFormInput['educationLevel'] = 'other';
+    if (educationText.includes('primaria')) educationLevel = 'primary';
+    else if (
+      educationText.includes('secundaria') ||
+      educationText.includes('bachiller')
+    )
+      educationLevel = 'secondary';
+    else if (
+      educationText.includes('técnica') ||
+      educationText.includes('tecnica') ||
+      educationText.includes('tecnológica') ||
+      educationText.includes('tecnologica')
+    )
+      educationLevel = 'technical';
+    else if (educationText.includes('profesional'))
+      educationLevel = 'undergraduate';
+    else if (
+      educationText.includes('maestr') ||
+      educationText.includes('doctor') ||
+      educationText.includes('especializ')
+    )
+      educationLevel = 'postgraduate';
+
+    const sizeText = (empresarioPrefill.companySize ?? '').toLowerCase();
+    let companySize: ProfileCredentialFormInput['companySize'] = 'micro';
+    if (sizeText.includes('micro')) companySize = 'micro';
+    else if (sizeText.includes('peque')) companySize = 'small';
+    else if (sizeText.includes('mediana')) companySize = 'medium';
+    else if (sizeText.includes('gran')) companySize = 'large';
+
+    const hasLegalEntity = !!empresarioPrefill.legalEntity;
+
+    return {
+      municipality: empresarioPrefill.municipality ?? '',
+      zone,
+      educationLevel,
+      formalizedBusiness: hasLegalEntity,
+      companySize,
+    };
+  }, [empresarioPrefill]);
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
@@ -248,6 +351,7 @@ export function CredentialIssuanceModal({
             <BehaviorCredentialForm
               onSubmit={handleFormSubmit}
               onBack={handleBack}
+              defaultValues={behaviorDefaults}
             />
           )}
 
@@ -255,6 +359,7 @@ export function CredentialIssuanceModal({
             <ImpactCredentialForm
               onSubmit={handleFormSubmit}
               onBack={handleBack}
+              defaultValues={impactDefaults}
             />
           )}
 
@@ -262,6 +367,7 @@ export function CredentialIssuanceModal({
             <ProfileCredentialForm
               onSubmit={handleFormSubmit}
               onBack={handleBack}
+              defaultValues={profileDefaults}
             />
           )}
 

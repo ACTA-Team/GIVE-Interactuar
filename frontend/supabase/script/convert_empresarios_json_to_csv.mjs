@@ -64,4 +64,3 @@ for (const row of data) {
 
 writeFileSync(csvPath, lines.join('\n'), 'utf8');
 console.log(`Wrote ${data.length} rows to ${csvPath}`);
-

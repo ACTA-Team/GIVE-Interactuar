@@ -48,4 +48,3 @@ export function mapEmpresarioToDashboardEntrepreneur(
     advisorId: 'advisor-1',
   };
 }
-

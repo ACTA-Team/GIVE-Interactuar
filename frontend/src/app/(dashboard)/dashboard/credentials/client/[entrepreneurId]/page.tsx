@@ -18,14 +18,15 @@ export default async function Page({ params }: PageProps) {
 
   const { data: empresario, error } = await supabase
     .from('empresarios')
-    .select(
-      'id, name, company, sector, active_credit, delinquent, created_at',
-    )
+    .select('id, name, company, sector, active_credit, delinquent, created_at')
     .eq('id', entrepreneurId)
     .maybeSingle();
 
   if (error) {
-    console.error('Error loading empresario for client credentials page', error);
+    console.error(
+      'Error loading empresario for client credentials page',
+      error,
+    );
   }
 
   if (!empresario) notFound();

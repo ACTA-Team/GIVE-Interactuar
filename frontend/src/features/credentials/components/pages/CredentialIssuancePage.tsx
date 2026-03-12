@@ -32,11 +32,11 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
     const term = search.toLowerCase().trim();
     const base = term
       ? entrepreneurs.filter((e) => {
-      return (
-        e.name.toLowerCase().includes(term) ||
-        e.businessName.toLowerCase().includes(term)
-      );
-      })
+          return (
+            e.name.toLowerCase().includes(term) ||
+            e.businessName.toLowerCase().includes(term)
+          );
+        })
       : entrepreneurs;
 
     return base;
@@ -143,9 +143,8 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
       {filtered.length > 0 && (
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div>
-            Mostrando {startIndex + 1}-
-            {Math.min(endIndex, filtered.length)} de {filtered.length}{' '}
-            emprendedores
+            Mostrando {startIndex + 1}-{Math.min(endIndex, filtered.length)} de{' '}
+            {filtered.length} emprendedores
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -165,9 +164,7 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
               variant="outline"
               size="xs"
               disabled={currentPage === totalPages}
-              onClick={() =>
-                setPage((p) => Math.min(totalPages, p + 1))
-              }
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             >
               Siguiente
             </Button>

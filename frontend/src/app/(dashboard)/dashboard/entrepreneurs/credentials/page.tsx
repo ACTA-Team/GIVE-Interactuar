@@ -28,7 +28,11 @@ export default async function Page({
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  const { data: empresarios, error, count } = await supabase
+  const {
+    data: empresarios,
+    error,
+    count,
+  } = await supabase
     .from('empresarios')
     .select(
       'id, name, company, sector, active_credit, delinquent, created_at',
@@ -88,8 +92,7 @@ export default async function Page({
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <div>
-            Página {page} de {totalPages} &mdash;{' '}
-            {total} emprendedores totales
+            Página {page} de {totalPages} &mdash; {total} emprendedores totales
           </div>
           <div className="flex items-center gap-2">
             {hasPrev ? (

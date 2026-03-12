@@ -21,6 +21,22 @@
     "funded": "Financiados",
     "entrepreneursCount": "{count} empresarios"
   },
+  "stages": {
+    "0": "Registro",
+    "1": "Formación básica",
+    "2": "Plan de negocio",
+    "3": "Capacitación financiera",
+    "4": "Apto para financiamiento",
+    "5": "Financiado"
+  },
+  "stages": {
+    "0": "Registro",
+    "1": "Formación básica",
+    "2": "Plan de negocio",
+    "3": "Capacitación financiera",
+    "4": "Apto para financiamiento",
+    "5": "Financiado"
+  },
   "table": {
     "title": "Empresarios",
     "description": "Selecciona empresarios para verificar etapas en lote",

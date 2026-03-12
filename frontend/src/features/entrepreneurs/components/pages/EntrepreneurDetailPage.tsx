@@ -28,7 +28,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import { STAGES } from '../../types/stages';
-import { MOCK_ENTREPRENEURS } from '../../data/mock-entrepreneurs';
+import { useDashboardEntrepreneur } from '../../hooks/useDashboardEntrepreneurs';
 import { CredentialIssuanceModal } from '@/features/credentials/components/ui/CredentialIssuanceModal';
 import { IconCertificate } from '@tabler/icons-react';
 
@@ -47,7 +47,7 @@ export function EntrepreneurDetailPage({
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
   const [isCredentialModalOpen, setIsCredentialModalOpen] = useState(false);
 
-  const entrepreneur = MOCK_ENTREPRENEURS.find((e) => e.id === entrepreneurId);
+  const { data: entrepreneur } = useDashboardEntrepreneur(entrepreneurId);
 
   if (!entrepreneur) {
     return (

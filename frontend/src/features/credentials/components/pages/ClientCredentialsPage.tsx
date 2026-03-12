@@ -11,8 +11,6 @@ import {
   ArrowLeft,
   Plus,
   ShieldCheck,
-  Mail,
-  Phone,
   Building2,
   Briefcase,
   DollarSign,
@@ -41,9 +39,35 @@ interface ClientInfo {
   delinquentDays?: number;
 }
 
+interface EmpresarioInfo {
+  program: string | null;
+  partner: string | null;
+  status: string | null;
+  gender: string | null;
+  municipality: string | null;
+  sector: string | null;
+  salesPrevYearCop: number | null;
+  salesCop: number | null;
+  growthPct: number | null;
+  newJobs: number | null;
+  level: string | null;
+  groupName: string | null;
+  cohortYear: number | null;
+  activeCredit: string | null;
+  education: string | null;
+  strata: number | null;
+  residenceZone: string | null;
+  legalEntity: string | null;
+  companySize: string | null;
+  age: number | null;
+  ageRange: string | null;
+  creditRequested: string;
+  delinquent: string;
+}
 interface ClientCredentialsPageProps {
   client: ClientInfo;
   credentials: Credential[];
+  empresario?: EmpresarioInfo;
 }
 
 const STATUS_VARIANT: Record<
@@ -168,6 +192,7 @@ const CREDENTIAL_TYPES: CredentialType[] = ['impact', 'behavior', 'profile'];
 export function ClientCredentialsPage({
   client,
   credentials,
+  empresario,
 }: ClientCredentialsPageProps) {
   const t = useTranslations('credentials');
   const tc = useTranslations('common');
@@ -229,7 +254,7 @@ export function ClientCredentialsPage({
                 .toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="flex items-center gap-2 text-sm">
                   <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
                   <span className="truncate">{client.businessName}</span>
@@ -237,14 +262,6 @@ export function ClientCredentialsPage({
                 <div className="flex items-center gap-2 text-sm">
                   <Briefcase className="h-4 w-4 text-muted-foreground shrink-0" />
                   <span>{client.businessType}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <span className="truncate">{client.email}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <span>{client.phone}</span>
                 </div>
               </div>
 
@@ -272,6 +289,140 @@ export function ClientCredentialsPage({
           </div>
         </CardContent>
       </Card>
+
+      {/* Empresario data from program / DB */}
+      {empresario && (
+        <Card>
+          <CardContent className="pt-5 pb-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-foreground">
+                Información del empresario
+              </h2>
+              {empresario.status && (
+                <Badge variant="outline" className="text-xs">
+                  {empresario.status}
+                </Badge>
+              )}
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="space-y-1 text-sm">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Programa
+                </p>
+                <p className="text-foreground">
+                  {empresario.program ?? 'Sin dato'}
+                  {empresario.cohortYear
+                    ? ` · Cohorte ${empresario.cohortYear}`
+                    : ''}
+                </p>
+                {empresario.partner && (
+                  <p className="text-xs text-muted-foreground">
+                    Aliado: {empresario.partner}
+                  </p>
+                )}
+                {(empresario.level || empresario.groupName) && (
+                  <p className="text-xs text-muted-foreground">
+                    {[empresario.level, empresario.groupName]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-1 text-sm">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Perfil del empresario
+                </p>
+                <p className="text-foreground">
+                  {empresario.gender ?? 'Género no registrado'}
+                  {empresario.age && ` · ${empresario.age} años`}
+                </p>
+                {empresario.ageRange && (
+                  <p className="text-xs text-muted-foreground">
+                    Rango de edad: {empresario.ageRange}
+                  </p>
+                )}
+                {empresario.education && (
+                  <p className="text-xs text-muted-foreground">
+                    Educación: {empresario.education}
+                  </p>
+                )}
+                {(empresario.strata || empresario.residenceZone) && (
+                  <p className="text-xs text-muted-foreground">
+                    {[
+                      empresario.residenceZone,
+                      empresario.strata ? `Estrato ${empresario.strata}` : null,
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-1 text-sm">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Negocio y riesgo
+                </p>
+                <p className="text-foreground">
+                  {empresario.municipality ?? 'Municipio no registrado'}
+                  {empresario.sector && ` · ${empresario.sector}`}
+                </p>
+                {(empresario.companySize || empresario.legalEntity) && (
+                  <p className="text-xs text-muted-foreground">
+                    {[empresario.companySize, empresario.legalEntity]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  Crédito solicitado: {empresario.creditRequested || 'Sin dato'}{' '}
+                  ·{' '}
+                  {empresario.activeCredit
+                    ? `Crédito activo: ${empresario.activeCredit}`
+                    : 'Sin crédito activo registrado'}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Estado de mora: {empresario.delinquent}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="space-y-1 text-sm">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Ventas
+                </p>
+                <p className="text-foreground">
+                  {empresario.salesPrevYearCop != null
+                    ? `Año anterior: $${empresario.salesPrevYearCop.toLocaleString('es-CO')}`
+                    : 'Año anterior: sin dato'}
+                </p>
+                <p className="text-foreground">
+                  {empresario.salesCop != null
+                    ? `Año actual: $${empresario.salesCop.toLocaleString('es-CO')}`
+                    : 'Año actual: sin dato'}
+                </p>
+                {empresario.growthPct != null && (
+                  <p className="text-xs text-muted-foreground">
+                    Crecimiento: {empresario.growthPct.toFixed(1)}%
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-1 text-sm">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Empleo
+                </p>
+                <p className="text-foreground">
+                  Nuevos empleos reportados:{' '}
+                  {empresario.newJobs != null ? empresario.newJobs : 0}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats by type */}
       <div className="grid gap-4 sm:grid-cols-3">

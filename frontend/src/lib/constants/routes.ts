@@ -9,7 +9,7 @@ export const ROUTES = {
     list: '/dashboard/credentials',
     new: '/dashboard/credentials/new',
     client: (entrepreneurId: string) =>
-      `/dashboard/entrepreneurs/credentials/details/${entrepreneurId}`,
+      `/dashboard/credentials/client/${entrepreneurId}`,
     detail: (id: string) => `/dashboard/credentials/${id}`,
   },
   verify: (credentialId: string) => `/verify/${credentialId}`,

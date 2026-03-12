@@ -92,7 +92,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);
   const isCredentialsActive =
     pathname.startsWith(ROUTES.entrepreneurs.storage) ||
-    pathname.startsWith('/dashboard/entrepreneurs/credentials/details/');
+    pathname.startsWith('/dashboard/credentials/client/');
 
   const content = (
     <div className="flex h-full flex-col">
@@ -147,9 +147,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
             href={ROUTES.entrepreneurs.storage}
             isActive={
               pathname === ROUTES.entrepreneurs.storage ||
-              pathname.startsWith(
-                '/dashboard/entrepreneurs/credentials/details/',
-              )
+              pathname.startsWith('/dashboard/credentials/client/')
             }
             onClick={onMobileClose}
           />

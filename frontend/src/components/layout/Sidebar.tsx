@@ -140,7 +140,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
 
         <NavItem
           icon={<IconFileText className="h-4 w-4" />}
-          label="Formulario"
+          label={t('nav.forms')}
           href={ROUTES.forms.responses}
           isActive={isFormsActive}
           onClick={onMobileClose}

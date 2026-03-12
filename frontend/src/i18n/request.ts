@@ -18,6 +18,7 @@ export default getRequestConfig(async () => {
       .default,
     credentials: (await import(`../../messages/${locale}/credentials.json`))
       .default,
+    forms: (await import(`../../messages/${locale}/forms.json`)).default,
     verification: (await import(`../../messages/${locale}/verification.json`))
       .default,
     errors: (await import(`../../messages/${locale}/errors.json`)).default,

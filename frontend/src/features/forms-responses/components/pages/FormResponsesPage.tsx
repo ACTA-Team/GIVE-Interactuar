@@ -1,6 +1,7 @@
-'use client';
+ 'use client';
 
 import { useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   Table,
   TableHeader,
@@ -19,6 +20,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/Button';
+import { useTranslations as useFormsTranslations } from 'next-intl';
 
 type FormResponse = {
   id: string;
@@ -112,6 +114,8 @@ function formatFull(dateString: string) {
 }
 
 export function FormResponsesPage() {
+  const t = useTranslations('dashboard.forms');
+  const tf = useFormsTranslations('forms.forms');
   const [selected, setSelected] = useState<FormResponse | null>(null);
 
   const rows = useMemo(() => MOCK_RESPONSES, []);
@@ -121,11 +125,10 @@ export function FormResponsesPage() {
       <header className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">
-            Respuestas de formulario
+            {t('title')}
           </h1>
           <p className="mt-1 text-sm text-gray-500">
-            Visualiza cada respuesta con su hora de llegada y revisa el detalle
-            completo en un panel lateral.
+            {t('subtitle')}
           </p>
         </div>
       </header>
@@ -134,10 +137,10 @@ export function FormResponsesPage() {
         <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
           <div className="flex flex-col gap-0.5">
             <h2 className="text-sm font-semibold text-gray-800">
-              Últimas respuestas
+              {t('latest')}
             </h2>
             <p className="text-xs text-gray-500">
-              {rows.length} respuestas recibidas
+              {t('count', { count: rows.length })}
             </p>
           </div>
         </div>
@@ -146,12 +149,14 @@ export function FormResponsesPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Tiempo de llegada</TableHead>
-                <TableHead>Nombre</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead>Fuente</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
+                <TableHead>{t('columns.arrivalAt')}</TableHead>
+                <TableHead>{t('columns.name')}</TableHead>
+                <TableHead>{t('columns.email')}</TableHead>
+                <TableHead>{t('columns.status')}</TableHead>
+                <TableHead>{t('columns.source')}</TableHead>
+                <TableHead className="text-right">
+                  {t('columns.actions')}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -177,7 +182,7 @@ export function FormResponsesPage() {
                     </span>
                   </TableCell>
                   <TableCell className="text-sm text-gray-500">
-                    Google Forms
+                    {tf('googleForms')}
                   </TableCell>
                   <TableCell className="text-right">
                     <Dialog open={selected?.id === response.id}>
@@ -186,21 +191,20 @@ export function FormResponsesPage() {
                         variant="outline"
                         onClick={() => setSelected(response)}
                       >
-                        Ver
+                        {t('actions.view')}
                       </Button>
                       <DialogContent className="max-w-lg" showCloseButton>
                         <DialogHeader>
-                          <DialogTitle>Detalle de respuesta</DialogTitle>
+                          <DialogTitle>{t('detail.title')}</DialogTitle>
                           <DialogDescription>
-                            Información completa enviada a través del
-                            formulario.
+                            {t('detail.description')}
                           </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-4 text-sm">
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-                                Nombre
+                                {t('detail.fields.name')}
                               </p>
                               <p className="mt-0.5 text-gray-900">
                                 {response.nombre}
@@ -208,7 +212,7 @@ export function FormResponsesPage() {
                             </div>
                             <div>
                               <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-                                Email
+                                {t('detail.fields.email')}
                               </p>
                               <p className="mt-0.5 text-gray-900">
                                 {response.email}
@@ -217,7 +221,7 @@ export function FormResponsesPage() {
                             {response.telefono && (
                               <div>
                                 <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-                                  Teléfono
+                                  {t('detail.fields.phone')}
                                 </p>
                                 <p className="mt-0.5 text-gray-900">
                                   {response.telefono}
@@ -226,7 +230,7 @@ export function FormResponsesPage() {
                             )}
                             <div>
                               <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-                                Tiempo de llegada
+                                {t('detail.fields.arrivalAt')}
                               </p>
                               <p className="mt-0.5 text-gray-900">
                                 {formatFull(response.submittedAt)}
@@ -234,7 +238,7 @@ export function FormResponsesPage() {
                             </div>
                             <div>
                               <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-                                Estado
+                                {t('detail.fields.status')}
                               </p>
                               <p className="mt-0.5">
                                 <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
@@ -244,17 +248,17 @@ export function FormResponsesPage() {
                             </div>
                             <div>
                               <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-                                Fuente
+                                {t('detail.fields.source')}
                               </p>
                               <p className="mt-0.5 text-gray-900">
-                                Google Forms
+                                {tf('googleForms')}
                               </p>
                             </div>
                           </div>
 
                           <div className="border-t border-gray-100 pt-4">
                             <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">
-                              Campos del formulario
+                              {t('detail.fields.payload')}
                             </p>
                             <div className="space-y-2 rounded-lg bg-gray-50 p-3">
                               {Object.entries(response.payload).map(
@@ -283,7 +287,7 @@ export function FormResponsesPage() {
                               className="w-full sm:w-auto"
                               onClick={() => setSelected(null)}
                             >
-                              Cerrar
+                              {t('actions.close')}
                             </Button>
                           </DialogClose>
                         </DialogFooter>

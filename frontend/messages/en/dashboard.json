@@ -67,5 +67,36 @@
     "apr": "Apr",
     "may": "May",
     "jun": "Jun"
+  },
+  "forms": {
+    "title": "Form responses",
+    "subtitle": "See each response with its arrival time and review the full details in a side panel.",
+    "latest": "Latest responses",
+    "count": "{count} responses received",
+    "columns": {
+      "arrivalAt": "Arrival time",
+      "name": "Name",
+      "email": "Email",
+      "status": "Status",
+      "source": "Source",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "close": "Close"
+    },
+    "detail": {
+      "title": "Response details",
+      "description": "Full information submitted through the form.",
+      "fields": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "arrivalAt": "Arrival time",
+        "status": "Status",
+        "source": "Source",
+        "payload": "Form fields"
+      }
+    }
   }
 }

@@ -75,5 +75,36 @@
     "apr": "Abr",
     "may": "May",
     "jun": "Jun"
+  },
+  "forms": {
+    "title": "Respuestas de formulario",
+    "subtitle": "Visualiza cada respuesta con su hora de llegada y revisa el detalle completo en un panel lateral.",
+    "latest": "Últimas respuestas",
+    "count": "{count} respuestas recibidas",
+    "columns": {
+      "arrivalAt": "Tiempo de llegada",
+      "name": "Nombre",
+      "email": "Email",
+      "status": "Estado",
+      "source": "Fuente",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "view": "Ver",
+      "close": "Cerrar"
+    },
+    "detail": {
+      "title": "Detalle de respuesta",
+      "description": "Información completa enviada a través del formulario.",
+      "fields": {
+        "name": "Nombre",
+        "email": "Email",
+        "phone": "Teléfono",
+        "arrivalAt": "Tiempo de llegada",
+        "status": "Estado",
+        "source": "Fuente",
+        "payload": "Campos del formulario"
+      }
+    }
   }
 }

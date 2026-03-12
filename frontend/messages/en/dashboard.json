@@ -21,6 +21,14 @@
     "funded": "Funded",
     "entrepreneursCount": "{count} entrepreneurs"
   },
+  "stages": {
+    "0": "Registration",
+    "1": "Basic Training",
+    "2": "Business Plan",
+    "3": "Financial Training",
+    "4": "Eligible for Financing",
+    "5": "Financed"
+  },
   "table": {
     "title": "Entrepreneurs",
     "description": "Select entrepreneurs to verify stages in batch",

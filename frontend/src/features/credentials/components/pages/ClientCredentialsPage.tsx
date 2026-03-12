@@ -11,8 +11,6 @@ import {
   ArrowLeft,
   Plus,
   ShieldCheck,
-  Mail,
-  Phone,
   Building2,
   Briefcase,
   DollarSign,
@@ -41,10 +39,7 @@ interface ClientInfo {
   delinquentDays?: number;
 }
 
-interface ClientCredentialsPageProps {
-  client: ClientInfo;
-  credentials: Credential[];
-  empresario: {
+interface EmpresarioInfo {
     program: string | null;
     partner: string | null;
     status: string | null;
@@ -68,7 +63,11 @@ interface ClientCredentialsPageProps {
     ageRange: string | null;
     creditRequested: string;
     delinquent: string;
-  };
+  }
+interface ClientCredentialsPageProps {
+  client: ClientInfo;
+  credentials: Credential[];
+  empresario?: EmpresarioInfo;
 }
 
 const STATUS_VARIANT: Record<
@@ -292,8 +291,9 @@ export function ClientCredentialsPage({
       </Card>
 
       {/* Empresario data from program / DB */}
-      <Card>
-        <CardContent className="pt-5 pb-4 space-y-4">
+      {empresario && (
+        <Card>
+          <CardContent className="pt-5 pb-4 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-foreground">
               Información del empresario
@@ -419,8 +419,9 @@ export function ClientCredentialsPage({
               </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats by type */}
       <div className="grid gap-4 sm:grid-cols-3">

@@ -34,12 +34,8 @@ import {
 import { STAGES } from '../../types/stages';
 import { MOCK_ENTREPRENEURS } from '../../data/mock-entrepreneurs';
 import { NewEntrepreneurDialog } from '../ui/NewEntrepreneurDialog';
-import {
-  BADGE_ICONS_SMALL,
-  BADGE_LIST_CLASSES,
-} from '../../constants/badge-ui';
 
-type SortField = 'name' | 'stage' | 'delinquent' | 'funding' | 'badges';
+type SortField = 'name' | 'stage' | 'delinquent' | 'funding';
 type SortDirection = 'asc' | 'desc';
 
 export function EntrepreneursListPage() {
@@ -92,9 +88,6 @@ export function EntrepreneursListPage() {
           break;
         case 'funding':
           comparison = (a.fundingAmount || 0) - (b.fundingAmount || 0);
-          break;
-        case 'badges':
-          comparison = a.badges.length - b.badges.length;
           break;
       }
       return sortDirection === 'desc' ? -comparison : comparison;
@@ -285,24 +278,13 @@ export function EntrepreneursListPage() {
                       />
                     </button>
                   </TableHead>
-                  <TableHead>
-                    <button
-                      onClick={() => toggleSort('badges')}
-                      className="flex items-center gap-1 hover:text-foreground transition-colors font-medium"
-                    >
-                      Insignias
-                      <ArrowUpDown
-                        className={`h-3 w-3 ${sortField === 'badges' ? 'text-primary' : 'text-muted-foreground'}`}
-                      />
-                    </button>
-                  </TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredAndSortedEntrepreneurs.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-32 text-center">
+                    <TableCell colSpan={6} className="h-32 text-center">
                       <p className="text-muted-foreground">
                         No se encontraron empresarios
                       </p>
@@ -383,33 +365,6 @@ export function EntrepreneursListPage() {
                               </Badge>
                             )}
                           </div>
-                        </TableCell>
-                        <TableCell>
-                          {entrepreneur.badges.length > 0 ? (
-                            <div className="flex items-center gap-1">
-                              {entrepreneur.badges.slice(0, 3).map((badge) => (
-                                <div
-                                  key={badge.id}
-                                  className={`h-7 w-7 rounded-lg ${BADGE_LIST_CLASSES[badge.id] ?? 'bg-muted border'} border flex items-center justify-center`}
-                                  title={badge.name}
-                                >
-                                  {BADGE_ICONS_SMALL[badge.id]}
-                                </div>
-                              ))}
-                              {entrepreneur.badges.length > 3 && (
-                                <Badge
-                                  variant="secondary"
-                                  className="text-xs h-7 px-2"
-                                >
-                                  +{entrepreneur.badges.length - 3}
-                                </Badge>
-                              )}
-                            </div>
-                          ) : (
-                            <span className="text-sm text-muted-foreground">
-                              -
-                            </span>
-                          )}
                         </TableCell>
                         <TableCell>
                           <Link

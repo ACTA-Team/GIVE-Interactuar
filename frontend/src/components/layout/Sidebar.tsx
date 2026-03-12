@@ -93,19 +93,13 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
 
         <hr className="my-3 border-gray-100" />
 
-        <SidebarNavGroup
+        <NavItem
           icon={<IconUsers className="h-4 w-4" />}
           label="Emprendedores"
-          defaultOpen={isEntrepreneursActive}
-        >
-          <NavItem
-            icon={<IconList className="h-4 w-4" />}
-            label="Lista"
-            href={ROUTES.entrepreneurs.list}
-            isActive={pathname === ROUTES.entrepreneurs.list}
-            onClick={onMobileClose}
-          />
-        </SidebarNavGroup>
+          href={ROUTES.entrepreneurs.list}
+          isActive={isEntrepreneursActive}
+          onClick={onMobileClose}
+        />
 
         <SidebarNavGroup
           icon={<IconCertificate className="h-4 w-4" />}

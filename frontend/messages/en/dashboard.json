@@ -1,6 +1,8 @@
 {
   "title": "Dashboard",
   "welcome": "Welcome. Summary of your entrepreneurs portfolio.",
+  "loading": "Loading dashboard data…",
+  "error": "Error loading dashboard data. Please try again later.",
   "stats": {
     "totalEntrepreneurs": "Total Entrepreneurs",
     "totalFunding": "Total Funding",
@@ -10,7 +12,10 @@
     "entrepreneursFunded": "{count} entrepreneurs funded",
     "stages1to3": "Stages 1-3 of the process",
     "needsAttention": "Needs attention",
-    "allUpToDate": "All up to date"
+    "allUpToDate": "All up to date",
+    "genderDistribution": "Gender distribution",
+    "female": "Women",
+    "male": "Men"
   },
   "charts": {
     "growthTrend": "Growth Trend",
@@ -32,6 +37,7 @@
   "table": {
     "title": "Entrepreneurs",
     "description": "Select entrepreneurs to verify stages in batch",
+    "top10Description": "Top 10 entrepreneurs based on current filters and sorting",
     "entrepreneur": "Entrepreneur",
     "business": "Business",
     "stage": "Stage",

@@ -52,7 +52,7 @@ import {
   Legend,
 } from 'recharts';
 import { STAGES } from '@/features/entrepreneurs/types/stages';
-import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
+import { useDashboardEntrepreneurs } from '@/features/entrepreneurs/hooks/useDashboardEntrepreneurs';
 
 type SortField = 'name' | 'stage' | 'delinquent' | 'funding';
 type SortDirection = 'asc' | 'desc';
@@ -60,7 +60,12 @@ type SortDirection = 'asc' | 'desc';
 export function DashboardPage() {
   const t = useTranslations('dashboard');
   const tc = useTranslations('common');
-  const entrepreneurs = MOCK_ENTREPRENEURS;
+  const {
+    data: entrepreneursData,
+    isLoading,
+    error,
+  } = useDashboardEntrepreneurs();
+  const entrepreneurs = entrepreneursData ?? [];
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortField, setSortField] = useState<SortField>('delinquent');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
@@ -146,6 +151,40 @@ export function DashboardPage() {
     });
   }, [entrepreneurs, sortField, sortDirection, filterStage, filterStatus]);
 
+  const normalizeGender = (value?: string) => {
+    if (!value) return 'unknown';
+    const normalized = value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
+
+    if (
+      normalized === 'f' ||
+      normalized === 'femenino' ||
+      normalized === 'mujer'
+    ) {
+      return 'female';
+    }
+    if (
+      normalized === 'm' ||
+      normalized === 'masculino' ||
+      normalized === 'hombre'
+    ) {
+      return 'male';
+    }
+    return 'unknown';
+  };
+
+  const femaleCount = entrepreneurs.filter(
+    (e) => normalizeGender(e.gender) === 'female',
+  ).length;
+  const maleCount = entrepreneurs.filter(
+    (e) => normalizeGender(e.gender) === 'male',
+  ).length;
+
+  const topEntrepreneurs = filteredAndSortedEntrepreneurs.slice(0, 10);
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
@@ -188,6 +227,22 @@ export function DashboardPage() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <p className="text-muted-foreground">{t('loading')}</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <p className="text-destructive">{t('error')}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -197,7 +252,7 @@ export function DashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -316,6 +371,34 @@ export function DashboardPage() {
               }}
             />
           </div>
+        </Card>
+
+        <Card className="relative overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              {t('stats.genderDistribution')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  {t('stats.female')}
+                </span>
+                <span className="font-semibold">
+                  {femaleCount} / {totalEntrepreneurs}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  {t('stats.male')}
+                </span>
+                <span className="font-semibold">
+                  {maleCount} / {totalEntrepreneurs}
+                </span>
+              </div>
+            </div>
+          </CardContent>
         </Card>
       </div>
 
@@ -448,13 +531,13 @@ export function DashboardPage() {
         </Card>
       </div>
 
-      {/* Sortable Table */}
+      {/* Sortable Table - Top 10 */}
       <Card>
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <CardTitle>{t('table.title')}</CardTitle>
-              <CardDescription>{t('table.description')}</CardDescription>
+              <CardDescription>{t('table.top10Description')}</CardDescription>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Select value={filterStage} onValueChange={handleFilterStage}>
@@ -591,7 +674,7 @@ export function DashboardPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAndSortedEntrepreneurs.length === 0 ? (
+                {topEntrepreneurs.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="h-32 text-center">
                       <p className="text-muted-foreground">
@@ -600,7 +683,7 @@ export function DashboardPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredAndSortedEntrepreneurs.map((entrepreneur) => {
+                  topEntrepreneurs.map((entrepreneur) => {
                     const currentStage = STAGES.find(
                       (s) => s.id === entrepreneur.currentStage,
                     );
@@ -700,7 +783,7 @@ export function DashboardPage() {
           <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
             <p>
               {tc('showing', {
-                count: filteredAndSortedEntrepreneurs.length,
+                count: topEntrepreneurs.length,
                 total: entrepreneurs.length,
               })}
             </p>

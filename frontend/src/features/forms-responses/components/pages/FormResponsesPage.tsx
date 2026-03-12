@@ -1,4 +1,4 @@
- 'use client';
+'use client';
 
 import { useMemo, useState } from 'react';
 import {
@@ -192,7 +192,8 @@ export function FormResponsesPage() {
                         <DialogHeader>
                           <DialogTitle>Detalle de respuesta</DialogTitle>
                           <DialogDescription>
-                            Información completa enviada a través del formulario.
+                            Información completa enviada a través del
+                            formulario.
                           </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-4 text-sm">
@@ -245,7 +246,9 @@ export function FormResponsesPage() {
                               <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
                                 Fuente
                               </p>
-                              <p className="mt-0.5 text-gray-900">Google Forms</p>
+                              <p className="mt-0.5 text-gray-900">
+                                Google Forms
+                              </p>
                             </div>
                           </div>
 
@@ -296,4 +299,3 @@ export function FormResponsesPage() {
     </div>
   );
 }
-

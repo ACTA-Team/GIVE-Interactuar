@@ -3,4 +3,3 @@ import { FormResponsesPage } from '@/features/forms-responses/components/pages/F
 export default function Page() {
   return <FormResponsesPage />;
 }
-

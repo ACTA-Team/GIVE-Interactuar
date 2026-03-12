@@ -2,12 +2,13 @@
 
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { CheckCircle, ExternalLink } from 'lucide-react';
+import { CheckCircle, ExternalLink, Copy, Check } from 'lucide-react';
 import {
   IconTrendingUp,
   IconShieldCheck,
   IconIdBadge2,
 } from '@tabler/icons-react';
+import { useState } from 'react';
 import type { CredentialType } from '../../types';
 import { CREDENTIAL_TYPE_LABELS } from '../../types';
 
@@ -21,6 +22,9 @@ interface CredentialIssuedSuccessProps {
   credentialType: CredentialType;
   entrepreneurName: string;
   businessName: string;
+  vcId: string | null;
+  txId: string | null;
+  issuerAddress: string | null;
   onClose: () => void;
 }
 
@@ -28,8 +32,28 @@ export function CredentialIssuedSuccess({
   credentialType,
   entrepreneurName,
   businessName,
+  vcId,
+  txId,
+  issuerAddress,
   onClose,
 }: CredentialIssuedSuccessProps) {
+  const [copied, setCopied] = useState(false);
+  const isOnChain = !!vcId;
+
+  const handleCopyVcId = async () => {
+    if (!vcId) return;
+    await navigator.clipboard.writeText(vcId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const network = process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? 'testnet';
+  const explorerUrl = txId
+    ? `https://stellar.expert/explorer/${network}/tx/${txId}`
+    : issuerAddress
+      ? `https://stellar.expert/explorer/${network}/account/${issuerAddress}`
+      : null;
+
   return (
     <div className="flex flex-col items-center gap-6 py-6 text-center">
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
@@ -38,10 +62,14 @@ export function CredentialIssuedSuccess({
 
       <div className="space-y-2">
         <h3 className="text-lg font-semibold text-foreground">
-          Credencial lista para emitir
+          {isOnChain
+            ? 'Credencial emitida en blockchain'
+            : 'Credencial lista para emitir'}
         </h3>
         <p className="text-sm text-muted-foreground">
-          Los datos han sido validados y la credencial está preparada.
+          {isOnChain
+            ? 'La credencial ha sido registrada de forma verificable en Stellar.'
+            : 'Los datos han sido validados y la credencial está preparada.'}
         </p>
       </div>
 
@@ -70,29 +98,57 @@ export function CredentialIssuedSuccess({
           <span className="text-sm text-muted-foreground">Estado</span>
           <Badge variant="success" className="gap-1">
             <CheckCircle className="h-3 w-3" />
-            Validada
+            {isOnChain ? 'Emitida on-chain' : 'Validada'}
           </Badge>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Blockchain</span>
-          {/* TODO: ACTA integration - show actual tx hash */}
-          <span className="text-xs text-muted-foreground italic">
-            Pendiente de emisión on-chain
+          <span className="text-sm text-muted-foreground">Red</span>
+          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Stellar {network}
           </span>
         </div>
+
+        {vcId && (
+          <div className="space-y-1.5">
+            <span className="text-sm text-muted-foreground">VC ID</span>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 truncate rounded bg-muted px-2 py-1 text-xs text-foreground">
+                {vcId}
+              </code>
+              <button
+                type="button"
+                onClick={handleCopyVcId}
+                className="shrink-0 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                {copied ? (
+                  <Check className="h-3.5 w-3.5 text-emerald-500" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="w-full max-w-sm rounded-lg border border-dashed border-amber-300 bg-amber-50 p-3">
-        <p className="text-xs text-amber-700">
-          La emisión on-chain con ACTA será habilitada próximamente. Los datos
-          del formulario quedarán almacenados como borrador hasta entonces.
-        </p>
-      </div>
+      {isOnChain && (
+        <div className="w-full max-w-sm rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+          <p className="text-xs text-emerald-700">
+            Esta credencial es verificable por cualquier persona con el VC ID.
+            Fue registrada de forma inmutable en la blockchain de Stellar
+            mediante ACTA.
+          </p>
+        </div>
+      )}
 
       <div className="flex w-full max-w-sm gap-3">
-        {/* TODO: ACTA integration - enable this button to view on explorer */}
-        <Button variant="outline" className="flex-1 gap-2" disabled>
+        <Button
+          variant="outline"
+          className="flex-1 gap-2"
+          disabled={!explorerUrl}
+          onClick={() => explorerUrl && window.open(explorerUrl, '_blank')}
+        >
           <ExternalLink className="h-4 w-4" />
           Ver en blockchain
         </Button>

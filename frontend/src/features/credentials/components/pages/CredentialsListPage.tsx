@@ -127,10 +127,7 @@ export function CredentialsListPage({
                       </TableCell>
                       <TableCell>
                         <p className="text-sm">
-                          {[
-                            entrepreneur.municipality,
-                            entrepreneur.department,
-                          ]
+                          {[entrepreneur.municipality, entrepreneur.department]
                             .filter(Boolean)
                             .join(', ') || '—'}
                         </p>
@@ -146,9 +143,7 @@ export function CredentialsListPage({
                         )}
                       </TableCell>
                       <TableCell>
-                        <Link
-                          href={ROUTES.credentials.client(entrepreneur.id)}
-                        >
+                        <Link href={ROUTES.credentials.client(entrepreneur.id)}>
                           <button className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
                             <ChevronRight className="h-4 w-4" />
                           </button>

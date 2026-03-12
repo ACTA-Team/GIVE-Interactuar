@@ -107,9 +107,7 @@ export function ClientCredentialsPage({
         <section key={type} className="space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-foreground">
-                {label}
-              </h2>
+              <h2 className="text-lg font-semibold text-foreground">{label}</h2>
               <p className="text-sm text-muted-foreground">{description}</p>
             </div>
             {items.length > 0 && (

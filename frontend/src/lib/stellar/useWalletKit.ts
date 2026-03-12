@@ -4,11 +4,9 @@ import { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 import { useWalletContext } from './WalletContext';
 
 export function useWalletKit() {
-  const { setWalletInfo, clearWalletInfo, walletKit } = useWalletContext();
+  const { setWalletInfo, clearWalletInfo } = useWalletContext();
 
   const connectWithWalletKit = async (): Promise<string> => {
-    if (!walletKit) throw new Error('WalletKit no disponible');
-
     const { address } = await StellarWalletsKit.authModal();
     const walletName =
       StellarWalletsKit.selectedModule?.productName ?? 'Stellar Wallet';

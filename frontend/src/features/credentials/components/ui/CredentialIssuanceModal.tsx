@@ -192,41 +192,45 @@ export function CredentialIssuanceModal({
     resetIssuance();
   };
 
-  const impactDefaults = useMemo<Partial<ImpactCredentialFormInput> | undefined>(
-    () => {
-      if (!empresarioPrefill) return undefined;
+  const impactDefaults = useMemo<
+    Partial<ImpactCredentialFormInput> | undefined
+  >(() => {
+    if (!empresarioPrefill) return undefined;
 
-      const sectorText = empresarioPrefill.sector ?? '';
-      const normalizedSector = sectorText.toLowerCase();
+    const sectorText = empresarioPrefill.sector ?? '';
+    const normalizedSector = sectorText.toLowerCase();
 
-      let mappedSector = '';
-      if (normalizedSector.includes('alimento')) mappedSector = 'Alimentos y bebidas';
-      else if (normalizedSector.includes('comercio')) mappedSector = 'Comercio';
-      else if (normalizedSector.includes('manufactura')) mappedSector = 'Manufactura';
-      else if (normalizedSector.includes('servicio')) mappedSector = 'Servicios';
-      else if (normalizedSector.includes('tecno')) mappedSector = 'Tecnología';
-      else if (normalizedSector.includes('agro')) mappedSector = 'Agropecuario';
-      else if (normalizedSector.includes('textil')) mappedSector = 'Textil y confecciones';
-      else if (normalizedSector.includes('turismo')) mappedSector = 'Turismo';
-      else mappedSector = '';
+    let mappedSector = '';
+    if (normalizedSector.includes('alimento'))
+      mappedSector = 'Alimentos y bebidas';
+    else if (normalizedSector.includes('comercio')) mappedSector = 'Comercio';
+    else if (normalizedSector.includes('manufactura'))
+      mappedSector = 'Manufactura';
+    else if (normalizedSector.includes('servicio')) mappedSector = 'Servicios';
+    else if (normalizedSector.includes('tecno')) mappedSector = 'Tecnología';
+    else if (normalizedSector.includes('agro')) mappedSector = 'Agropecuario';
+    else if (normalizedSector.includes('textil'))
+      mappedSector = 'Textil y confecciones';
+    else if (normalizedSector.includes('turismo')) mappedSector = 'Turismo';
+    else mappedSector = '';
 
-      return {
-        companyName: empresarioPrefill.company ?? '',
-        sector: mappedSector,
-        salesPreviousYear: empresarioPrefill.salesPrevYearCop ?? 0,
-        salesCurrentYear: empresarioPrefill.salesCop ?? 0,
-        newJobsCreated: empresarioPrefill.newJobs ?? 0,
-      };
-    },
-    [empresarioPrefill],
-  );
+    return {
+      companyName: empresarioPrefill.company ?? '',
+      sector: mappedSector,
+      salesPreviousYear: empresarioPrefill.salesPrevYearCop ?? 0,
+      salesCurrentYear: empresarioPrefill.salesCop ?? 0,
+      newJobsCreated: empresarioPrefill.newJobs ?? 0,
+    };
+  }, [empresarioPrefill]);
 
   const behaviorDefaults = useMemo<
     Partial<BehaviorCredentialFormInput> | undefined
   >(() => {
     if (!empresarioPrefill) return undefined;
 
-    const activeCreditValue = (empresarioPrefill.activeCredit ?? '').toLowerCase();
+    const activeCreditValue = (
+      empresarioPrefill.activeCredit ?? ''
+    ).toLowerCase();
     const hasActiveCredit =
       activeCreditValue === 'si' ||
       activeCreditValue === 'sí' ||

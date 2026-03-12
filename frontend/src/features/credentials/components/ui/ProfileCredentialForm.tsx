@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, useWatch, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -71,7 +71,6 @@ export function ProfileCredentialForm({
     register,
     control,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<ProfileCredentialFormInput>({
     resolver: zodResolver(profileCredentialFormSchema),
@@ -95,7 +94,7 @@ export function ProfileCredentialForm({
     },
   });
 
-  const formalizedBusiness = watch('formalizedBusiness');
+  const formalizedBusiness = useWatch({ control, name: 'formalizedBusiness' });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

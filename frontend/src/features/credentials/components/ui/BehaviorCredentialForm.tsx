@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, useWatch, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -79,7 +79,6 @@ export function BehaviorCredentialForm({
     register,
     control,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<BehaviorCredentialFormInput>({
     resolver: zodResolver(behaviorCredentialFormSchema),
@@ -98,18 +97,19 @@ export function BehaviorCredentialForm({
     },
   });
 
-  const averageSales = watch('averageSales');
-  const costsAndExpenses = watch('costsAndExpenses');
-  const assets = watch('assets');
-  const liabilities = watch('liabilities');
-  const activeCreditExists = watch('activeCredit.exists');
+  const averageSales = useWatch({ control, name: 'averageSales' });
+  const costsAndExpenses = useWatch({ control, name: 'costsAndExpenses' });
+  const assets = useWatch({ control, name: 'assets' });
+  const liabilities = useWatch({ control, name: 'liabilities' });
+  const activeCreditExists = useWatch({ control, name: 'activeCredit.exists' });
+  const financialTrend = useWatch({ control, name: 'financialTrend' });
 
   const derived = computeBehaviorDerivedFields({
     averageSales: averageSales || 0,
     costsAndExpenses: costsAndExpenses || 0,
     assets: assets || 0,
     liabilities: liabilities || 0,
-    financialTrend: watch('financialTrend') || 'stable',
+    financialTrend: financialTrend || 'stable',
     creditSegmentStart: '',
     creditSegmentEnd: '',
     monthlyIncomeStability: 'medium',

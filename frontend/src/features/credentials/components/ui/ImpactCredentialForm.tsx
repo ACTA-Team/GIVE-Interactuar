@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, useWatch, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -47,7 +47,6 @@ export function ImpactCredentialForm({
     register,
     control,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<ImpactCredentialFormInput>({
     resolver: zodResolver(impactCredentialFormSchema),
@@ -65,8 +64,8 @@ export function ImpactCredentialForm({
     },
   });
 
-  const salesPreviousYear = watch('salesPreviousYear');
-  const salesCurrentYear = watch('salesCurrentYear');
+  const salesPreviousYear = useWatch({ control, name: 'salesPreviousYear' });
+  const salesCurrentYear = useWatch({ control, name: 'salesCurrentYear' });
 
   const derived = computeImpactDerivedFields({
     salesPreviousYear: salesPreviousYear || 0,

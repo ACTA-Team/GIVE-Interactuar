@@ -9,9 +9,7 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const { entrepreneurId } = await params;
 
-  const entrepreneur = MOCK_ENTREPRENEURS.find(
-    (e) => e.id === entrepreneurId,
-  );
+  const entrepreneur = MOCK_ENTREPRENEURS.find((e) => e.id === entrepreneurId);
   if (!entrepreneur) notFound();
 
   return (

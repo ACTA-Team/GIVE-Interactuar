@@ -82,9 +82,7 @@ export function ClientCredentialsPage({
               <p className="mt-1 text-sm font-medium">{client.businessType}</p>
             </div>
             <div>
-              <p className="text-xs font-medium text-muted-foreground">
-                Email
-              </p>
+              <p className="text-xs font-medium text-muted-foreground">Email</p>
               <p className="mt-1 text-sm font-medium">{client.email}</p>
             </div>
             <div>
@@ -107,9 +105,7 @@ export function ClientCredentialsPage({
         <section key={type} className="space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-foreground">
-                {label}
-              </h2>
+              <h2 className="text-lg font-semibold text-foreground">{label}</h2>
               <p className="text-sm text-muted-foreground">{description}</p>
             </div>
             {items.length > 0 && (

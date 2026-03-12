@@ -46,6 +46,8 @@ import {
   BADGE_ICONS_LARGE,
   getBadgeColors,
 } from '../../constants/badge-ui';
+import { CredentialIssuanceModal } from '@/features/credentials/components/ui/CredentialIssuanceModal';
+import { IconCertificate } from '@tabler/icons-react';
 
 interface EntrepreneurDetailPageProps {
   entrepreneurId: string;
@@ -58,6 +60,7 @@ export function EntrepreneurDetailPage({
   const [isBadgeDialogOpen, setIsBadgeDialogOpen] = useState(false);
   const [certifyDialogOpen, setCertifyDialogOpen] = useState(false);
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
+  const [isCredentialModalOpen, setIsCredentialModalOpen] = useState(false);
 
   const entrepreneur = MOCK_ENTREPRENEURS.find((e) => e.id === entrepreneurId);
 
@@ -164,55 +167,66 @@ export function EntrepreneurDetailPage({
             </div>
           </div>
 
-          {/* Main CTA */}
-          <AlertDialog
-            open={certifyDialogOpen}
-            onOpenChange={setCertifyDialogOpen}
-          >
-            <AlertDialogTrigger
-              render={
-                <Button
-                  size="lg"
-                  className="gap-2 shadow-lg bg-accent hover:bg-accent/90 text-accent-foreground"
-                  disabled={!nextStageToCertify}
-                  onClick={() =>
-                    nextStageToCertify &&
-                    setSelectedStageId(nextStageToCertify.id)
-                  }
-                >
-                  <Shield className="h-5 w-5" />
-                  {nextStageToCertify
-                    ? `Aprobar Etapa ${nextStageToCertify.id}`
-                    : 'Todas las etapas certificadas'}
-                </Button>
-              }
-            />
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Aprobar Certificación - Etapa {selectedStageId}
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Esta acción emitirá una credencial verificable en blockchain
-                  certificando que {entrepreneur.name} ha completado la etapa
-                  &quot;
-                  {STAGES.find((s) => s.id === selectedStageId)?.name}&quot;.
-                  Esta acción no se puede deshacer.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() =>
-                    selectedStageId && handleCertifyStage(selectedStageId)
-                  }
-                >
-                  <Shield className="h-4 w-4 mr-2" />
-                  Emitir Credencial
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          {/* Main CTAs */}
+          <div className="flex items-center gap-2">
+            <Button
+              size="lg"
+              variant="outline"
+              className="gap-2"
+              onClick={() => setIsCredentialModalOpen(true)}
+            >
+              <IconCertificate className="h-5 w-5" />
+              Emitir Credencial
+            </Button>
+            <AlertDialog
+              open={certifyDialogOpen}
+              onOpenChange={setCertifyDialogOpen}
+            >
+              <AlertDialogTrigger
+                render={
+                  <Button
+                    size="lg"
+                    className="gap-2 shadow-lg bg-accent hover:bg-accent/90 text-accent-foreground"
+                    disabled={!nextStageToCertify}
+                    onClick={() =>
+                      nextStageToCertify &&
+                      setSelectedStageId(nextStageToCertify.id)
+                    }
+                  >
+                    <Shield className="h-5 w-5" />
+                    {nextStageToCertify
+                      ? `Aprobar Etapa ${nextStageToCertify.id}`
+                      : 'Todas las etapas certificadas'}
+                  </Button>
+                }
+              />
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Aprobar Certificación - Etapa {selectedStageId}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta acción emitirá una credencial verificable en blockchain
+                    certificando que {entrepreneur.name} ha completado la etapa
+                    &quot;
+                    {STAGES.find((s) => s.id === selectedStageId)?.name}&quot;.
+                    Esta acción no se puede deshacer.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() =>
+                      selectedStageId && handleCertifyStage(selectedStageId)
+                    }
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    Emitir Credencial
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
       </div>
 
@@ -475,6 +489,14 @@ export function EntrepreneurDetailPage({
           </div>
         </div>
       </div>
+
+      <CredentialIssuanceModal
+        open={isCredentialModalOpen}
+        onOpenChange={setIsCredentialModalOpen}
+        entrepreneurId={entrepreneur.id}
+        entrepreneurName={entrepreneur.name}
+        businessName={entrepreneur.businessName}
+      />
     </div>
   );
 }

@@ -48,6 +48,8 @@ export function EntrepreneursListPage() {
   const [search, setSearch] = useState('');
   const [filterStage, setFilterStage] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
   const handleFilterStage = (value: string | null) =>
     setFilterStage(value ?? 'all');
@@ -105,6 +107,20 @@ export function EntrepreneursListPage() {
     sortField,
     sortDirection,
   ]);
+
+  const totalPages = filteredAndSortedEntrepreneurs.length
+    ? Math.ceil(filteredAndSortedEntrepreneurs.length / pageSize)
+    : 1;
+
+  const currentPage = Math.min(page, totalPages);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const pageItems = filteredAndSortedEntrepreneurs.slice(startIndex, endIndex);
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
 
   const handleSelectAll = () => {
     if (selectedIds.size === filteredAndSortedEntrepreneurs.length) {
@@ -169,7 +185,7 @@ export function EntrepreneursListPage() {
                 placeholder={t('search')}
                 className="pl-9"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
               />
             </div>
 
@@ -237,6 +253,41 @@ export function EntrepreneursListPage() {
         </CardContent>
       </Card>
 
+      {/* Pagination summary */}
+      {filteredAndSortedEntrepreneurs.length > 0 && (
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <p>
+            {tc('showing', {
+              count: pageItems.length,
+              total: filteredAndSortedEntrepreneurs.length,
+            })}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="xs"
+              disabled={currentPage === 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+            >
+              Anterior
+            </Button>
+            <span>
+              Página {currentPage} de {totalPages}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="xs"
+              disabled={currentPage === totalPages}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            >
+              Siguiente
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Table */}
       <Card>
         <CardContent className="pt-6">
@@ -301,7 +352,7 @@ export function EntrepreneursListPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredAndSortedEntrepreneurs.map((entrepreneur) => {
+                  pageItems.map((entrepreneur) => {
                     const currentStage = STAGES.find(
                       (s) => s.id === entrepreneur.currentStage,
                     );

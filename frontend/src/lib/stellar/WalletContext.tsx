@@ -7,10 +7,7 @@ import {
   useEffect,
   type ReactNode,
 } from 'react';
-import {
-  StellarWalletsKit,
-  Networks,
-} from '@creit.tech/stellar-wallets-kit';
+import { StellarWalletsKit, Networks } from '@creit.tech/stellar-wallets-kit';
 import {
   FREIGHTER_ID,
   FreighterModule,
@@ -45,7 +42,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     setWalletName(localStorage.getItem('walletName'));
   }, []);
 
-  const [walletKit, setWalletKit] = useState<typeof StellarWalletsKit | null>(null);
+  const [walletKit, setWalletKit] = useState<typeof StellarWalletsKit | null>(
+    null,
+  );
 
   useEffect(() => {
     try {

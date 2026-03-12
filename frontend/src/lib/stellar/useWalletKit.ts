@@ -10,7 +10,8 @@ export function useWalletKit() {
     if (!walletKit) throw new Error('WalletKit no disponible');
 
     const { address } = await StellarWalletsKit.authModal();
-    const walletName = StellarWalletsKit.selectedModule?.productName ?? 'Stellar Wallet';
+    const walletName =
+      StellarWalletsKit.selectedModule?.productName ?? 'Stellar Wallet';
     setWalletInfo(address, walletName);
     return address;
   };

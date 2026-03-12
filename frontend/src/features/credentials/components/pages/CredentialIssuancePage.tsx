@@ -62,11 +62,18 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
 
       <div className="space-y-2">
         {filtered.map((entrepreneur) => (
-          <button
+          <div
             key={entrepreneur.id}
-            type="button"
+            role="button"
+            tabIndex={0}
             onClick={() => handleSelect(entrepreneur)}
-            className="flex w-full items-center justify-between gap-4 rounded-xl border border-border bg-card p-4 text-left transition-all hover:border-primary/30 hover:shadow-md"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleSelect(entrepreneur);
+              }
+            }}
+            className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-xl border border-border bg-card p-4 text-left transition-all hover:border-primary/30 hover:shadow-md"
           >
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
@@ -90,7 +97,7 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
               <IconCertificate className="h-4 w-4" />
               Emitir
             </Button>
-          </button>
+          </div>
         ))}
 
         {filtered.length === 0 && (

@@ -117,7 +117,11 @@ function formatClaimValue(key: string, value: unknown): string {
     ) {
       return `$${value.toLocaleString('es-CO')}`;
     }
-    if (key.includes('Percent') || key.includes('Ratio') || key.includes('Margin')) {
+    if (
+      key.includes('Percent') ||
+      key.includes('Ratio') ||
+      key.includes('Margin')
+    ) {
       return `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`;
     }
     return value.toLocaleString('es-CO');
@@ -176,7 +180,10 @@ function CopyButton({ text }: { text: string }) {
 function ClaimsGrid({ claims }: { claims: Record<string, unknown> }) {
   const entries = Object.entries(claims).filter(
     ([key]) =>
-      key !== '@context' && key !== 'type' && key !== 'issuer' && key !== 'validFrom',
+      key !== '@context' &&
+      key !== 'type' &&
+      key !== 'issuer' &&
+      key !== 'validFrom',
   );
 
   if (entries.length === 0) {
@@ -203,7 +210,9 @@ function ClaimsGrid({ claims }: { claims: Record<string, unknown> }) {
   );
 }
 
-export function CredentialDetailPage({ credential }: CredentialDetailPageProps) {
+export function CredentialDetailPage({
+  credential,
+}: CredentialDetailPageProps) {
   const Icon = TYPE_ICON[credential.credentialType];
 
   return (
@@ -330,7 +339,9 @@ export function CredentialDetailPage({ credential }: CredentialDetailPageProps) 
                 Emitida
               </p>
               <p className="mt-0.5 text-sm font-medium">
-                {credential.issuedAt ? formatDateTime(credential.issuedAt) : '—'}
+                {credential.issuedAt
+                  ? formatDateTime(credential.issuedAt)
+                  : '—'}
               </p>
             </div>
             <div>
@@ -338,7 +349,9 @@ export function CredentialDetailPage({ credential }: CredentialDetailPageProps) 
                 Expira
               </p>
               <p className="mt-0.5 text-sm font-medium">
-                {credential.expiresAt ? formatDateTime(credential.expiresAt) : '—'}
+                {credential.expiresAt
+                  ? formatDateTime(credential.expiresAt)
+                  : '—'}
               </p>
             </div>
           </div>

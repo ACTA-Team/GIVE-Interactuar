@@ -323,7 +323,6 @@ export function EntrepreneurDetailPage({
             })}
           </div>
         </div>
-
       </div>
 
       <CredentialIssuanceModal

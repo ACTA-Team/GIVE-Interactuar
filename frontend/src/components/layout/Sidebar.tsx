@@ -144,7 +144,9 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
             href={ROUTES.entrepreneurs.storage}
             isActive={
               pathname === ROUTES.entrepreneurs.storage ||
-              pathname.startsWith('/dashboard/entrepreneurs/credentials/details/')
+              pathname.startsWith(
+                '/dashboard/entrepreneurs/credentials/details/',
+              )
             }
             onClick={onMobileClose}
           />

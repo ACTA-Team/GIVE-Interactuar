@@ -46,4 +46,3 @@ export default async function Page() {
 
   return <CredentialsListPage clients={clients} />;
 }
-

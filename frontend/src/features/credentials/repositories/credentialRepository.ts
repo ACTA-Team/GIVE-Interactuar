@@ -16,7 +16,10 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
         q = q.eq('credential_type', filters.credentialType);
 
       const { data, error } = await q.order('created_at', { ascending: false });
-      if (error) throw error;
+      if (error) {
+        if (error.code === 'PGRST205' || error.code === '42P01') return [];
+        throw error;
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return (data ?? []).map((row: any) => mapCredential(row));
     },

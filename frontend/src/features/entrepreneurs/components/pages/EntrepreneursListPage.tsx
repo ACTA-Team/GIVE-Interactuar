@@ -48,6 +48,7 @@ export function EntrepreneursListPage() {
   const [search, setSearch] = useState('');
   const [filterStage, setFilterStage] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterGender, setFilterGender] = useState<string>('all');
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
@@ -55,9 +56,36 @@ export function EntrepreneursListPage() {
     setFilterStage(value ?? 'all');
   const handleFilterStatus = (value: string | null) =>
     setFilterStatus(value ?? 'all');
+  const handleFilterGender = (value: string | null) =>
+    setFilterGender(value ?? 'all');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+
+  const normalizeGender = (value?: string) => {
+    if (!value) return 'unknown';
+    const normalized = value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
+
+    if (
+      normalized === 'f' ||
+      normalized === 'femenino' ||
+      normalized === 'mujer'
+    ) {
+      return 'female';
+    }
+    if (
+      normalized === 'm' ||
+      normalized === 'masculino' ||
+      normalized === 'hombre'
+    ) {
+      return 'male';
+    }
+    return 'unknown';
+  };
 
   const filteredAndSortedEntrepreneurs = useMemo(() => {
     const filtered = entrepreneurs.filter((e) => {
@@ -75,7 +103,11 @@ export function EntrepreneursListPage() {
         (filterStatus === 'funded' && e.hasFunding) ||
         (filterStatus === 'not-funded' && !e.hasFunding);
 
-      return matchesSearch && matchesStage && matchesStatus;
+      const matchesGender =
+        filterGender === 'all' ||
+        normalizeGender(e.gender) === filterGender;
+
+      return matchesSearch && matchesStage && matchesStatus && matchesGender;
     });
 
     return filtered.sort((a, b) => {
@@ -104,6 +136,7 @@ export function EntrepreneursListPage() {
     search,
     filterStage,
     filterStatus,
+    filterGender,
     sortField,
     sortDirection,
   ]);
@@ -218,6 +251,24 @@ export function EntrepreneursListPage() {
                   </SelectItem>
                   <SelectItem value="delinquent">
                     {td('filters.delinquent')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={filterGender} onValueChange={handleFilterGender}>
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder={t('filterByGender')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('allGenders')}</SelectItem>
+                  <SelectItem value="female">
+                    {t('genderFemale')}
+                  </SelectItem>
+                  <SelectItem value="male">
+                    {t('genderMale')}
+                  </SelectItem>
+                  <SelectItem value="unknown">
+                    {t('genderUnknown')}
                   </SelectItem>
                 </SelectContent>
               </Select>

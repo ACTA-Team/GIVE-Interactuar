@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -16,17 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import {
-  ArrowLeft,
-  CheckCircle,
-  Shield,
-  Clock,
-  Mail,
-  Phone,
-  Building2,
-  Banknote,
-  AlertTriangle,
-} from 'lucide-react';
+import { ArrowLeft, Shield, Mail, Phone, Building2, Banknote, AlertTriangle } from 'lucide-react';
 import { STAGES } from '../../types/stages';
 import { useDashboardEntrepreneur } from '../../hooks/useDashboardEntrepreneurs';
 import { CredentialIssuanceModal } from '@/features/credentials/components/ui/CredentialIssuanceModal';
@@ -42,7 +32,6 @@ export function EntrepreneurDetailPage({
   const router = useRouter();
   const t = useTranslations('entrepreneurs');
   const tc = useTranslations('common');
-  const locale = useLocale();
   const [certifyDialogOpen, setCertifyDialogOpen] = useState(false);
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
   const [isCredentialModalOpen, setIsCredentialModalOpen] = useState(false);
@@ -201,143 +190,6 @@ export function EntrepreneurDetailPage({
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 min-h-0">
-        {/* Stages Timeline */}
-        <div className="bg-card rounded-xl border p-5 overflow-auto">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="font-semibold flex items-center gap-2">
-              <Shield className="h-4 w-4 text-primary" />
-              {t('detail.supportPath')}
-            </h2>
-            <span className="text-sm text-muted-foreground">
-              {entrepreneur.stages.length}/{STAGES.length}
-            </span>
-          </div>
-
-          <div className="relative">
-            {STAGES.map((stage, index) => {
-              const isCompleted = completedStages.has(stage.id);
-              const stageData = entrepreneur.stages.find(
-                (s) => s.stageId === stage.id,
-              );
-              const isCurrent =
-                stage.id === entrepreneur.currentStage && !isCompleted;
-              const isLast = index === STAGES.length - 1;
-
-              return (
-                <div key={stage.id} className="relative flex gap-4">
-                  <div className="flex flex-col items-center">
-                    <div
-                      className={`relative z-10 shrink-0 h-8 w-8 rounded-full flex items-center justify-center border-2 transition-all ${
-                        isCompleted
-                          ? 'bg-[#10B981] border-[#10B981]'
-                          : isCurrent
-                            ? 'bg-[#F15A24] border-[#F15A24]'
-                            : 'bg-background border-muted-foreground/30'
-                      }`}
-                    >
-                      {isCompleted ? (
-                        <CheckCircle className="h-4 w-4 text-white" />
-                      ) : isCurrent ? (
-                        <Clock className="h-4 w-4 text-white" />
-                      ) : (
-                        <span className="h-3 w-3 rounded-full bg-muted-foreground/20" />
-                      )}
-                    </div>
-                    {!isLast && (
-                      <div
-                        className={`w-0.5 flex-1 min-h-12 ${
-                          isCompleted
-                            ? 'bg-[#10B981]'
-                            : 'bg-muted-foreground/20'
-                        }`}
-                      />
-                    )}
-                  </div>
-
-                  <div className={`flex-1 pb-6 ${isLast ? 'pb-0' : ''}`}>
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p
-                          className={`font-medium text-sm ${
-                            isCompleted || isCurrent
-                              ? 'text-foreground'
-                              : 'text-muted-foreground'
-                          }`}
-                        >
-                          {stage.id}. {t(`stages.${stage.id}`)}
-                        </p>
-                        {isCompleted && stageData ? (
-                          <p className="text-xs text-muted-foreground mt-0.5">
-                            {new Date(stageData.completedAt).toLocaleDateString(
-                              locale,
-                            )}{' '}
-                            -{' '}
-                            <span className="text-[#10B981]">
-                              {t('detail.completed')}
-                            </span>
-                          </p>
-                        ) : isCurrent ? (
-                          <p className="text-xs text-[#F15A24] mt-0.5">
-                            {t('detail.inProgress')}
-                          </p>
-                        ) : (
-                          <p className="text-xs text-muted-foreground mt-0.5">
-                            {t('detail.pending')}
-                          </p>
-                        )}
-                      </div>
-                      {!isCompleted && (
-                        <AlertDialog>
-                          <AlertDialogTrigger
-                            render={
-                              <Button
-                                variant={isCurrent ? 'default' : 'ghost'}
-                                size="sm"
-                                className={`h-7 text-xs gap-1 ${isCurrent ? 'bg-accent hover:bg-accent/90 text-accent-foreground' : 'text-accent hover:text-accent'}`}
-                              >
-                                <Shield className="h-3 w-3" />
-                                {t('detail.certify')}
-                              </Button>
-                            }
-                          />
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                {t('detail.certifyStageTitle', {
-                                  id: stage.id,
-                                })}
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                {t('detail.certifyStageDescShort', {
-                                  name: entrepreneur.name,
-                                  stageName: t(`stages.${stage.id}`),
-                                })}
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>
-                                {tc('buttons.cancel')}
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleCertifyStage(stage.id)}
-                              >
-                                {t('detail.issueCredential')}
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </div>
       </div>

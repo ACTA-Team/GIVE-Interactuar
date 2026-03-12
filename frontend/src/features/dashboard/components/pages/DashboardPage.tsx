@@ -31,11 +31,9 @@ import {
 import {
   Users,
   AlertTriangle,
-  DollarSign,
   GraduationCap,
   ArrowUpRight,
   ArrowDownRight,
-  ChevronRight,
   CheckCircle2,
   Shield,
 } from 'lucide-react';
@@ -54,18 +52,13 @@ import {
 import { STAGES } from '@/features/entrepreneurs/types/stages';
 import { useDashboardEntrepreneurs } from '@/features/entrepreneurs/hooks/useDashboardEntrepreneurs';
 
-type SortField = 'name' | 'stage' | 'delinquent' | 'funding';
+type SortField = 'name' | 'stage' | 'delinquent';
 type SortDirection = 'asc' | 'desc';
 
 export function DashboardPage() {
   const t = useTranslations('dashboard');
   const tc = useTranslations('common');
-  const {
-    data: entrepreneursData,
-    isLoading,
-    error,
-  } = useDashboardEntrepreneurs();
-  const entrepreneurs = entrepreneursData ?? [];
+  const { data: entrepreneurs = [], isLoading, error } = useDashboardEntrepreneurs();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortField, setSortField] = useState<SortField>('delinquent');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
@@ -80,10 +73,6 @@ export function DashboardPage() {
   const totalEntrepreneurs = entrepreneurs.length;
   const delinquentCount = entrepreneurs.filter((e) => e.isDelinquent).length;
   const fundedCount = entrepreneurs.filter((e) => e.hasFunding).length;
-  const totalFunding = entrepreneurs.reduce(
-    (sum, e) => sum + (e.fundingAmount || 0),
-    0,
-  );
   const inTraining = entrepreneurs.filter(
     (e) => e.currentStage >= 1 && e.currentStage <= 3,
   ).length;
@@ -143,9 +132,7 @@ export function DashboardPage() {
             comparison = (a.delinquentDays || 0) - (b.delinquentDays || 0);
           }
           break;
-        case 'funding':
-          comparison = (a.fundingAmount || 0) - (b.fundingAmount || 0);
-          break;
+        // funding removed from dashboard sorting
       }
       return sortDirection === 'desc' ? -comparison : comparison;
     });
@@ -184,15 +171,6 @@ export function DashboardPage() {
   ).length;
 
   const topEntrepreneurs = filteredAndSortedEntrepreneurs.slice(0, 10);
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
 
   const handleSelectAll = () => {
     if (selectedIds.size === filteredAndSortedEntrepreneurs.length) {
@@ -252,7 +230,7 @@ export function DashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -271,35 +249,6 @@ export function DashboardPage() {
           </CardContent>
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary/20">
             <div className="h-full bg-primary" style={{ width: '75%' }} />
-          </div>
-        </Card>
-
-        <Card className="relative overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              {t('stats.totalFunding')}
-            </CardTitle>
-            <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center">
-              <DollarSign className="h-4 w-4 text-accent" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">
-              {formatCurrency(totalFunding)}
-            </div>
-            <div className="flex items-center gap-1 mt-1 text-sm text-muted-foreground">
-              <span>
-                {t('stats.entrepreneursFunded', { count: fundedCount })}
-              </span>
-            </div>
-          </CardContent>
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-accent/20">
-            <div
-              className="h-full bg-accent"
-              style={{
-                width: `${(fundedCount / totalEntrepreneurs) * 100}%`,
-              }}
-            />
           </div>
         </Card>
 
@@ -655,20 +604,7 @@ export function DashboardPage() {
                       )}
                     </button>
                   </TableHead>
-                  <TableHead>
-                    <button
-                      onClick={() => toggleSort('funding')}
-                      className="flex items-center gap-1 hover:text-foreground transition-colors"
-                    >
-                      {t('table.funding')}
-                      {sortField === 'funding' && (
-                        <span className="text-primary">
-                          {sortDirection === 'asc' ? '↑' : '↓'}
-                        </span>
-                      )}
-                    </button>
-                  </TableHead>
-                  <TableHead className="w-[50px]"></TableHead>
+                  {/* Funding column removed from dashboard table */}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -751,24 +687,6 @@ export function DashboardPage() {
                               {t('table.notFunded')}
                             </Badge>
                           )}
-                        </TableCell>
-                        <TableCell>
-                          {entrepreneur.hasFunding ? (
-                            <span className="font-medium">
-                              {formatCurrency(entrepreneur.fundingAmount || 0)}
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground">-</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <Link
-                            href={`/dashboard/entrepreneurs/${entrepreneur.id}`}
-                          >
-                            <Button variant="ghost" size="icon">
-                              <ChevronRight className="h-4 w-4" />
-                            </Button>
-                          </Link>
                         </TableCell>
                       </TableRow>
                     );

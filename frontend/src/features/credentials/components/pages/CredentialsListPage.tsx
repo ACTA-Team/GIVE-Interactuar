@@ -8,6 +8,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/Badge';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   Search,
   ChevronRight,
   ShieldCheck,
@@ -47,17 +54,55 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
   const t = useTranslations('credentials');
   const tc = useTranslations('common');
   const [search, setSearch] = useState('');
+  const [filterType, setFilterType] = useState<'all' | 'impact' | 'behavior' | 'profile'>('all');
+  const [fundingFilter, setFundingFilter] = useState<
+    'all' | 'funded' | 'not-funded' | 'delinquent'
+  >('all');
+  const [onChainFilter, setOnChainFilter] = useState<'all' | 'with' | 'without'>('all');
+  const [hasCredentialsFilter, setHasCredentialsFilter] = useState<
+    'all' | 'with' | 'without'
+  >('all');
 
   const filtered = useMemo(() => {
-    if (!search.trim()) return clients;
     const q = search.toLowerCase();
-    return clients.filter(
-      (c) =>
+    return clients.filter((c) => {
+      const matchesSearch =
+        !q ||
         c.name.toLowerCase().includes(q) ||
         c.businessName.toLowerCase().includes(q) ||
-        c.email.toLowerCase().includes(q),
-    );
-  }, [clients, search]);
+        c.email.toLowerCase().includes(q);
+
+      const matchesType =
+        filterType === 'all' ||
+        (filterType === 'impact' && c.impactCount > 0) ||
+        (filterType === 'behavior' && c.behaviorCount > 0) ||
+        (filterType === 'profile' && c.profileCount > 0);
+
+      const matchesFunding =
+        fundingFilter === 'all' ||
+        (fundingFilter === 'funded' && c.hasFunding) ||
+        (fundingFilter === 'not-funded' && !c.hasFunding) ||
+        (fundingFilter === 'delinquent' && c.isDelinquent);
+
+      const matchesOnChain =
+        onChainFilter === 'all' ||
+        (onChainFilter === 'with' && c.hasOnChain) ||
+        (onChainFilter === 'without' && !c.hasOnChain);
+
+      const matchesHasCredentials =
+        hasCredentialsFilter === 'all' ||
+        (hasCredentialsFilter === 'with' && c.totalCredentials > 0) ||
+        (hasCredentialsFilter === 'without' && c.totalCredentials === 0);
+
+      return (
+        matchesSearch &&
+        matchesType &&
+        matchesFunding &&
+        matchesOnChain &&
+        matchesHasCredentials
+      );
+    });
+  }, [clients, search, filterType, fundingFilter, onChainFilter, hasCredentialsFilter]);
 
   const totalImpact = clients.reduce((acc, c) => acc + c.impactCount, 0);
   const totalBehavior = clients.reduce((acc, c) => acc + c.behaviorCount, 0);
@@ -116,17 +161,99 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
         </Card>
       </div>
 
-      {/* Search */}
+      {/* Search & Filters */}
       <Card>
         <CardContent className="py-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder={t('vault.searchPlaceholder')}
-              className="pl-9"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder={t('vault.searchPlaceholder')}
+                className="pl-9"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <Select
+                value={filterType}
+                onValueChange={(value: 'all' | 'impact' | 'behavior' | 'profile') =>
+                  setFilterType(value)
+                }
+              >
+                <SelectTrigger className="w-[170px]">
+                  <SelectValue placeholder={t('vault.filterByType')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('vault.allTypes')}</SelectItem>
+                  <SelectItem value="impact">{t('vault.impact')}</SelectItem>
+                  <SelectItem value="behavior">{t('vault.behavior')}</SelectItem>
+                  <SelectItem value="profile">{t('vault.profile')}</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={fundingFilter}
+                onValueChange={(
+                  value: 'all' | 'funded' | 'not-funded' | 'delinquent',
+                ) => setFundingFilter(value)}
+              >
+                <SelectTrigger className="w-[190px]">
+                  <SelectValue placeholder={t('vault.filterByFundingStatus')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('vault.fundingAny')}</SelectItem>
+                  <SelectItem value="funded">{t('vault.fundingFunded')}</SelectItem>
+                  <SelectItem value="not-funded">
+                    {t('vault.fundingNotFunded')}
+                  </SelectItem>
+                  <SelectItem value="delinquent">
+                    {t('vault.fundingDelinquent')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={onChainFilter}
+                onValueChange={(value: 'all' | 'with' | 'without') =>
+                  setOnChainFilter(value)
+                }
+              >
+                <SelectTrigger className="w-[190px]">
+                  <SelectValue placeholder={t('vault.filterByOnChain')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('vault.onChainAny')}</SelectItem>
+                  <SelectItem value="with">{t('vault.onChainWith')}</SelectItem>
+                  <SelectItem value="without">
+                    {t('vault.onChainWithout')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={hasCredentialsFilter}
+                onValueChange={(value: 'all' | 'with' | 'without') =>
+                  setHasCredentialsFilter(value)
+                }
+              >
+                <SelectTrigger className="w-[210px]">
+                  <SelectValue placeholder={t('vault.filterByCredentialPresence')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    {t('vault.hasCredentialsAny')}
+                  </SelectItem>
+                  <SelectItem value="with">
+                    {t('vault.hasCredentialsWith')}
+                  </SelectItem>
+                  <SelectItem value="without">
+                    {t('vault.hasCredentialsWithout')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>

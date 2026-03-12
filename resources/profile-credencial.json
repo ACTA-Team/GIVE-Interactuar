@@ -1,0 +1,183 @@
+{
+  "$id": "https://acta.do/schemas/profile-formalization-credential.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Profile and Formalization Credential",
+  "description": "W3C VC 2.0 schema for applicant profile, traceability, and business formalization.",
+  "type": "object",
+  "required": ["@context", "type", "issuer", "validFrom", "credentialSubject"],
+  "properties": {
+    "@context": {
+      "type": "array",
+      "contains": {
+        "const": "https://www.w3.org/ns/credentials/v2"
+      }
+    },
+    "id": {
+      "type": "string",
+      "format": "uri"
+    },
+    "type": {
+      "type": "array",
+      "allOf": [
+        {
+          "contains": {
+            "const": "VerifiableCredential"
+          }
+        },
+        {
+          "contains": {
+            "const": "ProfileFormalizationCredential"
+          }
+        }
+      ]
+    },
+    "issuer": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "required": ["id"],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "validFrom": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "validUntil": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "credentialSubject": {
+      "type": "object",
+      "required": [
+        "id",
+        "identityValidated",
+        "educationLevel",
+        "municipality",
+        "zone",
+        "mainHouseholdProvider",
+        "householdIncome",
+        "formalizedBusiness",
+        "yearsInOperation",
+        "companySize",
+        "internetAccess",
+        "employmentFormalization",
+        "traceabilityLevel",
+        "formalizationLevel",
+        "applicantStabilitySignal"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "identityValidated": {
+          "type": "boolean"
+        },
+        "educationLevel": {
+          "type": "string",
+          "enum": [
+            "none",
+            "primary",
+            "secondary",
+            "technical",
+            "undergraduate",
+            "postgraduate",
+            "other"
+          ]
+        },
+        "municipality": {
+          "type": "string"
+        },
+        "zone": {
+          "type": "string",
+          "enum": ["urban", "rural", "periurban", "other"]
+        },
+        "mainHouseholdProvider": {
+          "type": "boolean"
+        },
+        "householdIncome": {
+          "type": "number",
+          "minimum": 0
+        },
+        "formalizedBusiness": {
+          "type": "boolean"
+        },
+        "nit": {
+          "type": ["string", "null"]
+        },
+        "yearsInOperation": {
+          "type": "number",
+          "minimum": 0
+        },
+        "legalForm": {
+          "type": ["string", "null"]
+        },
+        "companySize": {
+          "type": "string",
+          "enum": ["micro", "small", "medium", "large", "unknown"]
+        },
+        "internetAccess": {
+          "type": "boolean"
+        },
+        "socialSecurityCoverage": {
+          "type": "object",
+          "properties": {
+            "hasSocialSecurity": {
+              "type": "boolean"
+            },
+            "hasPension": {
+              "type": "boolean"
+            },
+            "notes": {
+              "type": "string"
+            }
+          },
+          "required": ["hasSocialSecurity", "hasPension"],
+          "additionalProperties": false
+        },
+        "employmentFormalization": {
+          "type": "object",
+          "properties": {
+            "formalizedJobsCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "informalJobsCount": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": ["formalizedJobsCount"],
+          "additionalProperties": false
+        },
+
+        "traceabilityLevel": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "formalizationLevel": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "none"]
+        },
+        "applicantStabilitySignal": {
+          "type": "string",
+          "enum": ["strong", "moderate", "weak"]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

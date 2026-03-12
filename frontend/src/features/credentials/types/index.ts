@@ -49,6 +49,10 @@ export interface IssuanceDraft {
   latestSnapshotId: string | null;
   preparedPayload: Record<string, unknown>;
   status: 'draft' | 'ready' | 'archived';
+  credentialType: CredentialType;
+  title: string;
+  description: string | null;
+  operatorNote: string | null;
   createdBy: string | null;
   createdAt: string;
   updatedAt: string;

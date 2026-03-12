@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -9,7 +10,7 @@ import {
   IconList,
   IconCertificate,
   IconPlus,
-  IconBuildingCommunity,
+
   IconX,
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
@@ -62,14 +63,9 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const content = (
     <div className="flex h-full flex-col">
       {/* Logo */}
-      <div className="flex items-center justify-between px-4 py-5">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900">
-            <IconBuildingCommunity className="h-5 w-5 text-white" />
-          </div>
-          <span className="text-base font-semibold tracking-tight text-gray-900">
-            Interactuar
-          </span>
+      <div className="flex items-center justify-between px-4">
+        <div className="flex items-center gap-1">
+          <Image src="/interactuar-logo.svg" alt="Interactuar" width={150} height={150} /> 
         </div>
         <button
           onClick={onMobileClose}

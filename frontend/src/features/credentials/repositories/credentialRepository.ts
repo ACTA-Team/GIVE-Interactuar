@@ -63,6 +63,10 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
           latest_snapshot_id: draft.latestSnapshotId,
           prepared_payload: draft.preparedPayload,
           status: draft.status,
+          credential_type: draft.credentialType,
+          title: draft.title,
+          description: draft.description,
+          operator_note: draft.operatorNote,
           created_by: draft.createdBy,
         })
         .select()

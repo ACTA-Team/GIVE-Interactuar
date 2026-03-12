@@ -28,7 +28,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           >
             <IconMenu2 className="h-5 w-5" />
           </button>
-          <Image src="/interactuar-logo.svg" alt="Interactuar" width={150} height={150} /> 
+          <Image
+            src="/interactuar-logo.svg"
+            alt="Interactuar"
+            width={150}
+            height={150}
+          />
         </header>
 
         <main className="flex flex-1 flex-col overflow-y-auto">

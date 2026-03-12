@@ -10,7 +10,6 @@ import {
   IconList,
   IconCertificate,
   IconPlus,
-
   IconX,
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
@@ -65,7 +64,12 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
       {/* Logo */}
       <div className="flex items-center justify-between px-4">
         <div className="flex items-center gap-1">
-          <Image src="/interactuar-logo.svg" alt="Interactuar" width={150} height={150} /> 
+          <Image
+            src="/interactuar-logo.svg"
+            alt="Interactuar"
+            width={150}
+            height={150}
+          />
         </div>
         <button
           onClick={onMobileClose}

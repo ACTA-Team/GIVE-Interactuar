@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
 import { IconCertificate, IconSearch } from '@tabler/icons-react';
 import { Building2 } from 'lucide-react';
 import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
@@ -40,25 +41,29 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
   };
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-foreground">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">
           Emitir Credencial
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-0.5">
           Selecciona un empresario para emitir una credencial verificable.
         </p>
       </div>
 
-      <div className="relative mb-4">
-        <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Buscar por nombre o negocio..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-9"
-        />
-      </div>
+      <Card>
+        <CardContent className="py-4">
+          <div className="relative">
+            <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por nombre o negocio..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="space-y-2">
         {filtered.map((entrepreneur) => (
@@ -101,9 +106,14 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
         ))}
 
         {filtered.length === 0 && (
-          <div className="py-12 text-center text-sm text-muted-foreground">
-            No se encontraron empresarios con ese criterio.
-          </div>
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <IconSearch className="h-8 w-8 text-muted-foreground/40" />
+              <p className="mt-2 text-sm text-muted-foreground">
+                No se encontraron empresarios con ese criterio.
+              </p>
+            </CardContent>
+          </Card>
         )}
       </div>
 

@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation';
 import { ClientCredentialsPage } from '@/features/credentials/components/pages/ClientCredentialsPage';
 import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createCredentialRepository } from '@/features/credentials/repositories/credentialRepository';
 
 interface PageProps {
   params: Promise<{ entrepreneurId: string }>;
@@ -12,6 +14,10 @@ export default async function Page({ params }: PageProps) {
   const entrepreneur = MOCK_ENTREPRENEURS.find((e) => e.id === entrepreneurId);
   if (!entrepreneur) notFound();
 
+  const supabase = await createServerSupabaseClient();
+  const repo = createCredentialRepository(supabase);
+  const credentials = await repo.findAll({ entrepreneurId });
+
   return (
     <ClientCredentialsPage
       client={{
@@ -21,8 +27,13 @@ export default async function Page({ params }: PageProps) {
         businessType: entrepreneur.businessType,
         email: entrepreneur.email,
         phone: entrepreneur.phone,
+        currentStage: entrepreneur.currentStage,
+        hasFunding: entrepreneur.hasFunding,
+        fundingAmount: entrepreneur.fundingAmount,
+        isDelinquent: entrepreneur.isDelinquent,
+        delinquentDays: entrepreneur.delinquentDays,
       }}
-      credentials={[]}
+      credentials={credentials}
     />
   );
 }

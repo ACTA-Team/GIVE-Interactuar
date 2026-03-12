@@ -109,7 +109,7 @@ export function ImpactCredentialForm({
             name="sector"
             render={({ field }) => (
               <Select
-                value={field.value || undefined}
+                value={field.value}
                 onValueChange={(v: string | null) => field.onChange(v ?? '')}
               >
                 <SelectTrigger className="w-full">

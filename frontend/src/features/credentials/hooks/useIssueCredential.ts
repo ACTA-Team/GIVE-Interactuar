@@ -6,6 +6,7 @@ import { useWalletContext } from '@/lib/stellar/WalletContext';
 import { useWalletKit } from '@/lib/stellar/useWalletKit';
 import { buildVCPayload, generateVcId } from '@/lib/acta/vcPayloadBuilder';
 import type { CredentialType } from '../types';
+import { CREDENTIAL_TYPE_LABELS } from '../types';
 import type { ImpactCredentialFormInput } from '../schemas/impactCredentialSchema';
 import type { BehaviorCredentialFormInput } from '../schemas/behaviorCredentialSchema';
 import type { ProfileCredentialFormInput } from '../schemas/profileCredentialSchema';
@@ -95,6 +96,24 @@ export function useIssueCredential() {
 
         setResult(issuanceResult);
         setStatus('success');
+
+        try {
+          await fetch('/api/credentials/store', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              entrepreneurId: params.entrepreneurId,
+              credentialType: params.credentialType,
+              title: `${CREDENTIAL_TYPE_LABELS[params.credentialType]} — ${params.entrepreneurName}`,
+              description: `Credencial emitida para ${params.businessName}`,
+              actaVcId: vcId,
+              issuerDid,
+              publicClaims: vcPayload.credentialSubject,
+            }),
+          });
+        } catch {
+          // Non-blocking: credential was issued on-chain even if local persistence fails
+        }
 
         return issuanceResult;
       } catch (err) {

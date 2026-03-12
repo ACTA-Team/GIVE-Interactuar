@@ -9,6 +9,12 @@ interface ProvidersProps {
   children: ReactNode;
 }
 
+const actaApiKey = process.env.NEXT_PUBLIC_ACTA_API_KEY;
+const actaBaseURL =
+  process.env.NEXT_PUBLIC_STELLAR_NETWORK === 'mainnet'
+    ? 'https://acta.build/api/mainnet'
+    : 'https://acta.build/api/testnet';
+
 export function Providers({ children }: ProvidersProps) {
   const [queryClient] = useState(
     () =>
@@ -22,20 +28,17 @@ export function Providers({ children }: ProvidersProps) {
       }),
   );
 
+  const content = actaApiKey ? (
+    <ActaConfig baseURL={actaBaseURL} apiKey={actaApiKey}>
+      {children}
+    </ActaConfig>
+  ) : (
+    children
+  );
+
   return (
     <QueryClientProvider client={queryClient}>
-      <WalletProvider>
-        <ActaConfig
-          baseURL={
-            process.env.NEXT_PUBLIC_STELLAR_NETWORK === 'mainnet'
-              ? 'https://acta.build/api/mainnet'
-              : 'https://acta.build/api/testnet'
-          }
-          apiKey={process.env.NEXT_PUBLIC_ACTA_API_KEY}
-        >
-          {children}
-        </ActaConfig>
-      </WalletProvider>
+      <WalletProvider>{content}</WalletProvider>
     </QueryClientProvider>
   );
 }

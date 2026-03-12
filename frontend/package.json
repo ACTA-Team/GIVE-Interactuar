@@ -13,7 +13,7 @@
   "dependencies": {
     "@acta-team/acta-sdk": "^1.1.8",
     "@base-ui/react": "^1.2.0",
-    "@creit.tech/stellar-wallets-kit": "^1.9.5",
+    "@creit.tech/stellar-wallets-kit": "^2.0.0",
     "@hookform/resolvers": "^3.9.0",
     "@stellar/stellar-sdk": "^13.3.0",
     "@tabler/icons-react": "^3.40.0",

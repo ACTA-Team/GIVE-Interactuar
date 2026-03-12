@@ -117,7 +117,10 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
             icon={<IconList className="h-4 w-4" />}
             label="Lista"
             href={ROUTES.credentials.list}
-            isActive={pathname === ROUTES.credentials.list}
+            isActive={
+              pathname === ROUTES.credentials.list ||
+              pathname.startsWith(ROUTES.credentials.list + '/client/')
+            }
             onClick={onMobileClose}
           />
           <NavItem

@@ -1,14 +1,20 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { createCredentialRepository } from '@/features/credentials/repositories/credentialRepository';
-import { createCredentialService } from '@/features/credentials/services/credentialService';
-import { CredentialsListPage } from '@/features/credentials/components/pages/CredentialsListPage';
+export const dynamic = 'force-dynamic';
 
-// TODO: add searchParams prop for status/type filters
-export default async function Page() {
-  const supabase = await createServerSupabaseClient();
-  const repo = createCredentialRepository(supabase);
-  const service = createCredentialService(repo);
-  const credentials = await service.list();
+import {
+  CredentialsListPage,
+  type VaultClient,
+} from '@/features/credentials/components/pages/CredentialsListPage';
+import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
 
-  return <CredentialsListPage credentials={credentials} />;
+export default function Page() {
+  const clients: VaultClient[] = MOCK_ENTREPRENEURS.map((e) => ({
+    id: e.id,
+    name: e.name,
+    businessName: e.businessName,
+    businessType: e.businessType,
+    email: e.email,
+    credentialCount: 0,
+  }));
+
+  return <CredentialsListPage clients={clients} />;
 }

@@ -1,37 +1,158 @@
+'use client';
+
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants/routes';
-import { Button } from '@/components/ui/Button';
-import type { Credential } from '../../types';
-import { CredentialCard } from '../ui/CredentialCard';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/Badge';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Search, ChevronRight, ShieldCheck } from 'lucide-react';
 
-interface CredentialsListPageProps {
-  credentials: Credential[];
+export interface VaultClient {
+  id: string;
+  name: string;
+  businessName: string;
+  businessType: string;
+  email: string;
+  credentialCount: number;
 }
 
-// Data is fetched server-side in app/(dashboard)/dashboard/credentials/page.tsx
-// TODO: add status filter tabs (all / draft / issued / revoked)
-// TODO: add pagination
-export function CredentialsListPage({ credentials }: CredentialsListPageProps) {
+interface CredentialsListPageProps {
+  clients: VaultClient[];
+}
+
+export function CredentialsListPage({ clients }: CredentialsListPageProps) {
+  const [search, setSearch] = useState('');
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return clients;
+    const q = search.toLowerCase();
+    return clients.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.businessName.toLowerCase().includes(q) ||
+        c.email.toLowerCase().includes(q),
+    );
+  }, [clients, search]);
+
   return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Credenciales</h1>
-        <Link href={ROUTES.credentials.new}>
-          <Button>Nueva credencial</Button>
-        </Link>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {credentials.map((c) => (
-          <CredentialCard key={c.id} credential={c} />
-        ))}
-      </div>
-
-      {credentials.length === 0 && (
-        <p className="mt-8 text-center text-sm text-gray-500">
-          No hay credenciales todavía.
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">
+          Registro de Credenciales
+        </h1>
+        <p className="text-muted-foreground mt-1">
+          Selecciona un cliente para ver y gestionar sus credenciales
+          verificables
         </p>
-      )}
+      </div>
+
+      <Card>
+        <CardContent className="pt-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por nombre, negocio o email..."
+              className="pl-9"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="pt-6">
+          <div className="rounded-lg border overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50">
+                  <TableHead>Cliente</TableHead>
+                  <TableHead>Negocio</TableHead>
+                  <TableHead className="text-center">Credenciales</TableHead>
+                  <TableHead className="w-[50px]" />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={4} className="h-32 text-center">
+                      <p className="text-muted-foreground">
+                        {search.trim()
+                          ? 'No se encontraron clientes'
+                          : 'No hay clientes registrados'}
+                      </p>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filtered.map((client) => (
+                    <TableRow key={client.id} className="group">
+                      <TableCell>
+                        <Link
+                          href={ROUTES.credentials.client(client.id)}
+                          className="flex items-center gap-3"
+                        >
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-medium text-sm">
+                            {client.name
+                              .split(' ')
+                              .map((n) => n[0])
+                              .join('')
+                              .slice(0, 2)
+                              .toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="font-medium group-hover:text-primary transition-colors">
+                              {client.name}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {client.email}
+                            </p>
+                          </div>
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <p className="font-medium">{client.businessName}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {client.businessType}
+                        </p>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {client.credentialCount > 0 ? (
+                          <Badge variant="success" className="gap-1">
+                            <ShieldCheck className="h-3 w-3" />
+                            {client.credentialCount}
+                          </Badge>
+                        ) : (
+                          <Badge variant="default">0</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Link href={ROUTES.credentials.client(client.id)}>
+                          <button className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+                            <ChevronRight className="h-4 w-4" />
+                          </button>
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+
+          <div className="mt-4 text-sm text-muted-foreground">
+            Mostrando {filtered.length} de {clients.length} clientes
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

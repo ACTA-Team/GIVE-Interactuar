@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/Button';
 import { IconIdBadge2 } from '@tabler/icons-react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import {
   profileCredentialFormSchema,
@@ -32,6 +33,7 @@ function ToggleField({
   value: boolean;
   onChange: (v: boolean) => void;
 }) {
+  const tc = useTranslations('common');
   return (
     <div className="flex gap-0">
       <button
@@ -44,7 +46,7 @@ function ToggleField({
             : 'border-border bg-card text-muted-foreground hover:bg-muted',
         )}
       >
-        Sí
+        {tc('toggle.yes')}
       </button>
       <button
         type="button"
@@ -56,7 +58,7 @@ function ToggleField({
             : 'border-border bg-card text-muted-foreground hover:bg-muted',
         )}
       >
-        No
+        {tc('toggle.no')}
       </button>
     </div>
   );
@@ -67,6 +69,8 @@ export function ProfileCredentialForm({
   onBack,
   defaultValues,
 }: ProfileCredentialFormProps) {
+  const t = useTranslations('credentials');
+  const tc = useTranslations('common');
   const {
     register,
     control,
@@ -102,14 +106,12 @@ export function ProfileCredentialForm({
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
           <IconIdBadge2 className="h-5 w-5" />
         </div>
-        <h3 className="text-base font-semibold">
-          Credencial de Perfil y Formalización
-        </h3>
+        <h3 className="text-base font-semibold">{t('forms.profileTitle')}</h3>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label>Identidad validada</Label>
+          <Label>{t('forms.identityValidated')}</Label>
           <Controller
             control={control}
             name="identityValidated"
@@ -120,7 +122,7 @@ export function ProfileCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label>Nivel educativo</Label>
+          <Label>{t('forms.educationLevel')}</Label>
           <Controller
             control={control}
             name="educationLevel"
@@ -132,16 +134,30 @@ export function ProfileCredentialForm({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Ninguno</SelectItem>
-                  <SelectItem value="primary">Primaria</SelectItem>
-                  <SelectItem value="secondary">Secundaria</SelectItem>
-                  <SelectItem value="technical">Técnico</SelectItem>
-                  <SelectItem value="undergraduate">Universitario</SelectItem>
-                  <SelectItem value="postgraduate">Posgrado</SelectItem>
-                  <SelectItem value="other">Otro</SelectItem>
+                  <SelectItem value="none">
+                    {t('forms.educationNone')}
+                  </SelectItem>
+                  <SelectItem value="primary">
+                    {t('forms.educationPrimary')}
+                  </SelectItem>
+                  <SelectItem value="secondary">
+                    {t('forms.educationSecondary')}
+                  </SelectItem>
+                  <SelectItem value="technical">
+                    {t('forms.educationTechnical')}
+                  </SelectItem>
+                  <SelectItem value="undergraduate">
+                    {t('forms.educationUndergrad')}
+                  </SelectItem>
+                  <SelectItem value="postgraduate">
+                    {t('forms.educationPostgrad')}
+                  </SelectItem>
+                  <SelectItem value="other">
+                    {t('forms.educationOther')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -151,8 +167,11 @@ export function ProfileCredentialForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label htmlFor="municipality">Municipio *</Label>
-          <Input {...register('municipality')} placeholder="Ej: Medellín" />
+          <Label htmlFor="municipality">{t('forms.municipality')}</Label>
+          <Input
+            {...register('municipality')}
+            placeholder={t('forms.municipalityPlaceholder')}
+          />
           {errors.municipality && (
             <p className="text-xs text-destructive">
               {errors.municipality.message}
@@ -161,7 +180,7 @@ export function ProfileCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label>Zona</Label>
+          <Label>{t('forms.zone')}</Label>
           <Controller
             control={control}
             name="zone"
@@ -173,13 +192,15 @@ export function ProfileCredentialForm({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="urban">Urbano</SelectItem>
-                  <SelectItem value="rural">Rural</SelectItem>
-                  <SelectItem value="periurban">Periurbano</SelectItem>
-                  <SelectItem value="other">Otro</SelectItem>
+                  <SelectItem value="urban">{t('forms.zoneUrban')}</SelectItem>
+                  <SelectItem value="rural">{t('forms.zoneRural')}</SelectItem>
+                  <SelectItem value="periurban">
+                    {t('forms.zonePeriurban')}
+                  </SelectItem>
+                  <SelectItem value="other">{t('forms.zoneOther')}</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -189,7 +210,7 @@ export function ProfileCredentialForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label>Proveedor principal del hogar</Label>
+          <Label>{t('forms.mainHouseholdProvider')}</Label>
           <Controller
             control={control}
             name="mainHouseholdProvider"
@@ -200,7 +221,7 @@ export function ProfileCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="householdIncome">Ingreso del hogar (COP)</Label>
+          <Label htmlFor="householdIncome">{t('forms.householdIncome')}</Label>
           <Input
             type="number"
             {...register('householdIncome', { valueAsNumber: true })}
@@ -215,7 +236,7 @@ export function ProfileCredentialForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label>Negocio formalizado</Label>
+          <Label>{t('forms.formalizedBusiness')}</Label>
           <Controller
             control={control}
             name="formalizedBusiness"
@@ -227,15 +248,20 @@ export function ProfileCredentialForm({
 
         {formalizedBusiness && (
           <div className="space-y-1.5">
-            <Label htmlFor="nit">NIT</Label>
-            <Input {...register('nit')} placeholder="Ej: 900123456-7" />
+            <Label htmlFor="nit">{t('forms.nit')}</Label>
+            <Input
+              {...register('nit')}
+              placeholder={t('forms.nitPlaceholder')}
+            />
           </div>
         )}
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         <div className="space-y-1.5">
-          <Label htmlFor="yearsInOperation">Años en operación</Label>
+          <Label htmlFor="yearsInOperation">
+            {t('forms.yearsInOperation')}
+          </Label>
           <Input
             type="number"
             {...register('yearsInOperation', { valueAsNumber: true })}
@@ -248,7 +274,7 @@ export function ProfileCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label>Tamaño de empresa</Label>
+          <Label>{t('forms.companySize')}</Label>
           <Controller
             control={control}
             name="companySize"
@@ -260,14 +286,16 @@ export function ProfileCredentialForm({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="micro">Micro</SelectItem>
-                  <SelectItem value="small">Pequeña</SelectItem>
-                  <SelectItem value="medium">Mediana</SelectItem>
-                  <SelectItem value="large">Grande</SelectItem>
-                  <SelectItem value="unknown">Desconocido</SelectItem>
+                  <SelectItem value="micro">{t('forms.micro')}</SelectItem>
+                  <SelectItem value="small">{t('forms.small')}</SelectItem>
+                  <SelectItem value="medium">
+                    {t('forms.mediumSize')}
+                  </SelectItem>
+                  <SelectItem value="large">{t('forms.large')}</SelectItem>
+                  <SelectItem value="unknown">{t('forms.unknown')}</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -275,7 +303,7 @@ export function ProfileCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label>Acceso a internet</Label>
+          <Label>{t('forms.internetAccess')}</Label>
           <Controller
             control={control}
             name="internetAccess"
@@ -287,10 +315,10 @@ export function ProfileCredentialForm({
       </div>
 
       <div className="space-y-3 rounded-lg border border-border bg-muted/30 p-4">
-        <p className="text-sm font-medium">Seguridad social (opcional)</p>
+        <p className="text-sm font-medium">{t('forms.socialSecurity')}</p>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label>Tiene seguridad social</Label>
+            <Label>{t('forms.hasSocialSecurity')}</Label>
             <Controller
               control={control}
               name="socialSecurityCoverage.hasSocialSecurity"
@@ -303,7 +331,7 @@ export function ProfileCredentialForm({
             />
           </div>
           <div className="space-y-1.5">
-            <Label>Tiene pensión</Label>
+            <Label>{t('forms.hasPension')}</Label>
             <Controller
               control={control}
               name="socialSecurityCoverage.hasPension"
@@ -319,10 +347,12 @@ export function ProfileCredentialForm({
       </div>
 
       <div className="space-y-3 rounded-lg border border-border bg-muted/30 p-4">
-        <p className="text-sm font-medium">Formalización del empleo</p>
+        <p className="text-sm font-medium">
+          {t('forms.employmentFormalization')}
+        </p>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label>Empleos formales</Label>
+            <Label>{t('forms.formalJobsCount')}</Label>
             <Input
               type="number"
               {...register('employmentFormalization.formalizedJobsCount', {
@@ -331,7 +361,7 @@ export function ProfileCredentialForm({
             />
           </div>
           <div className="space-y-1.5">
-            <Label>Empleos informales</Label>
+            <Label>{t('forms.informalJobsCount')}</Label>
             <Input
               type="number"
               {...register('employmentFormalization.informalJobsCount', {
@@ -344,7 +374,7 @@ export function ProfileCredentialForm({
 
       <div className="grid grid-cols-3 gap-4">
         <div className="space-y-1.5">
-          <Label>Nivel de trazabilidad</Label>
+          <Label>{t('forms.traceabilityLevel')}</Label>
           <Controller
             control={control}
             name="traceabilityLevel"
@@ -356,12 +386,14 @@ export function ProfileCredentialForm({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="high">Alto</SelectItem>
-                  <SelectItem value="medium">Medio</SelectItem>
-                  <SelectItem value="low">Bajo</SelectItem>
+                  <SelectItem value="high">{t('forms.levelHigh')}</SelectItem>
+                  <SelectItem value="medium">
+                    {t('forms.levelMedium')}
+                  </SelectItem>
+                  <SelectItem value="low">{t('forms.levelLow')}</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -369,7 +401,7 @@ export function ProfileCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label>Nivel de formalización</Label>
+          <Label>{t('forms.formalizationLevel')}</Label>
           <Controller
             control={control}
             name="formalizationLevel"
@@ -379,13 +411,15 @@ export function ProfileCredentialForm({
                 onValueChange={(v: string | null) => field.onChange(v ?? 'low')}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="high">Alto</SelectItem>
-                  <SelectItem value="medium">Medio</SelectItem>
-                  <SelectItem value="low">Bajo</SelectItem>
-                  <SelectItem value="none">Ninguno</SelectItem>
+                  <SelectItem value="high">{t('forms.levelHigh')}</SelectItem>
+                  <SelectItem value="medium">
+                    {t('forms.levelMedium')}
+                  </SelectItem>
+                  <SelectItem value="low">{t('forms.levelLow')}</SelectItem>
+                  <SelectItem value="none">{t('forms.levelNone')}</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -393,7 +427,7 @@ export function ProfileCredentialForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label>Señal de estabilidad</Label>
+          <Label>{t('forms.stabilitySignal')}</Label>
           <Controller
             control={control}
             name="applicantStabilitySignal"
@@ -405,12 +439,16 @@ export function ProfileCredentialForm({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar" />
+                  <SelectValue placeholder={t('forms.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="strong">Fuerte</SelectItem>
-                  <SelectItem value="moderate">Moderada</SelectItem>
-                  <SelectItem value="weak">Débil</SelectItem>
+                  <SelectItem value="strong">
+                    {t('forms.signalStrong')}
+                  </SelectItem>
+                  <SelectItem value="moderate">
+                    {t('forms.signalModerate')}
+                  </SelectItem>
+                  <SelectItem value="weak">{t('forms.signalWeak')}</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -420,13 +458,13 @@ export function ProfileCredentialForm({
 
       <div className="flex items-center justify-between border-t border-border pt-4">
         <Button type="button" variant="outline" onClick={onBack}>
-          &larr; Atrás
+          &larr; {tc('buttons.back')}
         </Button>
         <Button
           type="submit"
           className="bg-accent hover:bg-accent/90 text-accent-foreground"
         >
-          Generar Credencial &rarr;
+          {t('issuance.generateCredential')} &rarr;
         </Button>
       </div>
     </form>

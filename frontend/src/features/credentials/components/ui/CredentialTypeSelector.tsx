@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import {
   IconTrendingUp,
@@ -7,10 +8,6 @@ import {
   IconIdBadge2,
 } from '@tabler/icons-react';
 import type { CredentialType } from '../../types';
-import {
-  CREDENTIAL_TYPE_LABELS,
-  CREDENTIAL_TYPE_DESCRIPTIONS,
-} from '../../types';
 
 const TYPE_CONFIG: Record<
   CredentialType,
@@ -44,10 +41,13 @@ export function CredentialTypeSelector({
   selected,
   onSelect,
 }: CredentialTypeSelectorProps) {
+  const tc = useTranslations('common');
+  const t = useTranslations('credentials');
+
   return (
     <div className="space-y-4">
       <p className="text-sm font-medium text-muted-foreground">
-        Selecciona el tipo de credencial a emitir:
+        {t('issuance.selectType')}
       </p>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {TYPES.map((type) => {
@@ -77,10 +77,10 @@ export function CredentialTypeSelector({
               </div>
               <div>
                 <p className="text-sm font-semibold text-foreground">
-                  {CREDENTIAL_TYPE_LABELS[type]}
+                  {tc(`credentialTypes.${type}`)}
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  {CREDENTIAL_TYPE_DESCRIPTIONS[type]}
+                  {tc(`credentialTypeDescriptions.${type}`)}
                 </p>
               </div>
             </button>

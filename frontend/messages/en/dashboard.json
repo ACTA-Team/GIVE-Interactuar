@@ -1,0 +1,57 @@
+{
+  "title": "Dashboard",
+  "welcome": "Welcome. Summary of your entrepreneurs portfolio.",
+  "stats": {
+    "totalEntrepreneurs": "Total Entrepreneurs",
+    "totalFunding": "Total Funding",
+    "inTraining": "In Training",
+    "delinquent": "Delinquent",
+    "thisMonth": "+12% this month",
+    "entrepreneursFunded": "{count} entrepreneurs funded",
+    "stages1to3": "Stages 1-3 of the process",
+    "needsAttention": "Needs attention",
+    "allUpToDate": "All up to date"
+  },
+  "charts": {
+    "growthTrend": "Growth Trend",
+    "growthTrendDesc": "Entrepreneurs and funding by month",
+    "stageDistribution": "Stage Distribution",
+    "stageDistributionDesc": "Current status of entrepreneurs in the process",
+    "entrepreneurs": "Entrepreneurs",
+    "funded": "Funded",
+    "entrepreneursCount": "{count} entrepreneurs"
+  },
+  "table": {
+    "title": "Entrepreneurs",
+    "description": "Select entrepreneurs to verify stages in batch",
+    "entrepreneur": "Entrepreneur",
+    "business": "Business",
+    "stage": "Stage",
+    "status": "Status",
+    "funding": "Funding",
+    "delinquent": "Delinquent ({days}d)",
+    "upToDate": "Up to date",
+    "notFunded": "Not funded",
+    "noResults": "No entrepreneurs found",
+    "certifyStage": "Certify stage",
+    "stageLabel": "Stage {id}",
+    "stageWithName": "Stage {id}: {name}"
+  },
+  "filters": {
+    "stage": "Stage",
+    "status": "Status",
+    "all": "All",
+    "allStatuses": "All",
+    "delinquent": "Delinquent",
+    "funded": "Funded",
+    "notFunded": "Not funded"
+  },
+  "months": {
+    "jan": "Jan",
+    "feb": "Feb",
+    "mar": "Mar",
+    "apr": "Apr",
+    "may": "May",
+    "jun": "Jun"
+  }
+}

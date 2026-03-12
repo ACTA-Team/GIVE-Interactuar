@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants/routes';
 import { Button } from '@/components/ui/Button';
@@ -25,10 +26,6 @@ import {
   Clock,
 } from 'lucide-react';
 import type { Credential, CredentialType } from '../../types';
-import {
-  CREDENTIAL_TYPE_LABELS,
-  CREDENTIAL_TYPE_DESCRIPTIONS,
-} from '../../types';
 
 interface ClientInfo {
   id: string;
@@ -60,14 +57,6 @@ const STATUS_VARIANT: Record<
   pending_endorsement: 'info',
 };
 
-const STATUS_LABEL: Record<Credential['status'], string> = {
-  draft: 'Borrador',
-  issued: 'Emitida',
-  revoked: 'Revocada',
-  expired: 'Expirada',
-  pending_endorsement: 'Pendiente',
-};
-
 const TYPE_ICON: Record<CredentialType, typeof BarChart3> = {
   impact: BarChart3,
   behavior: Activity,
@@ -81,7 +70,19 @@ const TYPE_COLOR: Record<CredentialType, string> = {
 };
 
 function CredentialRow({ credential }: { credential: Credential }) {
+  const tc = useTranslations('common');
   const Icon = TYPE_ICON[credential.credentialType];
+
+  const getStatusLabel = (status: Credential['status']) => {
+    const labels: Record<Credential['status'], string> = {
+      draft: tc('status.draft'),
+      issued: tc('status.issued'),
+      revoked: tc('status.revoked'),
+      expired: tc('status.expired'),
+      pending_endorsement: tc('status.pending'),
+    };
+    return labels[status];
+  };
 
   return (
     <Link href={ROUTES.credentials.detail(credential.id)} className="group">
@@ -108,13 +109,13 @@ function CredentialRow({ credential }: { credential: Credential }) {
               variant={STATUS_VARIANT[credential.status]}
               className="shrink-0"
             >
-              {STATUS_LABEL[credential.status]}
+              {getStatusLabel(credential.status)}
             </Badge>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-muted-foreground">
             <span className="capitalize">
-              {CREDENTIAL_TYPE_LABELS[credential.credentialType]}
+              {tc(`credentialTypes.${credential.credentialType}`)}
             </span>
 
             {credential.issuedAt && (
@@ -168,10 +169,13 @@ export function ClientCredentialsPage({
   client,
   credentials,
 }: ClientCredentialsPageProps) {
+  const t = useTranslations('credentials');
+  const tc = useTranslations('common');
+
   const groupedCredentials = CREDENTIAL_TYPES.map((type) => ({
     type,
-    label: CREDENTIAL_TYPE_LABELS[type],
-    description: CREDENTIAL_TYPE_DESCRIPTIONS[type],
+    label: tc(`credentialTypes.${type}`),
+    description: tc(`credentialTypeDescriptions.${type}`),
     items: credentials.filter((c) => c.credentialType === type),
   }));
 
@@ -200,14 +204,14 @@ export function ClientCredentialsPage({
               {client.name}
             </h1>
             <p className="text-muted-foreground mt-0.5">
-              Empresario · Vault de credenciales verificables
+              {t('client.vaultSubtitle')}
             </p>
           </div>
         </div>
         <Link href={ROUTES.credentials.new}>
           <Button className="gap-2">
             <Plus className="h-4 w-4" />
-            Emitir Credencial
+            {t('client.issueCredential')}
           </Button>
         </Link>
       </div>
@@ -248,7 +252,7 @@ export function ClientCredentialsPage({
                 {client.hasFunding && (
                   <Badge variant="info" className="gap-1">
                     <DollarSign className="h-3 w-3" />
-                    Financiado
+                    {t('vault.funded')}
                     {client.fundingAmount
                       ? ` — $${client.fundingAmount.toLocaleString('es-CO')}`
                       : ''}
@@ -257,9 +261,9 @@ export function ClientCredentialsPage({
                 {client.isDelinquent && (
                   <Badge variant="danger" className="gap-1">
                     <AlertTriangle className="h-3 w-3" />
-                    En mora
+                    {t('client.inDelinquency')}
                     {client.delinquentDays
-                      ? ` (${client.delinquentDays} días)`
+                      ? ` ${t('client.delinquencyDays', { days: client.delinquentDays })}`
                       : ''}
                   </Badge>
                 )}
@@ -278,7 +282,9 @@ export function ClientCredentialsPage({
             </div>
             <div>
               <p className="text-2xl font-bold tabular-nums">{impactCount}</p>
-              <p className="text-xs text-muted-foreground">Impacto</p>
+              <p className="text-xs text-muted-foreground">
+                {t('vault.impact')}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -289,7 +295,9 @@ export function ClientCredentialsPage({
             </div>
             <div>
               <p className="text-2xl font-bold tabular-nums">{behaviorCount}</p>
-              <p className="text-xs text-muted-foreground">Comportamiento</p>
+              <p className="text-xs text-muted-foreground">
+                {t('vault.behavior')}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -300,7 +308,9 @@ export function ClientCredentialsPage({
             </div>
             <div>
               <p className="text-2xl font-bold tabular-nums">{profileCount}</p>
-              <p className="text-xs text-muted-foreground">Perfil</p>
+              <p className="text-xs text-muted-foreground">
+                {t('vault.profile')}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -340,12 +350,12 @@ export function ClientCredentialsPage({
                 <CardContent className="flex flex-col items-center justify-center py-8 text-center">
                   <FileWarning className="h-8 w-8 text-muted-foreground/30" />
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Sin credenciales de este tipo
+                    {t('client.noCredentialsOfType')}
                   </p>
                   <Link href={ROUTES.credentials.new} className="mt-3">
                     <Button variant="outline" size="sm" className="gap-1.5">
                       <Plus className="h-3.5 w-3.5" />
-                      Emitir {label}
+                      {t('client.issueType', { type: label })}
                     </Button>
                   </Link>
                 </CardContent>

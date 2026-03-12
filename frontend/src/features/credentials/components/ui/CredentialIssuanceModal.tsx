@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -30,25 +31,17 @@ interface CredentialIssuanceModalProps {
   businessName: string;
 }
 
-const STEPS = [
-  { number: 1, label: 'Tipo' },
-  { number: 2, label: 'Datos' },
-  { number: 3, label: 'Emitida' },
-] as const;
-
-const STATUS_LABELS: Record<IssuanceStatus, string> = {
-  idle: '',
-  connecting_wallet: 'Conectando wallet...',
-  building_payload: 'Preparando credencial...',
-  issuing: 'Emitiendo en blockchain...',
-  success: '',
-  error: '',
-};
-
 function Stepper({ currentStep }: { currentStep: number }) {
+  const t = useTranslations('credentials');
+  const steps = [
+    { number: 1, label: t('issuance.steps.type') },
+    { number: 2, label: t('issuance.steps.data') },
+    { number: 3, label: t('issuance.steps.issued') },
+  ];
+
   return (
     <div className="flex items-center gap-3">
-      {STEPS.map((step, i) => {
+      {steps.map((step, i) => {
         const isActive = step.number <= currentStep;
         const isCurrent = step.number === currentStep;
         return (
@@ -91,7 +84,17 @@ function Stepper({ currentStep }: { currentStep: number }) {
 }
 
 function IssuingOverlay({ status }: { status: IssuanceStatus }) {
-  const label = STATUS_LABELS[status];
+  const t = useTranslations('credentials');
+  const tc = useTranslations('common');
+  const labels: Record<IssuanceStatus, string> = {
+    idle: '',
+    connecting_wallet: t('issuance.statusLabels.connectingWallet'),
+    building_payload: t('issuance.statusLabels.buildingPayload'),
+    issuing: t('issuance.statusLabels.issuing'),
+    success: '',
+    error: '',
+  };
+  const label = labels[status];
   if (!label) return null;
 
   return (
@@ -100,7 +103,7 @@ function IssuingOverlay({ status }: { status: IssuanceStatus }) {
       <div className="text-center">
         <p className="text-sm font-medium text-foreground">{label}</p>
         <p className="mt-1 text-xs text-muted-foreground">
-          Aprueba la transacción en tu wallet Freighter
+          {tc('wallet.approveTransaction')}
         </p>
       </div>
     </div>
@@ -114,6 +117,8 @@ export function CredentialIssuanceModal({
   entrepreneurName,
   businessName,
 }: CredentialIssuanceModalProps) {
+  const t = useTranslations('credentials');
+  const tc = useTranslations('common');
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState<CredentialType | null>(null);
 
@@ -195,9 +200,7 @@ export function CredentialIssuanceModal({
         <div className="bg-(--color-brand-blue,#0B1F3F) px-6 py-4 text-white">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-lg font-bold">
-                Emitir Credencial Verificable
-              </h2>
+              <h2 className="text-lg font-bold">{t('issuance.modalTitle')}</h2>
               <p className="text-sm text-white/70">
                 {entrepreneurName} &middot; {businessName}
               </p>
@@ -235,7 +238,7 @@ export function CredentialIssuanceModal({
                   disabled={!selectedType}
                   className="bg-accent hover:bg-accent/90 text-accent-foreground"
                 >
-                  Continuar &rarr;
+                  {tc('buttons.continue')} &rarr;
                 </Button>
               </div>
             </div>
@@ -267,7 +270,7 @@ export function CredentialIssuanceModal({
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
               <div className="flex-1">
                 <p className="text-sm font-medium text-destructive">
-                  Error al emitir
+                  {t('issuance.errorTitle')}
                 </p>
                 <p className="mt-1 text-xs text-destructive/80">{error}</p>
                 <Button
@@ -276,7 +279,7 @@ export function CredentialIssuanceModal({
                   onClick={handleRetry}
                   className="mt-3"
                 >
-                  Reintentar
+                  {tc('buttons.retry')}
                 </Button>
               </div>
             </div>

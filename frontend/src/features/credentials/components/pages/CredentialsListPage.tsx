@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants/routes';
 import { Card, CardContent } from '@/components/ui/card';
@@ -43,6 +44,8 @@ interface CredentialsListPageProps {
 }
 
 export function CredentialsListPage({ clients }: CredentialsListPageProps) {
+  const t = useTranslations('credentials');
+  const tc = useTranslations('common');
   const [search, setSearch] = useState('');
 
   const filtered = useMemo(() => {
@@ -64,10 +67,10 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Empresarios</h1>
-        <p className="text-muted-foreground mt-0.5">
-          Registro de credenciales verificables por empresario
-        </p>
+        <h1 className="text-2xl font-bold text-foreground">
+          {t('vault.title')}
+        </h1>
+        <p className="text-muted-foreground mt-0.5">{t('vault.subtitle')}</p>
       </div>
 
       {/* Stats by type */}
@@ -79,7 +82,9 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
             </div>
             <div>
               <p className="text-2xl font-bold tabular-nums">{totalImpact}</p>
-              <p className="text-xs text-muted-foreground">Impacto</p>
+              <p className="text-xs text-muted-foreground">
+                {t('vault.impact')}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -90,7 +95,9 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
             </div>
             <div>
               <p className="text-2xl font-bold tabular-nums">{totalBehavior}</p>
-              <p className="text-xs text-muted-foreground">Comportamiento</p>
+              <p className="text-xs text-muted-foreground">
+                {t('vault.behavior')}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -101,7 +108,9 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
             </div>
             <div>
               <p className="text-2xl font-bold tabular-nums">{totalProfile}</p>
-              <p className="text-xs text-muted-foreground">Perfil</p>
+              <p className="text-xs text-muted-foreground">
+                {t('vault.profile')}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -113,7 +122,7 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Buscar por nombre, negocio o email..."
+              placeholder={t('vault.searchPlaceholder')}
               className="pl-9"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -131,8 +140,8 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                 <Search className="h-8 w-8 text-muted-foreground/40" />
                 <p className="mt-2 text-sm text-muted-foreground">
                   {search.trim()
-                    ? 'No se encontraron clientes'
-                    : 'No hay clientes registrados'}
+                    ? t('vault.noClientsFound')
+                    : t('vault.noClientsRegistered')}
                 </p>
               </CardContent>
             </Card>
@@ -180,7 +189,7 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                         {/* Total credentials */}
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-muted-foreground">
-                            Credenciales
+                            {t('vault.credentialsLabel')}
                           </span>
                           <Badge variant="success" className="gap-1">
                             <ShieldCheck className="h-3 w-3" />
@@ -193,7 +202,8 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                           {client.impactCount > 0 && (
                             <Badge variant="info" className="gap-1 text-[10px]">
                               <BarChart3 className="h-3 w-3" />
-                              {client.impactCount} impacto
+                              {client.impactCount}{' '}
+                              {t('vault.impact').toLowerCase()}
                             </Badge>
                           )}
                           {client.behaviorCount > 0 && (
@@ -202,7 +212,8 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                               className="gap-1 text-[10px]"
                             >
                               <Activity className="h-3 w-3" />
-                              {client.behaviorCount} comportamiento
+                              {client.behaviorCount}{' '}
+                              {t('vault.behavior').toLowerCase()}
                             </Badge>
                           )}
                           {client.profileCount > 0 && (
@@ -211,7 +222,8 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                               className="gap-1 text-[10px]"
                             >
                               <UserCheck className="h-3 w-3" />
-                              {client.profileCount} perfil
+                              {client.profileCount}{' '}
+                              {t('vault.profile').toLowerCase()}
                             </Badge>
                           )}
                         </div>
@@ -220,13 +232,13 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                         {client.hasOnChain && (
                           <div className="flex items-center gap-1 text-xs text-emerald-600">
                             <Link2 className="h-3 w-3" />
-                            Credenciales on-chain
+                            {t('vault.onChainCredentials')}
                           </div>
                         )}
                       </>
                     ) : (
                       <p className="text-xs text-muted-foreground text-center py-2">
-                        Sin credenciales emitidas
+                        {t('vault.noCredentialsIssued')}
                       </p>
                     )}
 
@@ -235,13 +247,13 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                       {client.hasFunding && (
                         <Badge variant="info" className="gap-1 text-[10px]">
                           <DollarSign className="h-3 w-3" />
-                          Financiado
+                          {t('vault.funded')}
                         </Badge>
                       )}
                       {client.isDelinquent && (
                         <Badge variant="danger" className="gap-1 text-[10px]">
                           <AlertTriangle className="h-3 w-3" />
-                          Mora
+                          {t('vault.delinquent')}
                           {client.delinquentDays
                             ? ` ${client.delinquentDays}d`
                             : ''}
@@ -258,7 +270,7 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
 
       {/* Footer count */}
       <p className="text-sm text-muted-foreground">
-        Mostrando {filtered.length} de {clients.length} clientes
+        {tc('showing', { count: filtered.length, total: clients.length })}
       </p>
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import {
@@ -27,6 +28,8 @@ export function BadgeDetailDialog({
   entrepreneurName,
   children,
 }: BadgeDetailDialogProps) {
+  const t = useTranslations('entrepreneurs');
+  const tc = useTranslations('common');
   const [copiedHash, setCopiedHash] = useState(false);
   const colors = getBadgeColors(badge.id);
 
@@ -59,7 +62,9 @@ export function BadgeDetailDialog({
         <div className="space-y-4 py-4">
           <div className="p-4 rounded-xl bg-muted/50 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Emisor</span>
+              <span className="text-sm text-muted-foreground">
+                {t('badgeDetail.issuer')}
+              </span>
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 text-primary" />
                 <span className="font-medium text-sm">Interactuar</span>
@@ -67,7 +72,7 @@ export function BadgeDetailDialog({
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">
-                Fecha de emisión
+                {t('badgeDetail.issuedDate')}
               </span>
               <span className="font-medium text-sm">
                 {badge.earnedAt &&
@@ -79,17 +84,19 @@ export function BadgeDetailDialog({
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Estado</span>
+              <span className="text-sm text-muted-foreground">
+                {t('badgeDetail.status')}
+              </span>
               <Badge variant="success" className="gap-1">
                 <CheckCircle className="h-3 w-3" />
-                Verificado
+                {tc('status.verified')}
               </Badge>
             </div>
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">
-              Dirección de transacción
+              {t('badgeDetail.transactionAddress')}
             </label>
             <div className="flex items-center gap-2">
               <div className="flex-1 p-3 rounded-lg bg-muted font-mono text-xs break-all">
@@ -117,7 +124,7 @@ export function BadgeDetailDialog({
             </div>
             <p className="font-bold">{badge.name}</p>
             <p className="text-sm text-muted-foreground">
-              Otorgado a {entrepreneurName}
+              {t('detail.grantedTo', { name: entrepreneurName })}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               {badge.earnedAt &&
@@ -129,11 +136,11 @@ export function BadgeDetailDialog({
         <DialogFooter className="flex-row gap-2 sm:gap-2">
           <Button variant="outline" className="flex-1 gap-2">
             <Eye className="h-4 w-4" />
-            Ver en blockchain
+            {tc('buttons.viewOnBlockchain')}
           </Button>
           <Button className="flex-1 gap-2">
             <Download className="h-4 w-4" />
-            Descargar
+            {tc('buttons.download')}
           </Button>
         </DialogFooter>
       </DialogContent>

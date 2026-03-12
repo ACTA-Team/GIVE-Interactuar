@@ -1,0 +1,96 @@
+{
+  "title": "Entrepreneurs",
+  "subtitle": "Manage entrepreneurs and their progress in the program",
+  "search": "Search by name, business or email...",
+  "filterByStage": "Filter by stage",
+  "filterByStatus": "Filter by status",
+  "allStages": "All stages",
+  "certifyStageAction": "Certify stage...",
+  "clearSelection": "Clear selection",
+  "newEntrepreneur": "New Entrepreneur",
+  "notFound": "Entrepreneur not found",
+  "backToList": "Back to list",
+  "table": {
+    "entrepreneur": "Entrepreneur",
+    "business": "Business",
+    "stage": "Stage",
+    "status": "Status",
+    "delinquent": "Delinquent ({days}d)",
+    "upToDate": "Up to date",
+    "noResults": "No entrepreneurs found"
+  },
+  "detail": {
+    "supportPath": "Support Path",
+    "reputationBadges": "Reputation Badges",
+    "issueCredential": "Issue Credential",
+    "approveStage": "Approve Stage {id}",
+    "allStagesCertified": "All stages certified",
+    "certify": "Certify",
+    "certifyStageTitle": "Certify Stage {id}",
+    "certifyStageApproveTitle": "Approve Certification - Stage {id}",
+    "certifyStageDesc": "This action will issue a verifiable credential on blockchain certifying that {name} has completed stage \"{stageName}\". This action cannot be undone.",
+    "certifyStageDescShort": "This action will issue a verifiable credential certifying that {name} has completed \"{stageName}\".",
+    "completed": "Completed",
+    "inProgress": "In progress",
+    "pending": "Pending",
+    "award": "Award",
+    "awardBadge": "Award Badge",
+    "awardBadgeDesc": "Select a badge for {name}",
+    "verified": "Verified",
+    "toUnlock": "To unlock",
+    "grantedTo": "Granted to {name}"
+  },
+  "newDialog": {
+    "title": "Register New Entrepreneur",
+    "description": "The entrepreneur will start at Stage 0 (Registration) automatically.",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "E.g.: María García López",
+    "email": "Email",
+    "emailPlaceholder": "email@example.com",
+    "phone": "Phone",
+    "phonePlaceholder": "+57 300 123 4567",
+    "businessName": "Business name",
+    "businessNamePlaceholder": "E.g.: Empanadas Doña María",
+    "businessType": "Business type",
+    "businessTypePlaceholder": "Select a type",
+    "submit": "Register Entrepreneur"
+  },
+  "badgeDetail": {
+    "issuer": "Issuer",
+    "issuedDate": "Issue date",
+    "status": "Status",
+    "transactionAddress": "Transaction address"
+  },
+  "stages": {
+    "0": "Registration",
+    "1": "Basic Training",
+    "2": "Business Plan",
+    "3": "Financial Training",
+    "4": "Ready for Funding",
+    "5": "Funded"
+  },
+  "stageDescriptions": {
+    "0": "Entrepreneur registered in the system",
+    "1": "Completed business fundamentals courses",
+    "2": "Submitted and approved business plan",
+    "3": "Completed financial education modules",
+    "4": "Meets requirements for microcredit",
+    "5": "Received active funding"
+  },
+  "badges": {
+    "punctual": "Punctual Payment",
+    "growth": "Growing Business",
+    "community": "Community Leader",
+    "training": "Complete Training",
+    "innovation": "Innovator",
+    "sustainable": "Sustainable"
+  },
+  "badgeDescriptions": {
+    "punctual": "Has never been late on payments",
+    "growth": "Demonstrated sustained growth",
+    "community": "Actively participates in the community",
+    "training": "Completed all available courses",
+    "innovation": "Implemented innovative practices",
+    "sustainable": "Environmentally responsible practices"
+  }
+}

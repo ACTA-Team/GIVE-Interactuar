@@ -9,8 +9,8 @@ import {
   IconIdBadge2,
 } from '@tabler/icons-react';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import type { CredentialType } from '../../types';
-import { CREDENTIAL_TYPE_LABELS } from '../../types';
 
 const TYPE_ICONS: Record<CredentialType, React.ReactNode> = {
   impact: <IconTrendingUp className="h-6 w-6 text-orange-500" />,
@@ -37,6 +37,8 @@ export function CredentialIssuedSuccess({
   issuerAddress,
   onClose,
 }: CredentialIssuedSuccessProps) {
+  const t = useTranslations('credentials');
+  const tc = useTranslations('common');
   const [copied, setCopied] = useState(false);
   const isOnChain = !!vcId;
 
@@ -62,48 +64,58 @@ export function CredentialIssuedSuccess({
 
       <div className="space-y-2">
         <h3 className="text-lg font-semibold text-foreground">
-          {isOnChain
-            ? 'Credencial emitida en blockchain'
-            : 'Credencial lista para emitir'}
+          {isOnChain ? t('success.issuedOnChain') : t('success.readyToIssue')}
         </h3>
         <p className="text-sm text-muted-foreground">
           {isOnChain
-            ? 'La credencial ha sido registrada de forma verificable en Stellar.'
-            : 'Los datos han sido validados y la credencial está preparada.'}
+            ? t('success.issuedOnChainDesc')
+            : t('success.readyToIssueDesc')}
         </p>
       </div>
 
       <div className="w-full max-w-sm space-y-3 rounded-xl border border-border bg-muted/30 p-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Tipo</span>
+          <span className="text-sm text-muted-foreground">
+            {t('success.type')}
+          </span>
           <div className="flex items-center gap-2">
             {TYPE_ICONS[credentialType]}
             <span className="text-sm font-medium">
-              {CREDENTIAL_TYPE_LABELS[credentialType]}
+              {tc('credentialTypes.' + credentialType)}
             </span>
           </div>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Empresario</span>
+          <span className="text-sm text-muted-foreground">
+            {t('success.entrepreneur')}
+          </span>
           <span className="text-sm font-medium">{entrepreneurName}</span>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Negocio</span>
+          <span className="text-sm text-muted-foreground">
+            {t('success.business')}
+          </span>
           <span className="text-sm font-medium">{businessName}</span>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Estado</span>
+          <span className="text-sm text-muted-foreground">
+            {t('success.status')}
+          </span>
           <Badge variant="success" className="gap-1">
             <CheckCircle className="h-3 w-3" />
-            {isOnChain ? 'Emitida on-chain' : 'Validada'}
+            {isOnChain
+              ? t('success.issuedOnChainBadge')
+              : t('success.validated')}
           </Badge>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Red</span>
+          <span className="text-sm text-muted-foreground">
+            {t('success.network')}
+          </span>
           <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
             Stellar {network}
           </span>
@@ -111,7 +123,9 @@ export function CredentialIssuedSuccess({
 
         {vcId && (
           <div className="space-y-1.5">
-            <span className="text-sm text-muted-foreground">VC ID</span>
+            <span className="text-sm text-muted-foreground">
+              {t('success.vcId')}
+            </span>
             <div className="flex items-center gap-2">
               <code className="flex-1 truncate rounded bg-muted px-2 py-1 text-xs text-foreground">
                 {vcId}
@@ -135,9 +149,7 @@ export function CredentialIssuedSuccess({
       {isOnChain && (
         <div className="w-full max-w-sm rounded-lg border border-emerald-200 bg-emerald-50 p-3">
           <p className="text-xs text-emerald-700">
-            Esta credencial es verificable por cualquier persona con el VC ID.
-            Fue registrada de forma inmutable en la blockchain de Stellar
-            mediante ACTA.
+            {t('success.verifiableNote')}
           </p>
         </div>
       )}
@@ -150,13 +162,13 @@ export function CredentialIssuedSuccess({
           onClick={() => explorerUrl && window.open(explorerUrl, '_blank')}
         >
           <ExternalLink className="h-4 w-4" />
-          Ver en blockchain
+          {tc('buttons.viewOnBlockchain')}
         </Button>
         <Button
           className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground"
           onClick={onClose}
         >
-          Cerrar
+          {tc('buttons.close')}
         </Button>
       </div>
     </div>

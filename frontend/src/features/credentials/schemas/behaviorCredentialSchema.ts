@@ -8,20 +8,20 @@ export const activeCreditSchema = z.object({
 });
 
 export const behaviorCredentialFormSchema = z.object({
-  creditSegmentStart: z.string().min(1, 'Segmento inicio es requerido'),
-  creditSegmentEnd: z.string().min(1, 'Segmento final es requerido'),
+  creditSegmentStart: z.string().min(1, 'Start segment is required'),
+  creditSegmentEnd: z.string().min(1, 'End segment is required'),
   activeCredit: activeCreditSchema.nullable().optional(),
-  averageSales: z.number().min(0, 'Debe ser mayor o igual a 0'),
-  costsAndExpenses: z.number().min(0, 'Debe ser mayor o igual a 0'),
-  assets: z.number().min(0, 'Debe ser mayor o igual a 0'),
-  liabilities: z.number().min(0, 'Debe ser mayor o igual a 0'),
+  averageSales: z.number().min(0, 'Must be greater than or equal to 0'),
+  costsAndExpenses: z.number().min(0, 'Must be greater than or equal to 0'),
+  assets: z.number().min(0, 'Must be greater than or equal to 0'),
+  liabilities: z.number().min(0, 'Must be greater than or equal to 0'),
   monthlyIncomeStability: z.enum(['high', 'medium', 'low', 'volatile']),
   registryValidation: z.enum([
     'validated',
     'partially_validated',
     'not_validated',
   ]),
-  newJobs: z.number().int().min(0, 'Debe ser mayor o igual a 0'),
+  newJobs: z.number().int().min(0, 'Must be greater than or equal to 0'),
   commercialStability: z.enum(['stable', 'seasonal', 'volatile']),
   financialTrend: z.enum(['improving', 'stable', 'deteriorating']),
 });

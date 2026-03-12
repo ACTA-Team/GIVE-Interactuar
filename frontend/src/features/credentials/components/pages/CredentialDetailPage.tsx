@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -17,7 +18,6 @@ import {
 } from 'lucide-react';
 import { ROUTES } from '@/lib/constants/routes';
 import type { Credential, CredentialType } from '../../types';
-import { CREDENTIAL_TYPE_LABELS } from '../../types';
 
 interface CredentialDetailPageProps {
   credential: Credential;
@@ -34,14 +34,6 @@ const STATUS_VARIANT: Record<
   pending_endorsement: 'info',
 };
 
-const STATUS_LABEL: Record<Credential['status'], string> = {
-  draft: 'Borrador',
-  issued: 'Emitida',
-  revoked: 'Revocada',
-  expired: 'Expirada',
-  pending_endorsement: 'Pendiente',
-};
-
 const TYPE_ICON: Record<CredentialType, typeof BarChart3> = {
   impact: BarChart3,
   behavior: Activity,
@@ -54,106 +46,8 @@ const TYPE_COLOR: Record<CredentialType, string> = {
   profile: 'bg-violet-500/10 text-violet-600',
 };
 
-const CLAIM_LABELS: Record<string, string> = {
-  id: 'ID del sujeto',
-  companyName: 'Empresa',
-  sector: 'Sector',
-  yearsInOperation: 'Años en operación',
-  salesPreviousYear: 'Ventas año anterior (COP)',
-  salesCurrentYear: 'Ventas año actual (COP)',
-  salesVariationPercent: 'Variación de ventas (%)',
-  currentEmployees: 'Empleados actuales',
-  newJobsCreated: 'Nuevos empleos',
-  newFormalJobsCreated: 'Empleos formales nuevos',
-  businessTrend: 'Tendencia del negocio',
-  assessmentPeriod: 'Período de evaluación',
-  creditSegmentStart: 'Segmento crediticio inicial',
-  creditSegmentEnd: 'Segmento crediticio final',
-  activeCredit: 'Crédito activo',
-  averageSales: 'Ventas promedio',
-  costsAndExpenses: 'Costos y gastos',
-  assets: 'Activos',
-  liabilities: 'Pasivos',
-  estimatedOperatingMargin: 'Margen operativo estimado',
-  liabilitiesToAssetsRatio: 'Ratio pasivos/activos',
-  monthlyIncomeStability: 'Estabilidad ingreso mensual',
-  registryValidation: 'Validación de registro',
-  newJobs: 'Nuevos empleos',
-  estimatedOperationalCapacity: 'Capacidad operativa estimada',
-  leverageLevel: 'Nivel de apalancamiento',
-  commercialStability: 'Estabilidad comercial',
-  financialTrend: 'Tendencia financiera',
-  paymentCapacitySignal: 'Señal de capacidad de pago',
-  identityValidated: 'Identidad validada',
-  educationLevel: 'Nivel educativo',
-  municipality: 'Municipio',
-  zone: 'Zona',
-  mainHouseholdProvider: 'Proveedor principal del hogar',
-  householdIncome: 'Ingreso del hogar',
-  formalizedBusiness: 'Negocio formalizado',
-  nit: 'NIT',
-  legalForm: 'Forma jurídica',
-  companySize: 'Tamaño de empresa',
-  internetAccess: 'Acceso a internet',
-  socialSecurityCoverage: 'Cobertura seguridad social',
-  employmentFormalization: 'Formalización laboral',
-  traceabilityLevel: 'Nivel de trazabilidad',
-  formalizationLevel: 'Nivel de formalización',
-  applicantStabilitySignal: 'Señal de estabilidad del solicitante',
-};
-
-function formatClaimValue(key: string, value: unknown): string {
-  if (value === null || value === undefined) return '—';
-  if (typeof value === 'boolean') return value ? 'Sí' : 'No';
-  if (typeof value === 'number') {
-    if (
-      key.includes('sales') ||
-      key.includes('Sales') ||
-      key.includes('assets') ||
-      key.includes('liabilities') ||
-      key.includes('costs') ||
-      key.includes('Income') ||
-      key.includes('income')
-    ) {
-      return `$${value.toLocaleString('es-CO')}`;
-    }
-    if (
-      key.includes('Percent') ||
-      key.includes('Ratio') ||
-      key.includes('Margin')
-    ) {
-      return `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`;
-    }
-    return value.toLocaleString('es-CO');
-  }
-  if (typeof value === 'object' && value !== null) {
-    const obj = value as Record<string, unknown>;
-    if ('startDate' in obj && 'endDate' in obj) {
-      const fmt = (d: unknown) => {
-        try {
-          return new Intl.DateTimeFormat('es-CO', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-          }).format(new Date(String(d)));
-        } catch {
-          return String(d);
-        }
-      };
-      return `${fmt(obj.startDate)} — ${fmt(obj.endDate)}`;
-    }
-    return JSON.stringify(value);
-  }
-  const trendLabels: Record<string, string> = {
-    growing: 'En crecimiento',
-    stable: 'Estable',
-    deteriorating: 'En deterioro',
-  };
-  if (trendLabels[String(value)]) return trendLabels[String(value)];
-  return String(value);
-}
-
 function CopyButton({ text }: { text: string }) {
+  const tc = useTranslations('common');
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -172,12 +66,21 @@ function CopyButton({ text }: { text: string }) {
       ) : (
         <Copy className="h-3 w-3" />
       )}
-      {copied ? 'Copiado' : 'Copiar'}
+      {copied ? tc('buttons.copied') : tc('buttons.copy')}
     </button>
   );
 }
 
-function ClaimsGrid({ claims }: { claims: Record<string, unknown> }) {
+function ClaimsGrid({
+  claims,
+  getClaimLabel,
+  formatClaimValue,
+}: {
+  claims: Record<string, unknown>;
+  getClaimLabel: (key: string) => string;
+  formatClaimValue: (key: string, value: unknown) => string;
+}) {
+  const t = useTranslations('credentials');
   const entries = Object.entries(claims).filter(
     ([key]) =>
       key !== '@context' &&
@@ -189,7 +92,7 @@ function ClaimsGrid({ claims }: { claims: Record<string, unknown> }) {
   if (entries.length === 0) {
     return (
       <p className="text-sm text-muted-foreground py-4 text-center">
-        Sin datos disponibles
+        {t('detail.noDataAvailable')}
       </p>
     );
   }
@@ -199,7 +102,7 @@ function ClaimsGrid({ claims }: { claims: Record<string, unknown> }) {
       {entries.map(([key, value]) => (
         <div key={key} className="rounded-lg border bg-muted/30 px-3 py-2.5">
           <dt className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-            {CLAIM_LABELS[key] ?? key}
+            {getClaimLabel(key)}
           </dt>
           <dd className="mt-0.5 text-sm font-medium text-foreground wrap-break-word">
             {formatClaimValue(key, value)}
@@ -213,7 +116,75 @@ function ClaimsGrid({ claims }: { claims: Record<string, unknown> }) {
 export function CredentialDetailPage({
   credential,
 }: CredentialDetailPageProps) {
+  const tc = useTranslations('common');
+  const t = useTranslations('credentials');
   const Icon = TYPE_ICON[credential.credentialType];
+
+  const getStatusLabel = (status: Credential['status']) => {
+    const labels: Record<Credential['status'], string> = {
+      draft: tc('status.draft'),
+      issued: tc('status.issued'),
+      revoked: tc('status.revoked'),
+      expired: tc('status.expired'),
+      pending_endorsement: tc('status.pending'),
+    };
+    return labels[status];
+  };
+
+  const claimLabels = t.raw('claimLabels') as Record<string, string>;
+  const getClaimLabel = (key: string) => claimLabels[key] ?? key;
+
+  const formatClaimValue = (key: string, value: unknown): string => {
+    if (value === null || value === undefined) return '—';
+    if (typeof value === 'boolean')
+      return value ? t('booleanYes') : t('booleanNo');
+    if (typeof value === 'number') {
+      if (
+        key.includes('sales') ||
+        key.includes('Sales') ||
+        key.includes('assets') ||
+        key.includes('liabilities') ||
+        key.includes('costs') ||
+        key.includes('Income') ||
+        key.includes('income')
+      ) {
+        return `$${value.toLocaleString('es-CO')}`;
+      }
+      if (
+        key.includes('Percent') ||
+        key.includes('Ratio') ||
+        key.includes('Margin')
+      ) {
+        return `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`;
+      }
+      return value.toLocaleString('es-CO');
+    }
+    if (typeof value === 'object' && value !== null) {
+      const obj = value as Record<string, unknown>;
+      if ('startDate' in obj && 'endDate' in obj) {
+        const fmt = (d: unknown) => {
+          try {
+            return new Intl.DateTimeFormat('es-CO', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+            }).format(new Date(String(d)));
+          } catch {
+            return String(d);
+          }
+        };
+        return `${fmt(obj.startDate)} — ${fmt(obj.endDate)}`;
+      }
+      return JSON.stringify(value);
+    }
+    const trendLabels: Record<string, string> = {
+      growing: t('trendLabels.growing'),
+      stable: t('trendLabels.stable'),
+      deteriorating: t('trendLabels.deteriorating'),
+    };
+    if (trendLabels[String(value)]) return trendLabels[String(value)];
+    return String(value);
+  };
 
   return (
     <div className="space-y-6">
@@ -247,7 +218,7 @@ export function CredentialDetailPage({
           variant={STATUS_VARIANT[credential.status]}
           className="shrink-0 text-sm px-3 py-1"
         >
-          {STATUS_LABEL[credential.status]}
+          {getStatusLabel(credential.status)}
         </Badge>
       </div>
 
@@ -256,30 +227,30 @@ export function CredentialDetailPage({
         <CardContent className="pt-5 pb-5">
           <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
             <Link2 className="h-5 w-5 text-muted-foreground" />
-            Información de la Credencial
+            {t('detail.credentialInfo')}
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
               <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-                Tipo
+                {t('detail.type')}
               </p>
               <p className="mt-0.5 text-sm font-medium">
-                {CREDENTIAL_TYPE_LABELS[credential.credentialType]}
+                {tc(`credentialTypes.${credential.credentialType}`)}
               </p>
             </div>
             <div>
               <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-                Estado
+                {t('detail.status')}
               </p>
               <div className="mt-0.5">
                 <Badge variant={STATUS_VARIANT[credential.status]}>
-                  {STATUS_LABEL[credential.status]}
+                  {getStatusLabel(credential.status)}
                 </Badge>
               </div>
             </div>
             <div>
               <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-                Public ID
+                {t('detail.publicId')}
               </p>
               <div className="mt-0.5 flex items-center gap-1">
                 <p className="text-sm font-mono text-foreground truncate">
@@ -291,7 +262,7 @@ export function CredentialDetailPage({
             {credential.issuerDid && (
               <div className="sm:col-span-2 lg:col-span-3">
                 <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-                  Emisor DID
+                  {t('detail.issuerDid')}
                 </p>
                 <div className="mt-0.5 flex items-center gap-1">
                   <p className="text-sm font-mono text-foreground truncate">
@@ -304,7 +275,7 @@ export function CredentialDetailPage({
             {credential.actaVcId && (
               <div className="sm:col-span-2 lg:col-span-3">
                 <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-                  ACTA VC ID
+                  {t('detail.actaVcId')}
                 </p>
                 <div className="mt-0.5 flex items-center gap-1">
                   <p className="text-sm font-mono text-foreground truncate">
@@ -323,12 +294,12 @@ export function CredentialDetailPage({
         <CardContent className="pt-5 pb-5">
           <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
             <Clock className="h-5 w-5 text-muted-foreground" />
-            Fechas
+            {t('detail.dates')}
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
               <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-                Creada
+                {t('detail.created')}
               </p>
               <p className="mt-0.5 text-sm font-medium">
                 {formatDateTime(credential.createdAt)}
@@ -336,7 +307,7 @@ export function CredentialDetailPage({
             </div>
             <div>
               <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-                Emitida
+                {t('detail.issued')}
               </p>
               <p className="mt-0.5 text-sm font-medium">
                 {credential.issuedAt
@@ -346,7 +317,7 @@ export function CredentialDetailPage({
             </div>
             <div>
               <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-                Expira
+                {t('detail.expires')}
               </p>
               <p className="mt-0.5 text-sm font-medium">
                 {credential.expiresAt
@@ -365,9 +336,13 @@ export function CredentialDetailPage({
             <CardContent className="pt-5 pb-5">
               <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <Icon className="h-5 w-5 text-muted-foreground" />
-                Datos de la Credencial
+                {t('detail.credentialData')}
               </h2>
-              <ClaimsGrid claims={credential.publicClaims} />
+              <ClaimsGrid
+                claims={credential.publicClaims}
+                getClaimLabel={getClaimLabel}
+                formatClaimValue={formatClaimValue}
+              />
             </CardContent>
           </Card>
         )}

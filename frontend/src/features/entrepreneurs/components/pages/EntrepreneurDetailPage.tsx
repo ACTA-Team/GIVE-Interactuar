@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -39,6 +40,9 @@ export function EntrepreneurDetailPage({
   entrepreneurId,
 }: EntrepreneurDetailPageProps) {
   const router = useRouter();
+  const t = useTranslations('entrepreneurs');
+  const tc = useTranslations('common');
+  const locale = useLocale();
   const [certifyDialogOpen, setCertifyDialogOpen] = useState(false);
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
   const [isCredentialModalOpen, setIsCredentialModalOpen] = useState(false);
@@ -48,13 +52,13 @@ export function EntrepreneurDetailPage({
   if (!entrepreneur) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-        <p className="text-muted-foreground">Empresario no encontrado</p>
+        <p className="text-muted-foreground">{t('notFound')}</p>
         <Button
           variant="outline"
           onClick={() => router.push('/dashboard/entrepreneurs')}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Volver a la lista
+          {t('backToList')}
         </Button>
       </div>
     );
@@ -82,7 +86,7 @@ export function EntrepreneurDetailPage({
   return (
     <div className="h-[calc(100vh-6rem)] flex flex-col">
       {/* Header */}
-      <div className="flex-shrink-0 pb-4 border-b mb-4">
+      <div className="shrink-0 pb-4 border-b mb-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <Button
@@ -100,7 +104,9 @@ export function EntrepreneurDetailPage({
                 {entrepreneur.isDelinquent && (
                   <Badge variant="danger" className="gap-1">
                     <AlertTriangle className="h-3 w-3" />
-                    Moroso {entrepreneur.delinquentDays}d
+                    {t('table.delinquent', {
+                      days: entrepreneur.delinquentDays ?? 0,
+                    })}
                   </Badge>
                 )}
                 {entrepreneur.hasFunding && !entrepreneur.isDelinquent && (
@@ -142,7 +148,7 @@ export function EntrepreneurDetailPage({
               onClick={() => setIsCredentialModalOpen(true)}
             >
               <IconCertificate className="h-5 w-5" />
-              Emitir Credencial
+              {t('detail.issueCredential')}
             </Button>
             <AlertDialog
               open={certifyDialogOpen}
@@ -161,33 +167,36 @@ export function EntrepreneurDetailPage({
                   >
                     <Shield className="h-5 w-5" />
                     {nextStageToCertify
-                      ? `Aprobar Etapa ${nextStageToCertify.id}`
-                      : 'Todas las etapas certificadas'}
+                      ? t('detail.approveStage', { id: nextStageToCertify.id })
+                      : t('detail.allStagesCertified')}
                   </Button>
                 }
               />
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    Aprobar Certificación - Etapa {selectedStageId}
+                    {t('detail.certifyStageApproveTitle', {
+                      id: selectedStageId ?? 0,
+                    })}
                   </AlertDialogTitle>
                   <AlertDialogDescription>
-                    Esta acción emitirá una credencial verificable en blockchain
-                    certificando que {entrepreneur.name} ha completado la etapa
-                    &quot;
-                    {STAGES.find((s) => s.id === selectedStageId)?.name}&quot;.
-                    Esta acción no se puede deshacer.
+                    {t('detail.certifyStageDesc', {
+                      name: entrepreneur.name,
+                      stageName:
+                        STAGES.find((s) => s.id === selectedStageId)?.name ??
+                        '',
+                    })}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogCancel>{tc('buttons.cancel')}</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() =>
                       selectedStageId && handleCertifyStage(selectedStageId)
                     }
                   >
                     <Shield className="h-4 w-4 mr-2" />
-                    Emitir Credencial
+                    {t('detail.issueCredential')}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -203,7 +212,7 @@ export function EntrepreneurDetailPage({
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-semibold flex items-center gap-2">
               <Shield className="h-4 w-4 text-primary" />
-              Ruta de Apoyo
+              {t('detail.supportPath')}
             </h2>
             <span className="text-sm text-muted-foreground">
               {entrepreneur.stages.length}/{STAGES.length}
@@ -261,22 +270,25 @@ export function EntrepreneurDetailPage({
                               : 'text-muted-foreground'
                           }`}
                         >
-                          {stage.id}. {stage.name}
+                          {stage.id}. {t(`stages.${stage.id}`)}
                         </p>
                         {isCompleted && stageData ? (
                           <p className="text-xs text-muted-foreground mt-0.5">
                             {new Date(stageData.completedAt).toLocaleDateString(
-                              'es-CO',
+                              locale,
                             )}{' '}
-                            - <span className="text-[#10B981]">Completado</span>
+                            -{' '}
+                            <span className="text-[#10B981]">
+                              {t('detail.completed')}
+                            </span>
                           </p>
                         ) : isCurrent ? (
                           <p className="text-xs text-[#F15A24] mt-0.5">
-                            En progreso
+                            {t('detail.inProgress')}
                           </p>
                         ) : (
                           <p className="text-xs text-muted-foreground mt-0.5">
-                            Pendiente
+                            {t('detail.pending')}
                           </p>
                         )}
                       </div>
@@ -290,27 +302,32 @@ export function EntrepreneurDetailPage({
                                 className={`h-7 text-xs gap-1 ${isCurrent ? 'bg-accent hover:bg-accent/90 text-accent-foreground' : 'text-accent hover:text-accent'}`}
                               >
                                 <Shield className="h-3 w-3" />
-                                Certificar
+                                {t('detail.certify')}
                               </Button>
                             }
                           />
                           <AlertDialogContent>
                             <AlertDialogHeader>
                               <AlertDialogTitle>
-                                Certificar Etapa {stage.id}
+                                {t('detail.certifyStageTitle', {
+                                  id: stage.id,
+                                })}
                               </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Esta acción emitirá una credencial verificable
-                                certificando que {entrepreneur.name} ha
-                                completado &quot;{stage.name}&quot;.
+                                {t('detail.certifyStageDescShort', {
+                                  name: entrepreneur.name,
+                                  stageName: t(`stages.${stage.id}`),
+                                })}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogCancel>
+                                {tc('buttons.cancel')}
+                              </AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => handleCertifyStage(stage.id)}
                               >
-                                Emitir Credencial
+                                {t('detail.issueCredential')}
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>

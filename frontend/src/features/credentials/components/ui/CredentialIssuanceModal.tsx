@@ -4,13 +4,15 @@ import { useState, useCallback } from 'react';
 import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import { X } from 'lucide-react';
+import { X, Loader2, AlertTriangle } from 'lucide-react';
 import type { CredentialType } from '../../types';
 import { CredentialTypeSelector } from './CredentialTypeSelector';
 import { BehaviorCredentialForm } from './BehaviorCredentialForm';
 import { ImpactCredentialForm } from './ImpactCredentialForm';
 import { ProfileCredentialForm } from './ProfileCredentialForm';
 import { CredentialIssuedSuccess } from './CredentialIssuedSuccess';
+import { useIssueCredential } from '../../hooks/useIssueCredential';
+import type { IssuanceStatus } from '../../hooks/useIssueCredential';
 import type { BehaviorCredentialFormInput } from '../../schemas/behaviorCredentialSchema';
 import type { ImpactCredentialFormInput } from '../../schemas/impactCredentialSchema';
 import type { ProfileCredentialFormInput } from '../../schemas/profileCredentialSchema';
@@ -33,6 +35,15 @@ const STEPS = [
   { number: 2, label: 'Datos' },
   { number: 3, label: 'Emitida' },
 ] as const;
+
+const STATUS_LABELS: Record<IssuanceStatus, string> = {
+  idle: '',
+  connecting_wallet: 'Conectando wallet...',
+  building_payload: 'Preparando credencial...',
+  issuing: 'Emitiendo en blockchain...',
+  success: '',
+  error: '',
+};
 
 function Stepper({ currentStep }: { currentStep: number }) {
   return (
@@ -79,6 +90,23 @@ function Stepper({ currentStep }: { currentStep: number }) {
   );
 }
 
+function IssuingOverlay({ status }: { status: IssuanceStatus }) {
+  const label = STATUS_LABELS[status];
+  if (!label) return null;
+
+  return (
+    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-background/80 backdrop-blur-sm">
+      <Loader2 className="h-10 w-10 animate-spin text-primary" />
+      <div className="text-center">
+        <p className="text-sm font-medium text-foreground">{label}</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Aprueba la transacción en tu wallet Freighter
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export function CredentialIssuanceModal({
   open,
   onOpenChange,
@@ -88,20 +116,36 @@ export function CredentialIssuanceModal({
 }: CredentialIssuanceModalProps) {
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState<CredentialType | null>(null);
-  const [, setFormData] = useState<FormData | null>(null);
+
+  const {
+    issueCredential,
+    status,
+    error,
+    result,
+    reset: resetIssuance,
+  } = useIssueCredential();
+
+  const isIssuing =
+    status === 'connecting_wallet' ||
+    status === 'building_payload' ||
+    status === 'issuing';
 
   const resetState = useCallback(() => {
     setStep(1);
     setSelectedType(null);
-    setFormData(null);
-  }, []);
+    resetIssuance();
+  }, [resetIssuance]);
 
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {
-      if (!nextOpen) resetState();
-      onOpenChange(nextOpen);
+      if (!nextOpen && !isIssuing) {
+        resetState();
+      }
+      if (!isIssuing) {
+        onOpenChange(nextOpen);
+      }
     },
-    [onOpenChange, resetState],
+    [onOpenChange, resetState, isIssuing],
   );
 
   const handleTypeSelect = (type: CredentialType) => {
@@ -112,25 +156,33 @@ export function CredentialIssuanceModal({
     if (selectedType) setStep(2);
   };
 
-  const handleFormSubmit = (data: FormData) => {
-    setFormData(data);
+  const handleFormSubmit = async (data: FormData) => {
+    if (!selectedType) return;
 
-    // TODO: ACTA integration
-    // 1. Build W3C VC 2.0 payload from form data
-    // 2. Call useCredential().issue() with the payload
-    // 3. Store the credential in the database
-    // 4. On success, transition to step 3
+    const issuanceResult = await issueCredential({
+      credentialType: selectedType,
+      formData: data,
+      entrepreneurId,
+      entrepreneurName,
+      businessName,
+    });
 
-    void entrepreneurId;
-    setStep(3);
+    if (issuanceResult) {
+      setStep(3);
+    }
   };
 
   const handleBack = () => {
+    resetIssuance();
     setStep(1);
   };
 
   const handleClose = () => {
     handleOpenChange(false);
+  };
+
+  const handleRetry = () => {
+    resetIssuance();
   };
 
   return (
@@ -140,7 +192,7 @@ export function CredentialIssuanceModal({
         className="sm:max-w-2xl p-0 gap-0 overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-[var(--color-brand-blue,#0B1F3F)] px-6 py-4 text-white">
+        <div className="bg-(--color-brand-blue,#0B1F3F) px-6 py-4 text-white">
           <div className="flex items-start justify-between">
             <div>
               <h2 className="text-lg font-bold">
@@ -154,7 +206,8 @@ export function CredentialIssuanceModal({
               render={
                 <button
                   type="button"
-                  className="rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                  disabled={isIssuing}
+                  className="rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-50"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -167,7 +220,9 @@ export function CredentialIssuanceModal({
         </div>
 
         {/* Content */}
-        <div className="max-h-[60vh] overflow-y-auto px-6 py-5">
+        <div className="relative max-h-[60vh] overflow-y-auto px-6 py-5">
+          {isIssuing && <IssuingOverlay status={status} />}
+
           {step === 1 && (
             <div className="space-y-6">
               <CredentialTypeSelector
@@ -207,11 +262,34 @@ export function CredentialIssuanceModal({
             />
           )}
 
+          {step === 2 && status === 'error' && error && (
+            <div className="mt-4 flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/5 p-4">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-destructive">
+                  Error al emitir
+                </p>
+                <p className="mt-1 text-xs text-destructive/80">{error}</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRetry}
+                  className="mt-3"
+                >
+                  Reintentar
+                </Button>
+              </div>
+            </div>
+          )}
+
           {step === 3 && selectedType && (
             <CredentialIssuedSuccess
               credentialType={selectedType}
               entrepreneurName={entrepreneurName}
               businessName={businessName}
+              vcId={result?.vcId ?? null}
+              txId={result?.txId ?? null}
+              issuerAddress={result?.issuerAddress ?? null}
               onClose={handleClose}
             />
           )}

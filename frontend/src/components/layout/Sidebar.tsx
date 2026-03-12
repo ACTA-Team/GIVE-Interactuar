@@ -11,10 +11,12 @@ import {
   IconCertificate,
   IconPlus,
   IconX,
+  IconWallet,
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
 import { SidebarNavGroup } from './SidebarNavGroup';
+import { useWalletContext } from '@/lib/stellar/WalletContext';
 import type { ReactNode } from 'react';
 
 interface NavItemProps {
@@ -52,8 +54,13 @@ interface SidebarProps {
   onMobileClose: () => void;
 }
 
+function truncateAddress(addr: string) {
+  return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+}
+
 export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
+  const wallet = useWalletContext();
 
   const isDashboardActive = pathname === ROUTES.dashboard;
   const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);
@@ -124,7 +131,20 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-gray-100 px-4 py-4">
+      <div className="border-t border-gray-100 px-4 py-4 space-y-3">
+        {wallet.connected && wallet.walletAddress && (
+          <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2">
+            <IconWallet className="h-4 w-4 text-emerald-600 shrink-0" />
+            <div className="flex flex-col min-w-0">
+              <span className="text-[11px] font-medium text-emerald-700">
+                {wallet.walletName ?? 'Wallet conectada'}
+              </span>
+              <span className="text-[10px] font-mono text-emerald-600 truncate">
+                {truncateAddress(wallet.walletAddress)}
+              </span>
+            </div>
+          </div>
+        )}
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
             GI

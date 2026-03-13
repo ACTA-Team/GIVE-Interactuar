@@ -74,7 +74,6 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
             alt="Interactuar"
             width={130}
             height={36}
-            className="h-9 w-auto"
           />
         </div>
         <button

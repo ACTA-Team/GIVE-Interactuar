@@ -214,143 +214,135 @@ export function CredentialsListPage({
 
       {/* Search & Filters */}
       <Card className="shadow-sm">
-        <CardContent className="py-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder={t('vault.searchPlaceholder')}
-                className="pl-9"
-                value={search}
-                onChange={(e) => handleSearch(e.target.value)}
-              />
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <Select
-                value={filterType}
-                onValueChange={(value) =>
-                  handleFilterType(
-                    (value ?? 'all') as
-                      | 'all'
-                      | 'impact'
-                      | 'behavior'
-                      | 'profile',
-                  )
-                }
-                items={{
-                  all: t('vault.allTypes'),
-                  impact: t('vault.impact'),
-                  behavior: t('vault.behavior'),
-                  profile: t('vault.profile'),
-                }}
-              >
-                <SelectTrigger className="w-[170px]">
-                  <SelectValue placeholder={t('vault.filterByType')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('vault.allTypes')}</SelectItem>
-                  <SelectItem value="impact">{t('vault.impact')}</SelectItem>
-                  <SelectItem value="behavior">
-                    {t('vault.behavior')}
-                  </SelectItem>
-                  <SelectItem value="profile">{t('vault.profile')}</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={fundingFilter}
-                onValueChange={(value) =>
-                  handleFundingFilter(
-                    (value ?? 'all') as
-                      | 'all'
-                      | 'funded'
-                      | 'not-funded'
-                      | 'delinquent',
-                  )
-                }
-                items={{
-                  all: t('vault.fundingAny'),
-                  funded: t('vault.fundingFunded'),
-                  'not-funded': t('vault.fundingNotFunded'),
-                  delinquent: t('vault.fundingDelinquent'),
-                }}
-              >
-                <SelectTrigger className="w-[190px]">
-                  <SelectValue placeholder={t('vault.filterByFundingStatus')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('vault.fundingAny')}</SelectItem>
-                  <SelectItem value="funded">
-                    {t('vault.fundingFunded')}
-                  </SelectItem>
-                  <SelectItem value="not-funded">
-                    {t('vault.fundingNotFunded')}
-                  </SelectItem>
-                  <SelectItem value="delinquent">
-                    {t('vault.fundingDelinquent')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={onChainFilter}
-                onValueChange={(value) =>
-                  handleOnChainFilter(
-                    (value ?? 'all') as 'all' | 'with' | 'without',
-                  )
-                }
-                items={{
-                  all: t('vault.onChainAny'),
-                  with: t('vault.onChainWith'),
-                  without: t('vault.onChainWithout'),
-                }}
-              >
-                <SelectTrigger className="w-[190px]">
-                  <SelectValue placeholder={t('vault.filterByOnChain')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('vault.onChainAny')}</SelectItem>
-                  <SelectItem value="with">{t('vault.onChainWith')}</SelectItem>
-                  <SelectItem value="without">
-                    {t('vault.onChainWithout')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={hasCredentialsFilter}
-                onValueChange={(value) =>
-                  handleHasCredentialsFilter(
-                    (value ?? 'all') as 'all' | 'with' | 'without',
-                  )
-                }
-                items={{
-                  all: t('vault.hasCredentialsAny'),
-                  with: t('vault.hasCredentialsWith'),
-                  without: t('vault.hasCredentialsWithout'),
-                }}
-              >
-                <SelectTrigger className="w-[210px]">
-                  <SelectValue
-                    placeholder={t('vault.filterByCredentialPresence')}
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">
-                    {t('vault.hasCredentialsAny')}
-                  </SelectItem>
-                  <SelectItem value="with">
-                    {t('vault.hasCredentialsWith')}
-                  </SelectItem>
-                  <SelectItem value="without">
-                    {t('vault.hasCredentialsWithout')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder={t('vault.searchPlaceholder')}
+              className="pl-9"
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
           </div>
-        </CardContent>
+
+          <div className="flex flex-wrap gap-3">
+            <Select
+              value={filterType}
+              onValueChange={(value) =>
+                handleFilterType(
+                  (value ?? 'all') as 'all' | 'impact' | 'behavior' | 'profile',
+                )
+              }
+              items={{
+                all: t('vault.allTypes'),
+                impact: t('vault.impact'),
+                behavior: t('vault.behavior'),
+                profile: t('vault.profile'),
+              }}
+            >
+              <SelectTrigger className="w-[170px]">
+                <SelectValue placeholder={t('vault.filterByType')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('vault.allTypes')}</SelectItem>
+                <SelectItem value="impact">{t('vault.impact')}</SelectItem>
+                <SelectItem value="behavior">{t('vault.behavior')}</SelectItem>
+                <SelectItem value="profile">{t('vault.profile')}</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={fundingFilter}
+              onValueChange={(value) =>
+                handleFundingFilter(
+                  (value ?? 'all') as
+                    | 'all'
+                    | 'funded'
+                    | 'not-funded'
+                    | 'delinquent',
+                )
+              }
+              items={{
+                all: t('vault.fundingAny'),
+                funded: t('vault.fundingFunded'),
+                'not-funded': t('vault.fundingNotFunded'),
+                delinquent: t('vault.fundingDelinquent'),
+              }}
+            >
+              <SelectTrigger className="w-[190px]">
+                <SelectValue placeholder={t('vault.filterByFundingStatus')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('vault.fundingAny')}</SelectItem>
+                <SelectItem value="funded">
+                  {t('vault.fundingFunded')}
+                </SelectItem>
+                <SelectItem value="not-funded">
+                  {t('vault.fundingNotFunded')}
+                </SelectItem>
+                <SelectItem value="delinquent">
+                  {t('vault.fundingDelinquent')}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={onChainFilter}
+              onValueChange={(value) =>
+                handleOnChainFilter(
+                  (value ?? 'all') as 'all' | 'with' | 'without',
+                )
+              }
+              items={{
+                all: t('vault.onChainAny'),
+                with: t('vault.onChainWith'),
+                without: t('vault.onChainWithout'),
+              }}
+            >
+              <SelectTrigger className="w-[190px]">
+                <SelectValue placeholder={t('vault.filterByOnChain')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('vault.onChainAny')}</SelectItem>
+                <SelectItem value="with">{t('vault.onChainWith')}</SelectItem>
+                <SelectItem value="without">
+                  {t('vault.onChainWithout')}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={hasCredentialsFilter}
+              onValueChange={(value) =>
+                handleHasCredentialsFilter(
+                  (value ?? 'all') as 'all' | 'with' | 'without',
+                )
+              }
+              items={{
+                all: t('vault.hasCredentialsAny'),
+                with: t('vault.hasCredentialsWith'),
+                without: t('vault.hasCredentialsWithout'),
+              }}
+            >
+              <SelectTrigger className="w-[210px]">
+                <SelectValue
+                  placeholder={t('vault.filterByCredentialPresence')}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">
+                  {t('vault.hasCredentialsAny')}
+                </SelectItem>
+                <SelectItem value="with">
+                  {t('vault.hasCredentialsWith')}
+                </SelectItem>
+                <SelectItem value="without">
+                  {t('vault.hasCredentialsWithout')}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
       </Card>
 
       {/* Client cards */}

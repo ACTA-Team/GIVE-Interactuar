@@ -75,9 +75,7 @@ export function buildSignTransaction() {
         // smart-account-kit bundles stellar-sdk@14 internally.
         // Round-trip through raw XDR to reconcile types with our stellar-sdk@13.
         type SignedAuthEntryLike = { toXDR(): Buffer };
-        const signedKit = await kit.signAuthEntry(
-          entry as unknown as never,
-        );
+        const signedKit = await kit.signAuthEntry(entry as unknown as never);
         const signedEntry = xdr.SorobanAuthorizationEntry.fromXDR(
           (signedKit as SignedAuthEntryLike).toXDR(),
         ) as typeof entry;

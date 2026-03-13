@@ -1,8 +1,17 @@
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ClientCredentialsPage } from '@/features/credentials/components/pages/ClientCredentialsPage';
 import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createCredentialRepository } from '@/features/credentials/repositories/credentialRepository';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('common');
+  return {
+    title: t('titles.entrepreneurClientDetail'),
+  };
+}
 
 interface PageProps {
   params: Promise<{ entrepreneurId: string }>;

@@ -61,5 +61,17 @@
   },
   "showing": "Showing {count} of {total}",
   "selected": "{count} selected",
-  "language": "Language"
+  "language": "Language",
+  "titles": {
+    "dashboard": "Home - Interactuar",
+    "entrepreneurs": "Entrepreneurs - Interactuar",
+    "credentials": "Credentials - Interactuar",
+    "credentialsNew": "Issue credential - Interactuar",
+    "credentialsClient": "Client - Interactuar",
+    "credentialsDetail": "Credential detail - Interactuar",
+    "entrepreneurDetail": "Entrepreneur detail - Interactuar",
+    "credentialsStorage": "Credentials storage - Interactuar",
+    "entrepreneurCredentialsList": "Credentials by entrepreneur - Interactuar",
+    "entrepreneurClientDetail": "Client detail - Interactuar"
+  }
 }

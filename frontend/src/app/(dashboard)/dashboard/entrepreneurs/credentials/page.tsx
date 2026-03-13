@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { CredentialsListPage } from '@/features/credentials/components/pages/CredentialsListPage';
 import { Pagination } from '@/components/ui/pagination';
@@ -10,6 +11,13 @@ import {
   mapEmpresarioToDashboardEntrepreneur,
   type EmpresarioRow,
 } from '@/features/entrepreneurs/mappers/empresariosDashboardMapper';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('common');
+  return {
+    title: t('titles.entrepreneurCredentialsList'),
+  };
+}
 
 export default async function Page({
   searchParams,

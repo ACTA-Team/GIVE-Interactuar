@@ -63,7 +63,8 @@
     "stage": "Etapa",
     "status": "Estado",
     "all": "Todas",
-    "allStatuses": "Todos",
+    "allStages": "Todas las etapas",
+    "allStatuses": "Todos los estados",
     "delinquent": "Morosos",
     "funded": "Financiados",
     "notFunded": "Sin financiar"

@@ -215,9 +215,7 @@ function CredentialRow({ credential }: { credential: Credential }) {
 
                     return (
                       <div key={key} className="text-xs">
-                        <span className="text-muted-foreground">
-                          {label}:
-                        </span>{' '}
+                        <span className="text-muted-foreground">{label}:</span>{' '}
                         <span className="font-medium text-foreground">
                           {displayValue}
                         </span>

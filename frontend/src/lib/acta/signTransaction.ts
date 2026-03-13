@@ -4,22 +4,37 @@ import { getSmartAccountKit } from '@/lib/smart-account/config';
 // The browser `buffer` polyfill (npm "buffer") lacks BigInt read/write helpers
 // that stellar-sdk's XDR parser needs when deserialising Soroban footprints
 // containing uint64/int64 fields (nonce TTLs, etc.).
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const _bp = (typeof Buffer !== 'undefined' ? Buffer.prototype : null) as any;
-if (_bp && typeof _bp.readBigUInt64BE !== 'function') {
-  _bp.readBigUInt64BE = function (offset = 0) {
+type BufferPrototypeWithBigInt = {
+  readUInt32BE(offset: number): number;
+  readBigUInt64BE?(offset?: number): bigint;
+  readBigInt64BE?(offset?: number): bigint;
+};
+
+const bufferProto: BufferPrototypeWithBigInt | null =
+  typeof Buffer !== 'undefined'
+    ? (Buffer.prototype as unknown as BufferPrototypeWithBigInt)
+    : null;
+
+if (bufferProto && typeof bufferProto.readBigUInt64BE !== 'function') {
+  bufferProto.readBigUInt64BE = function (
+    this: BufferPrototypeWithBigInt,
+    offset = 0,
+  ) {
     const hi = BigInt(this.readUInt32BE(offset));
     const lo = BigInt(this.readUInt32BE(offset + 4));
     return (hi << BigInt(32)) | lo;
   };
 }
-if (_bp && typeof _bp.readBigInt64BE !== 'function') {
-  _bp.readBigInt64BE = function (offset = 0) {
-    const v: bigint = this.readBigUInt64BE(offset);
+
+if (bufferProto && typeof bufferProto.readBigInt64BE !== 'function') {
+  bufferProto.readBigInt64BE = function (
+    this: BufferPrototypeWithBigInt,
+    offset = 0,
+  ) {
+    const v: bigint = this.readBigUInt64BE!(offset);
     return v >= BigInt(1) << BigInt(63) ? v - (BigInt(1) << BigInt(64)) : v;
   };
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * Builds a signTransaction function compatible with the ACTA SDK.
@@ -47,7 +62,8 @@ export function buildSignTransaction() {
     let hasSorobanAuth = false;
 
     for (const op of txBody.operations()) {
-      if ((op.body().switch().name as string) !== 'invokeHostFunction') continue;
+      if ((op.body().switch().name as string) !== 'invokeHostFunction')
+        continue;
 
       const authEntries = op.body().invokeHostFunctionOp().auth();
       for (let i = 0; i < authEntries.length; i++) {
@@ -58,10 +74,12 @@ export function buildSignTransaction() {
 
         // smart-account-kit bundles stellar-sdk@14 internally.
         // Round-trip through raw XDR to reconcile types with our stellar-sdk@13.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const signedKit = (await kit.signAuthEntry(entry as unknown as any)) as any;
+        type SignedAuthEntryLike = { toXDR(): Buffer };
+        const signedKit = await kit.signAuthEntry(
+          entry as unknown as never,
+        );
         const signedEntry = xdr.SorobanAuthorizationEntry.fromXDR(
-          signedKit.toXDR(),
+          (signedKit as SignedAuthEntryLike).toXDR(),
         ) as typeof entry;
         authEntries[i] = signedEntry;
       }
@@ -81,7 +99,7 @@ export function buildSignTransaction() {
 
 async function resimulateAndPatchResources(
   txEnvelope: xdr.TransactionEnvelope,
-  networkPassphrase: string,
+  _networkPassphrase: string,
 ): Promise<void> {
   const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL;
   if (!rpcUrl) return;
@@ -104,7 +122,10 @@ async function resimulateAndPatchResources(
   const sim = json?.result;
 
   if (!sim || sim.error || !sim.transactionData) {
-    console.error('[signTransaction] re-simulation failed:', sim?.error ?? json);
+    console.error(
+      '[signTransaction] re-simulation failed:',
+      sim?.error ?? json,
+    );
     return;
   }
 

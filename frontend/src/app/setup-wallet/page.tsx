@@ -65,7 +65,7 @@ export default function SetupWalletPage() {
       }
       setUserEmail(data.user.email ?? null);
     });
-  }, []);
+  }, [router, supabase]);
 
   const saveWalletAndRedirect = useCallback(
     async (contractId: string, vaultDone: boolean) => {
@@ -97,9 +97,7 @@ export default function SetupWalletPage() {
 
         router.replace('/dashboard');
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'Error guardando wallet',
-        );
+        setError(err instanceof Error ? err.message : 'Error guardando wallet');
         setPhase('wallet');
       }
     },
@@ -115,10 +113,7 @@ export default function SetupWalletPage() {
       const vaultTx = await handleCreateVault(contractId);
       if (vaultTx === null) {
         // "already exists" → continue; real errors → abort
-        if (
-          vaultStatus === 'error' &&
-          !isAlreadyDone(vaultError)
-        ) {
+        if (vaultStatus === 'error' && !isAlreadyDone(vaultError)) {
           setError(vaultError ?? 'Error creando vault');
           setPhase('wallet');
           return;
@@ -129,10 +124,7 @@ export default function SetupWalletPage() {
       setPhase('vault_authorize');
       const authTx = await handleAuthorizeIssuer(contractId);
       if (authTx === null) {
-        if (
-          vaultStatus === 'error' &&
-          !isAlreadyDone(vaultError)
-        ) {
+        if (vaultStatus === 'error' && !isAlreadyDone(vaultError)) {
           setError(vaultError ?? 'Error autorizando emisor');
           setPhase('wallet');
           return;
@@ -319,7 +311,8 @@ export default function SetupWalletPage() {
                   <div>
                     <p className="text-sm font-medium text-foreground">
                       {phase === 'vault_create' && 'Creando vault...'}
-                      {phase === 'vault_authorize' && 'Configurando permisos...'}
+                      {phase === 'vault_authorize' &&
+                        'Configurando permisos...'}
                       {phase === 'saving' && 'Guardando...'}
                     </p>
                     <p className="text-xs text-muted-foreground">

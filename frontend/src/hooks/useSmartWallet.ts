@@ -4,7 +4,13 @@ import { useState, useEffect, useCallback } from 'react';
 import type { ConnectWalletResult } from 'smart-account-kit';
 import { getSmartAccountKit } from '@/lib/smart-account/config';
 
-export type SmartWalletStatus = 'idle' | 'loading' | 'creating' | 'connecting' | 'ready' | 'error';
+export type SmartWalletStatus =
+  | 'idle'
+  | 'loading'
+  | 'creating'
+  | 'connecting'
+  | 'ready'
+  | 'error';
 
 export function useSmartWallet() {
   const [wallet, setWallet] = useState<ConnectWalletResult | null>(null);
@@ -75,7 +81,8 @@ export function useSmartWallet() {
       setStatus('ready');
       return result;
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Error conectando wallet';
+      const msg =
+        err instanceof Error ? err.message : 'Error conectando wallet';
       setError(msg);
       setStatus('error');
       throw err;

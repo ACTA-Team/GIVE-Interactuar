@@ -8,7 +8,12 @@ function buildConfig() {
   const accountWasmHash = process.env.NEXT_PUBLIC_ACCOUNT_WASM_HASH;
   const webauthnVerifierAddress = process.env.NEXT_PUBLIC_WEBAUTHN_VERIFIER;
 
-  if (!rpcUrl || !networkPassphrase || !accountWasmHash || !webauthnVerifierAddress) {
+  if (
+    !rpcUrl ||
+    !networkPassphrase ||
+    !accountWasmHash ||
+    !webauthnVerifierAddress
+  ) {
     throw new Error(
       'Missing SmartAccountKit env vars: NEXT_PUBLIC_RPC_URL, NEXT_PUBLIC_NETWORK_PASSPHRASE, NEXT_PUBLIC_ACCOUNT_WASM_HASH, NEXT_PUBLIC_WEBAUTHN_VERIFIER',
     );
@@ -20,7 +25,8 @@ function buildConfig() {
     accountWasmHash,
     webauthnVerifierAddress,
     storage: new IndexedDBStorage(),
-    rpId: typeof window !== 'undefined' ? window.location.hostname : 'localhost',
+    rpId:
+      typeof window !== 'undefined' ? window.location.hostname : 'localhost',
     rpName: 'Interactuar',
     timeoutInSeconds: 30,
   };

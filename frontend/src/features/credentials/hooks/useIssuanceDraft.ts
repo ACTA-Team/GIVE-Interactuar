@@ -10,9 +10,7 @@ interface UseIssuanceDraftOptions {
   createdBy: string;
 }
 
-export function useIssuanceDraft({
-  createdBy,
-}: UseIssuanceDraftOptions) {
+export function useIssuanceDraft({ createdBy }: UseIssuanceDraftOptions) {
   const queryClient = useQueryClient();
 
   return useMutation({

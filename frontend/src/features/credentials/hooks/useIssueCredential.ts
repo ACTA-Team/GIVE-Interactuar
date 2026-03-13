@@ -30,7 +30,6 @@ export interface IssuanceResult {
   issuerDid: string;
 }
 
-
 export function useIssueCredential() {
   const { issue } = useCredential();
   const { wallet, contractId } = useSmartWallet();
@@ -117,12 +116,20 @@ export function useIssueCredential() {
         return issuanceResult;
       } catch (err) {
         const message =
-          err instanceof Error ? err.message : 'Error desconocido al emitir la credencial';
+          err instanceof Error
+            ? err.message
+            : 'Error desconocido al emitir la credencial';
 
-        if (message.includes('denied') || message.includes('cancel') || message.includes('NotAllowed')) {
+        if (
+          message.includes('denied') ||
+          message.includes('cancel') ||
+          message.includes('NotAllowed')
+        ) {
           setError('Firma cancelada por el usuario.');
         } else if (message.includes('authorized')) {
-          setError('El emisor no está autorizado. Autorizá tu wallet en el vault primero.');
+          setError(
+            'El emisor no está autorizado. Autorizá tu wallet en el vault primero.',
+          );
         } else {
           setError(message);
         }

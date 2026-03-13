@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import {
@@ -36,6 +36,8 @@ import {
   ArrowDownRight,
   CheckCircle2,
   Shield,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -68,11 +70,17 @@ export function DashboardPage() {
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [filterStage, setFilterStage] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 10;
 
-  const handleFilterStage = (value: string | null) =>
+  const handleFilterStage = (value: string | null) => {
     setFilterStage(value ?? 'all');
-  const handleFilterStatus = (value: string | null) =>
+    setCurrentPage(1);
+  };
+  const handleFilterStatus = (value: string | null) => {
     setFilterStatus(value ?? 'all');
+    setCurrentPage(1);
+  };
 
   const totalEntrepreneurs = entrepreneurs.length;
   const delinquentCount = entrepreneurs.filter((e) => e.isDelinquent).length;
@@ -174,13 +182,25 @@ export function DashboardPage() {
     (e) => normalizeGender(e.gender) === 'male',
   ).length;
 
-  const topEntrepreneurs = filteredAndSortedEntrepreneurs.slice(0, 10);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredAndSortedEntrepreneurs.length / PAGE_SIZE),
+  );
+  const paginatedEntrepreneurs = filteredAndSortedEntrepreneurs.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
+
+  // Reset to page 1 when sort changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [sortField, sortDirection]);
 
   const handleSelectAll = () => {
-    if (selectedIds.size === filteredAndSortedEntrepreneurs.length) {
+    if (selectedIds.size === paginatedEntrepreneurs.length) {
       setSelectedIds(new Set());
     } else {
-      setSelectedIds(new Set(filteredAndSortedEntrepreneurs.map((e) => e.id)));
+      setSelectedIds(new Set(paginatedEntrepreneurs.map((e) => e.id)));
     }
   };
 
@@ -561,9 +581,10 @@ export function DashboardPage() {
                   <TableHead className="w-[50px]">
                     <Checkbox
                       checked={
-                        selectedIds.size ===
-                          filteredAndSortedEntrepreneurs.length &&
-                        filteredAndSortedEntrepreneurs.length > 0
+                        paginatedEntrepreneurs.length > 0 &&
+                        paginatedEntrepreneurs.every((e) =>
+                          selectedIds.has(e.id),
+                        )
                       }
                       onCheckedChange={handleSelectAll}
                     />
@@ -612,7 +633,7 @@ export function DashboardPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {topEntrepreneurs.length === 0 ? (
+                {paginatedEntrepreneurs.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="h-32 text-center">
                       <p className="text-muted-foreground">
@@ -621,7 +642,7 @@ export function DashboardPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  topEntrepreneurs.map((entrepreneur) => {
+                  paginatedEntrepreneurs.map((entrepreneur) => {
                     const currentStage = STAGES.find(
                       (s) => s.id === entrepreneur.currentStage,
                     );
@@ -703,10 +724,76 @@ export function DashboardPage() {
           <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
             <p>
               {tc('showing', {
-                count: topEntrepreneurs.length,
-                total: entrepreneurs.length,
+                count: paginatedEntrepreneurs.length,
+                total: filteredAndSortedEntrepreneurs.length,
               })}
             </p>
+
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="flex h-8 w-8 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+
+              {(() => {
+                // Always show exactly 2 consecutive boxes: [current, current+1]
+                // or [current-1, current] when on the last page.
+                const pair: number[] =
+                  currentPage < totalPages
+                    ? [currentPage, currentPage + 1]
+                    : totalPages > 1
+                      ? [currentPage - 1, currentPage]
+                      : [currentPage];
+
+                const showEllipsis =
+                  totalPages > 1 && pair[pair.length - 1] < totalPages;
+
+                return (
+                  <>
+                    {pair.map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`flex h-8 w-8 items-center justify-center rounded-md border text-sm font-medium transition-colors ${
+                          currentPage === page
+                            ? 'border-primary bg-primary text-primary-foreground'
+                            : 'border-border hover:bg-muted'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    {showEllipsis && (
+                      <>
+                        <span className="flex h-8 items-center justify-center px-1 text-muted-foreground">
+                          …
+                        </span>
+                        <button
+                          onClick={() => setCurrentPage(totalPages)}
+                          className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-sm font-medium transition-colors hover:bg-muted"
+                        >
+                          {totalPages}
+                        </button>
+                      </>
+                    )}
+                  </>
+                );
+              })()}
+
+              <button
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
+                disabled={currentPage === totalPages}
+                className="flex h-8 w-8 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+
             <Link href="/dashboard/entrepreneurs">
               <Button variant="link" className="gap-1 p-0">
                 {tc('buttons.viewAll')}

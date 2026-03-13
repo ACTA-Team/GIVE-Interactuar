@@ -130,11 +130,30 @@ export function CredentialsListPage({
   const startIndex = (currentPage - 1) * pageSize;
   const pageItems = filtered.slice(startIndex, startIndex + pageSize);
 
-  const handleSearch = (value: string) => { setSearch(value); setPage(1); };
-  const handleFilterType = (value: 'all' | 'impact' | 'behavior' | 'profile') => { setFilterType(value); setPage(1); };
-  const handleFundingFilter = (value: 'all' | 'funded' | 'not-funded' | 'delinquent') => { setFundingFilter(value); setPage(1); };
-  const handleOnChainFilter = (value: 'all' | 'with' | 'without') => { setOnChainFilter(value); setPage(1); };
-  const handleHasCredentialsFilter = (value: 'all' | 'with' | 'without') => { setHasCredentialsFilter(value); setPage(1); };
+  const handleSearch = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
+  const handleFilterType = (
+    value: 'all' | 'impact' | 'behavior' | 'profile',
+  ) => {
+    setFilterType(value);
+    setPage(1);
+  };
+  const handleFundingFilter = (
+    value: 'all' | 'funded' | 'not-funded' | 'delinquent',
+  ) => {
+    setFundingFilter(value);
+    setPage(1);
+  };
+  const handleOnChainFilter = (value: 'all' | 'with' | 'without') => {
+    setOnChainFilter(value);
+    setPage(1);
+  };
+  const handleHasCredentialsFilter = (value: 'all' | 'with' | 'without') => {
+    setHasCredentialsFilter(value);
+    setPage(1);
+  };
 
   const totalImpact = clients.reduce((acc, c) => acc + c.impactCount, 0);
   const totalBehavior = clients.reduce((acc, c) => acc + c.behaviorCount, 0);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
@@ -161,11 +161,6 @@ export function EntrepreneursListPage() {
     setPage(1);
   };
 
-  // Reset page when sort changes
-  useEffect(() => {
-    setPage(1);
-  }, [sortField, sortDirection]);
-
   const handleSelectAll = () => {
     if (pageItems.every((e) => selectedIds.has(e.id))) {
       setSelectedIds(new Set());
@@ -197,6 +192,7 @@ export function EntrepreneursListPage() {
       setSortField(field);
       setSortDirection('asc');
     }
+    setPage(1);
   };
 
   const formatCurrency = (amount: number) => {

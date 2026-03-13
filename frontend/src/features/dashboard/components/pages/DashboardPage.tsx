@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import {
@@ -191,11 +191,6 @@ export function DashboardPage() {
     currentPage * PAGE_SIZE,
   );
 
-  // Reset to page 1 when sort changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [sortField, sortDirection]);
-
   const handleSelectAll = () => {
     if (selectedIds.size === paginatedEntrepreneurs.length) {
       setSelectedIds(new Set());
@@ -227,6 +222,7 @@ export function DashboardPage() {
       setSortField(field);
       setSortDirection('desc');
     }
+    setCurrentPage(1);
   };
 
   if (isLoading) {

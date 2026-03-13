@@ -55,7 +55,8 @@
     "stage": "Stage",
     "status": "Status",
     "all": "All",
-    "allStatuses": "All",
+    "allStages": "All stages",
+    "allStatuses": "All statuses",
     "delinquent": "Delinquent",
     "funded": "Funded",
     "notFunded": "Not funded"

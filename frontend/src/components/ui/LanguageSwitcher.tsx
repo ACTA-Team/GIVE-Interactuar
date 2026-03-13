@@ -30,7 +30,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'flex items-center gap-1 rounded-lg bg-muted p-0.5',
+        'flex w-fit items-center gap-1 rounded-lg bg-muted p-0.5',
         className,
       )}
       role="radiogroup"
@@ -44,7 +44,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
           onClick={() => handleChange(locale)}
           disabled={isPending}
           className={cn(
-            'rounded-md px-2.5 py-1 text-xs font-semibold transition-all',
+            'flex h-7 min-w-7 items-center justify-center rounded-md px-2.5 text-xs font-semibold transition-all',
             locale === currentLocale
               ? 'bg-background text-foreground shadow-sm'
               : 'text-muted-foreground hover:text-foreground',

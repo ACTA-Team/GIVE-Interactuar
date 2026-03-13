@@ -507,12 +507,24 @@ export function DashboardPage() {
               <CardDescription>{t('table.top10Description')}</CardDescription>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <Select value={filterStage} onValueChange={handleFilterStage}>
+              <Select
+                value={filterStage}
+                onValueChange={handleFilterStage}
+                items={{
+                  all: t('filters.allStages'),
+                  ...Object.fromEntries(
+                    STAGES.map((s) => [
+                      s.id.toString(),
+                      t('table.stageLabel', { id: s.id }),
+                    ]),
+                  ),
+                }}
+              >
                 <SelectTrigger className="w-[150px]">
                   <SelectValue placeholder={t('filters.stage')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('filters.all')}</SelectItem>
+                  <SelectItem value="all">{t('filters.allStages')}</SelectItem>
                   {STAGES.map((stage) => (
                     <SelectItem key={stage.id} value={stage.id.toString()}>
                       {t('table.stageLabel', { id: stage.id })}
@@ -521,7 +533,16 @@ export function DashboardPage() {
                 </SelectContent>
               </Select>
 
-              <Select value={filterStatus} onValueChange={handleFilterStatus}>
+              <Select
+                value={filterStatus}
+                onValueChange={handleFilterStatus}
+                items={{
+                  all: t('filters.allStatuses'),
+                  delinquent: t('filters.delinquent'),
+                  funded: t('filters.funded'),
+                  'not-funded': t('filters.notFunded'),
+                }}
+              >
                 <SelectTrigger className="w-[150px]">
                   <SelectValue placeholder={t('filters.status')} />
                 </SelectTrigger>

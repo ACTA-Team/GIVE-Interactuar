@@ -39,3 +39,17 @@ on public.credential_templates
 for select
 to authenticated
 using (true);
+
+-- Overdue portfolio (cartera_vencida) metrics for dashboard
+create policy "Allow authenticated read cartera_vencida"
+on public.cartera_vencida
+for select
+to authenticated
+using (true);
+
+-- Escuela intervention type distribution for dashboard
+create policy "Allow authenticated read escuela"
+on public.escuela
+for select
+to authenticated
+using (true);

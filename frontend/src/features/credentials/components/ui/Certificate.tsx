@@ -29,34 +29,36 @@ export default function Certificate({
       <Image
         src="/assets/certificate/Leftside.svg"
         alt=""
-        fill
+        width={64}
+        height={800}
         className="absolute left-0 top-0 h-full w-auto object-cover"
-        style={{ width: 'auto' }}
       />
 
       {/* Right Side Bar - using the actual SVG asset */}
       <Image
         src="/assets/certificate/RightSide.svg"
         alt=""
-        fill
+        width={64}
+        height={800}
         className="absolute right-0 top-0 h-full w-auto object-cover"
-        style={{ width: 'auto', right: '-3%' }}
       />
 
       {/* Top Border - using the actual SVG asset */}
       <Image
         src="/assets/certificate/Upperside.svg"
         alt=""
-        fill
-        className="absolute top-0 left-0 w-full object-fill"
+        width={1600}
+        height={64}
+        className="absolute top-0 left-0 w-full h-auto object-fill"
       />
 
       {/* Bottom Border - using the actual SVG asset */}
       <Image
         src="/assets/certificate/Downside.svg"
         alt=""
-        fill
-        className="absolute bottom-0 left-0 w-full object-fill"
+        width={1600}
+        height={64}
+        className="absolute bottom-0 left-0 w-full h-auto object-fill"
       />
 
       {/* Content Area */}

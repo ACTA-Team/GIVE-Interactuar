@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/card';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const t = useTranslations('login');
@@ -47,21 +48,15 @@ export default function LoginPage() {
         <div className="flex flex-col gap-8">
           {/* Logo and Brand */}
           <div className="flex flex-col items-center gap-2">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                className="h-8 w-8 text-primary-foreground"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                <path d="M2 17l10 5 10-5" />
-                <path d="M2 12l10 5 10-5" />
-              </svg>
+            <div className="flex items-center justify-center -mb-12">
+              <Image
+                src="/assets/interactuar/interactuar-logo.svg"
+                alt="Interactuar"
+                width={180}
+                height={56}
+                className="h-28 w-auto md:h-32 lg:h-40"
+              />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">{t('brand')}</h1>
-            <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
           </div>
 
           <Card className="border-border/50 shadow-lg">

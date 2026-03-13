@@ -54,14 +54,6 @@ export default function NotFound() {
       >
         {t('notFound.backToDashboard')}
       </Link>
-
-      {/* Brand watermark */}
-      <span
-        className="absolute bottom-8 text-xs tracking-widest uppercase"
-        style={{ color: '#000000', opacity: 0.3 }}
-      >
-        Interactuar
-      </span>
     </main>
   );
 }

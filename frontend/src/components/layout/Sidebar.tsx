@@ -108,13 +108,13 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const content = (
     <div className="flex h-full flex-col">
       {/* Logo */}
-      <div className="flex items-center justify-between px-4">
-        <div className="flex items-center gap-1">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1 -mb-2 -mt-2">
           <Image
-            src="/interactuar-logo.svg"
+            src="/assets/interactuar/interactuar-logo.svg"
             alt="Interactuar"
-            width={150}
-            height={150}
+            width={180}
+            height={56}
           />
         </div>
         <button
@@ -174,9 +174,6 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
 
       {/* Footer */}
       <div className="border-t border-gray-100 px-4 py-4 space-y-3">
-        <div className="flex justify-center border-b border-gray-100 pb-3">
-          <LanguageSwitcher />
-        </div>
 
         {user && (
           <div className="flex items-center gap-3">

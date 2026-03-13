@@ -98,7 +98,11 @@ const TYPE_COLOR: Record<CredentialType, string> = {
 
 function CredentialRow({ credential }: { credential: Credential }) {
   const tc = useTranslations('common');
+  const t = useTranslations('credentials');
   const Icon = TYPE_ICON[credential.credentialType];
+
+  const claimLabels = t.raw('claimLabels') as Record<string, string>;
+  const getClaimLabel = (key: string) => claimLabels[key] ?? key;
 
   const getStatusLabel = (status: Credential['status']) => {
     const labels: Record<Credential['status'], string> = {
@@ -207,9 +211,13 @@ function CredentialRow({ credential }: { credential: Credential }) {
                       displayValue = String(value);
                     }
 
+                    const label = getClaimLabel(key);
+
                     return (
                       <div key={key} className="text-xs">
-                        <span className="text-muted-foreground">{key}:</span>{' '}
+                        <span className="text-muted-foreground">
+                          {label}:
+                        </span>{' '}
                         <span className="font-medium text-foreground">
                           {displayValue}
                         </span>

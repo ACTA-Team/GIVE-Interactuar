@@ -163,11 +163,7 @@ function CredentialRow({ credential }: { credential: Credential }) {
               </span>
             )}
 
-            {credential.publicId && (
-              <span className="font-mono text-[10px] text-muted-foreground/60 truncate max-w-[180px]">
-                {credential.publicId}
-              </span>
-            )}
+            {/* Public ID intentionally hidden from UI */}
           </div>
 
           {/* Public claims preview */}

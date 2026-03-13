@@ -356,17 +356,6 @@ export function CredentialDetailPage({
                 </Badge>
               </div>
             </div>
-            <div>
-              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-                {t('detail.publicId')}
-              </p>
-              <div className="mt-0.5 flex items-center gap-1">
-                <p className="text-sm font-mono text-foreground truncate">
-                  {credential.publicId}
-                </p>
-                <CopyButton text={credential.publicId} />
-              </div>
-            </div>
             {credential.issuerDid && (
               <div className="sm:col-span-2 lg:col-span-3">
                 <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">

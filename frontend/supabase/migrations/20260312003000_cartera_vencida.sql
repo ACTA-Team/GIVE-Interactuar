@@ -1,5 +1,5 @@
 -- =============================================================================
--- Migration: Cartera Vencida
+-- Migration: Overdue Portfolio (Cartera Vencida)
 -- Source: Cartera Vencida sheet (00. Medición de Impacto MicroMBA.xlsm)
 -- Generated: 2026-03-12
 -- =============================================================================
@@ -10,34 +10,34 @@
 
 create table public.cartera_vencida (
   id                  uuid            primary key default gen_random_uuid(),
-  anio_medicion       integer,
-  aliado              text,
-  programa            text,
-  nivel               text,
+  measurement_year    integer,
+  partner             text,
+  program             text,
+  level               text,
   "group"             text,
-  consultor           text,
-  cedula              text            not null,
-  nombre_completo     text,
-  empresa             text,
+  consultant          text,
+  document_number     text            not null,
+  full_name           text,
+  company             text,
   nit                 text,
-  credito_vigente     integer,
-  monto_inicial       bigint,
-  saldo_mora          bigint,
-  porcentaje_deuda    text,
-  dias_vencidos       text,
-  clasificacion       text,
+  active_credit       integer,
+  initial_amount      bigint,
+  overdue_balance     bigint,
+  debt_percentage     numeric(18,10),
+  overdue_days        integer,
+  classification      text,
   created_at          timestamptz     not null default now(),
   updated_at          timestamptz     not null default now()
 );
 
-create index cartera_vencida_cedula_idx
-  on public.cartera_vencida(cedula);
+create index cartera_vencida_document_number_idx
+  on public.cartera_vencida(document_number);
 
-create index cartera_vencida_aliado_idx
-  on public.cartera_vencida(aliado);
+create index cartera_vencida_partner_idx
+  on public.cartera_vencida(partner);
 
-create index cartera_vencida_anio_medicion_idx
-  on public.cartera_vencida(anio_medicion);
+create index cartera_vencida_measurement_year_idx
+  on public.cartera_vencida(measurement_year);
 
 create trigger cartera_vencida_updated_at
   before update on public.cartera_vencida

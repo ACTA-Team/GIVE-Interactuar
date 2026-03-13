@@ -27,6 +27,11 @@ import {
   GraduationCap,
 } from 'lucide-react';
 import { Pagination } from '@/components/ui/pagination';
+import {
+  CREDENTIAL_TYPE_CONFIG,
+  CREDENTIAL_TYPE_IDS,
+  type CredentialTypeId,
+} from '../../constants/credential-type-badges';
 
 export interface VaultClientSummary {
   id: string;
@@ -62,9 +67,7 @@ export function CredentialsListPage({
   const t = useTranslations('credentials');
   const tc = useTranslations('common');
   const [search, setSearch] = useState('');
-  const [filterType, setFilterType] = useState<
-    'all' | 'impact' | 'behavior' | 'profile'
-  >('all');
+  const [selectedTypes, setSelectedTypes] = useState<CredentialTypeId[]>([]);
   const [fundingFilter, setFundingFilter] = useState<
     'all' | 'funded' | 'not-funded' | 'delinquent'
   >('all');
@@ -87,10 +90,14 @@ export function CredentialsListPage({
         c.email.toLowerCase().includes(q);
 
       const matchesType =
-        filterType === 'all' ||
-        (filterType === 'impact' && c.impactCount > 0) ||
-        (filterType === 'behavior' && c.behaviorCount > 0) ||
-        (filterType === 'profile' && c.profileCount > 0);
+        selectedTypes.length === 0 ||
+        selectedTypes.some((type) => {
+          if (type === 'impact') return c.impactCount > 0;
+          if (type === 'mba') return (c.mbaCount ?? 0) > 0;
+          if (type === 'behavior') return c.behaviorCount > 0;
+          if (type === 'profile') return c.profileCount > 0;
+          return false;
+        });
 
       const matchesFunding =
         fundingFilter === 'all' ||
@@ -119,7 +126,7 @@ export function CredentialsListPage({
   }, [
     clients,
     search,
-    filterType,
+    selectedTypes,
     fundingFilter,
     onChainFilter,
     hasCredentialsFilter,
@@ -136,10 +143,10 @@ export function CredentialsListPage({
     setSearch(value);
     setPage(1);
   };
-  const handleFilterType = (
-    value: 'all' | 'impact' | 'behavior' | 'profile',
-  ) => {
-    setFilterType(value);
+  const toggleTypeFilter = (type: CredentialTypeId) => {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
+    );
     setPage(1);
   };
   const handleFundingFilter = (
@@ -172,60 +179,48 @@ export function CredentialsListPage({
         <p className="text-muted-foreground mt-0.5">{t('vault.subtitle')}</p>
       </div>
 
-      {/* Stats by type */}
-      <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        <Card className="shadow-sm">
-          <CardContent className="flex items-center gap-3 py-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10">
-              <BarChart3 className="h-4.5 w-4.5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold tabular-nums">{totalImpact}</p>
-              <p className="text-xs text-muted-foreground">
-                {t('vault.impact')}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        {totalMba > 0 && (
-          <Card className="shadow-sm">
-            <CardContent className="flex items-center gap-3 py-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10">
-                <GraduationCap className="h-4.5 w-4.5 text-emerald-600" />
+      {/* Credential type badges (insignias) – multi-select filter */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {CREDENTIAL_TYPE_IDS.map((typeId) => {
+          const config = CREDENTIAL_TYPE_CONFIG[typeId];
+          const total =
+            typeId === 'impact'
+              ? totalImpact
+              : typeId === 'mba'
+                ? totalMba
+                : typeId === 'behavior'
+                  ? totalBehavior
+                  : totalProfile;
+          const isSelected = selectedTypes.includes(typeId);
+          return (
+            <button
+              key={typeId}
+              type="button"
+              onClick={() => toggleTypeFilter(typeId)}
+              aria-pressed={isSelected}
+              className={`
+                relative flex items-center gap-3 rounded-2xl px-4 py-4 text-left
+                transition-all duration-200 hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
+                ${isSelected ? config.activeClasses : config.colorClasses}
+              `}
+            >
+              <div
+                className={`
+                  flex h-10 w-10 shrink-0 items-center justify-center rounded-xl
+                  ${isSelected ? 'bg-white shadow-sm' : 'bg-transparent'}
+                `}
+              >
+                {config.icon}
               </div>
-              <div>
-                <p className="text-2xl font-bold tabular-nums">{totalMba}</p>
-                <p className="text-xs text-muted-foreground">MBA</p>
+              <div className="min-w-0 flex-1">
+                <p className="text-2xl font-bold tabular-nums">{total}</p>
+                <p className="text-xs font-medium text-muted-foreground">
+                  {t(`vault.${config.labelKey}`)}
+                </p>
               </div>
-            </CardContent>
-          </Card>
-        )}
-        <Card className="shadow-sm">
-          <CardContent className="flex items-center gap-3 py-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10">
-              <Activity className="h-4.5 w-4.5 text-amber-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold tabular-nums">{totalBehavior}</p>
-              <p className="text-xs text-muted-foreground">
-                {t('vault.behavior')}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardContent className="flex items-center gap-3 py-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/10">
-              <UserCheck className="h-4.5 w-4.5 text-violet-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold tabular-nums">{totalProfile}</p>
-              <p className="text-xs text-muted-foreground">
-                {t('vault.profile')}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+            </button>
+          );
+        })}
       </div>
 
       {/* Search & Filters */}
@@ -242,31 +237,6 @@ export function CredentialsListPage({
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Select
-              value={filterType}
-              onValueChange={(value) =>
-                handleFilterType(
-                  (value ?? 'all') as 'all' | 'impact' | 'behavior' | 'profile',
-                )
-              }
-              items={{
-                all: t('vault.allTypes'),
-                impact: t('vault.impact'),
-                behavior: t('vault.behavior'),
-                profile: t('vault.profile'),
-              }}
-            >
-              <SelectTrigger className="w-[170px]">
-                <SelectValue placeholder={t('vault.filterByType')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('vault.allTypes')}</SelectItem>
-                <SelectItem value="impact">{t('vault.impact')}</SelectItem>
-                <SelectItem value="behavior">{t('vault.behavior')}</SelectItem>
-                <SelectItem value="profile">{t('vault.profile')}</SelectItem>
-              </SelectContent>
-            </Select>
-
             <Select
               value={fundingFilter}
               onValueChange={(value) =>

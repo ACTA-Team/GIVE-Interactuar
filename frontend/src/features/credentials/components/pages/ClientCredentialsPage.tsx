@@ -456,7 +456,7 @@ export function ClientCredentialsPage({
                 </p>
                 {empresario.growthPct != null && (
                   <p className="text-xs text-muted-foreground">
-                    Crecimiento: {empresario.growthPct.toFixed(1)}%
+                    Variación: {empresario.growthPct.toFixed(1)}%
                   </p>
                 )}
               </div>
@@ -466,7 +466,7 @@ export function ClientCredentialsPage({
                   Empleo
                 </p>
                 <p className="text-foreground">
-                  Nuevos empleos reportados:{' '}
+                  Nuevos empleos generados:{' '}
                   {empresario.newJobs != null ? empresario.newJobs : 0}
                 </p>
               </div>

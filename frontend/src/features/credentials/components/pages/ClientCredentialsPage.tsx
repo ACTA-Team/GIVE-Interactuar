@@ -215,7 +215,9 @@ export function ClientCredentialsPage({
   ).length;
 
   const displayName =
-    client.name?.trim() || client.businessName?.trim() || t('client.unknownEntrepreneur');
+    client.name?.trim() ||
+    client.businessName?.trim() ||
+    t('client.unknownEntrepreneur');
 
   return (
     <div className="space-y-6">

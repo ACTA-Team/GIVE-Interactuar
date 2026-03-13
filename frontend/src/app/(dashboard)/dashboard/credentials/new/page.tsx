@@ -12,5 +12,5 @@ export async function generateMetadata(): Promise<Metadata> {
 // TODO: add auth guard once login flow is built
 // TODO: resolve organizationId and userId from authenticated session
 export default function Page() {
-  return <CredentialIssuancePage organizationId="dev-org" userId="dev-user" />;
+  return <CredentialIssuancePage />;
 }

@@ -2,14 +2,8 @@
   "brand": "Interactuar",
   "subtitle": "Panel de Asesores",
   "title": "Iniciar Sesión",
-  "description": "Ingresa tus credenciales o conecta tu wallet Stellar",
-  "email": "Correo electrónico",
-  "emailPlaceholder": "asesor@interactuar.com",
-  "password": "Contraseña",
-  "passwordPlaceholder": "Mínimo 6 caracteres",
-  "submit": "Ingresar",
-  "submitting": "Ingresando...",
-  "orContinueWith": "O continúa con",
-  "invalidCredentials": "Credenciales inválidas. Contraseña mínimo 6 caracteres.",
-  "walletError": "No se pudo conectar la wallet."
+  "description": "Usa tu cuenta Google para ingresar al panel",
+  "continueWithGoogle": "Continuar con Google",
+  "signingIn": "Ingresando...",
+  "authError": "No se pudo iniciar sesión. Intenta nuevamente."
 }

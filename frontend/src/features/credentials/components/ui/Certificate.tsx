@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 
@@ -25,33 +26,39 @@ export default function Certificate({
       style={{ aspectRatio: '1.414/1' }}
     >
       {/* Left Side Bar - using the actual SVG asset */}
-      <img
+      <Image
         src="/assets/certificate/Leftside.svg"
         alt=""
-        className="absolute left-0 top-0 h-full object-cover"
-        style={{ width: 'auto' }}
+        width={64}
+        height={800}
+        className="absolute left-0 top-0 h-full w-auto object-cover"
       />
 
       {/* Right Side Bar - using the actual SVG asset */}
-      <img
+      <Image
         src="/assets/certificate/RightSide.svg"
         alt=""
-        className="absolute right-0 top-0 h-full object-cover"
-        style={{ width: 'auto', right: '-3%' }}
+        width={64}
+        height={800}
+        className="absolute right-0 top-0 h-full w-auto object-cover"
       />
 
       {/* Top Border - using the actual SVG asset */}
-      <img
+      <Image
         src="/assets/certificate/Upperside.svg"
         alt=""
-        className="absolute top-0 left-0 w-full object-fill"
+        width={1600}
+        height={64}
+        className="absolute top-0 left-0 w-full h-auto object-fill"
       />
 
       {/* Bottom Border - using the actual SVG asset */}
-      <img
+      <Image
         src="/assets/certificate/Downside.svg"
         alt=""
-        className="absolute bottom-0 left-0 w-full object-fill"
+        width={1600}
+        height={64}
+        className="absolute bottom-0 left-0 w-full h-auto object-fill"
       />
 
       {/* Content Area */}
@@ -66,10 +73,12 @@ export default function Certificate({
       >
         {/* Interactuar Logo */}
         <div className="flex flex-col items-center">
-          <img
+          <Image
             src="/assets/interactuar/interactuar-logo.svg"
             alt="Logo Interactuar"
-            className="w-16 md:w-20 lg:w-24"
+            width={96}
+            height={96}
+            className="w-16 md:w-20 lg:w-24 h-auto"
           />
         </div>
 
@@ -128,9 +137,11 @@ export default function Certificate({
 
           {/* Center: MBA Logo + QR - using the actual SVG assets */}
           <div className="flex items-center justify-center gap-3 md:gap-4">
-            <img
+            <Image
               src="/assets/certificate/MBAlogo.svg"
               alt="MBA L-1 Logo"
+              width={56}
+              height={56}
               className="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14"
             />
             {qrUrl ? (

@@ -92,7 +92,6 @@ function IssuingOverlay({ status }: { status: IssuanceStatus }) {
   const tc = useTranslations('common');
   const labels: Record<IssuanceStatus, string> = {
     idle: '',
-    connecting_wallet: t('issuance.statusLabels.connectingWallet'),
     building_payload: t('issuance.statusLabels.buildingPayload'),
     issuing: t('issuance.statusLabels.issuing'),
     success: '',
@@ -135,10 +134,7 @@ export function CredentialIssuanceModal({
     reset: resetIssuance,
   } = useIssueCredential();
 
-  const isIssuing =
-    status === 'connecting_wallet' ||
-    status === 'building_payload' ||
-    status === 'issuing';
+  const isIssuing = status === 'building_payload' || status === 'issuing';
 
   const resetState = useCallback(() => {
     setStep(1);

@@ -34,7 +34,6 @@ create type public.issuance_draft_status as enum (
 
 create table public.credential_templates (
   id                   uuid            primary key default gen_random_uuid(),
-  organization_id      text            not null,
   name                 text            not null,
   credential_type      public.credential_type not null,
   schema_version       text            not null default '1.0.0',
@@ -44,16 +43,12 @@ create table public.credential_templates (
   updated_at           timestamptz     not null default now()
 );
 
-create index credential_templates_org_idx
-  on public.credential_templates(organization_id);
-
 -- =============================================================================
 -- CREDENTIALS
 -- =============================================================================
 
 create table public.credentials (
   id                  uuid                     primary key default gen_random_uuid(),
-  organization_id     text                     not null,
   entrepreneur_id     text                     not null,
   template_id         uuid                     references public.credential_templates(id) on delete set null,
   source_draft_id     uuid,
@@ -78,9 +73,6 @@ create table public.credentials (
 create index credentials_entrepreneur_idx
   on public.credentials(entrepreneur_id);
 
-create index credentials_org_idx
-  on public.credentials(organization_id);
-
 create index credentials_status_idx
   on public.credentials(status);
 
@@ -100,7 +92,6 @@ create index credentials_acta_vc_idx
 
 create table public.issuance_drafts (
   id                  uuid                          primary key default gen_random_uuid(),
-  organization_id     text                          not null,
   entrepreneur_id     text                          not null,
   template_id         uuid                          references public.credential_templates(id) on delete set null,
   latest_snapshot_id  uuid,
@@ -117,9 +108,6 @@ create table public.issuance_drafts (
 
 create index issuance_drafts_entrepreneur_idx
   on public.issuance_drafts(entrepreneur_id);
-
-create index issuance_drafts_org_idx
-  on public.issuance_drafts(organization_id);
 
 -- Add foreign key from credentials to issuance_drafts
 alter table public.credentials

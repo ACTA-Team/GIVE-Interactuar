@@ -1,6 +1,5 @@
 export interface Entrepreneur {
   id: string;
-  organizationId: string;
   firstName: string;
   lastName: string;
   fullName: string;

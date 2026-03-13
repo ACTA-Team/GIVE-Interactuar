@@ -2,7 +2,6 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ActaConfig } from '@acta-team/acta-sdk';
-import { WalletProvider } from '@/lib/stellar/WalletContext';
 import { useState, type ReactNode } from 'react';
 
 interface ProvidersProps {
@@ -37,8 +36,6 @@ export function Providers({ children }: ProvidersProps) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <WalletProvider>{content}</WalletProvider>
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{content}</QueryClientProvider>
   );
 }

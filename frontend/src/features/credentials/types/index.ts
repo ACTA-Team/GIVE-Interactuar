@@ -40,7 +40,6 @@ export type RelationshipType =
 
 export interface Credential {
   id: string;
-  organizationId: string;
   entrepreneurId: string;
   templateId: string | null;
   sourceDraftId: string | null;
@@ -70,7 +69,6 @@ export interface Credential {
 
 export interface IssuanceDraft {
   id: string;
-  organizationId: string;
   entrepreneurId: string;
   templateId: string | null;
   latestSnapshotId: string | null;
@@ -87,7 +85,6 @@ export interface IssuanceDraft {
 
 export interface CredentialTemplate {
   id: string;
-  organizationId: string;
   name: string;
   credentialType: CredentialType;
   schemaVersion: string;

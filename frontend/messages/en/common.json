@@ -4,7 +4,8 @@
     "entrepreneurs": "Entrepreneurs",
     "credentials": "Credentials",
     "list": "List",
-    "newCredential": "New Credential"
+    "newCredential": "New Credential",
+    "vault": "Vault"
   },
   "wallet": {
     "connected": "Wallet connected",
@@ -62,6 +63,9 @@
   "showing": "Showing {count} of {total}",
   "selected": "{count} selected",
   "language": "Language",
+  "auth": {
+    "signOut": "Sign out"
+  },
   "titles": {
     "dashboard": "Home - Interactuar",
     "entrepreneurs": "Entrepreneurs - Interactuar",

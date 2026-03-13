@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -17,7 +17,9 @@ import {
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
 import { SidebarNavGroup } from './SidebarNavGroup';
-import type { ReactNode } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { useEffect, useState, type ReactNode } from 'react';
+import type { User } from '@supabase/supabase-js';
 
 interface NavItemProps {
   icon: ReactNode;
@@ -54,9 +56,47 @@ interface SidebarProps {
   onMobileClose: () => void;
 }
 
+function getUserInitials(user: User): string {
+  const name =
+    user.user_metadata?.full_name ??
+    user.user_metadata?.name ??
+    user.email ??
+    '';
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part: string) => part[0]?.toUpperCase() ?? '')
+    .join('');
+}
+
 export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations('common');
+  const [user, setUser] = useState<User | null>(null);
+  const [signingOut, setSigningOut] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      },
+    );
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    setSigningOut(true);
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      router.push('/');
+    } finally {
+      setSigningOut(false);
+    }
+  };
 
   const isDashboardActive = pathname === ROUTES.dashboard;
   const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);
@@ -67,13 +107,13 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const content = (
     <div className="flex h-full flex-col">
       {/* Logo */}
-      <div className="flex items-center justify-between px-4">
-        <div className="flex items-center gap-1">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1 -mb-2 -mt-2">
           <Image
             src="/assets/interactuar/interactuar-logo.svg"
             alt="Interactuar"
-            width={130}
-            height={36}
+            width={180}
+            height={56}
           />
         </div>
         <button
@@ -132,28 +172,34 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-gray-100 px-4 py-4">
-        <div className="flex items-center justify-between gap-3">
+      <div className="border-t border-gray-100 px-4 py-4 space-y-3">
+        {user && (
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
-              GI
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
+              {getUserInitials(user)}
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-gray-900">
-                {t('footer.team')}
+            <div className="flex min-w-0 flex-1 flex-col">
+              <span className="truncate text-sm font-medium text-gray-900">
+                {user.user_metadata?.full_name ??
+                  user.user_metadata?.name ??
+                  user.email}
               </span>
-              <span className="text-xs text-gray-400">
-                {t('footer.organization')}
-              </span>
+              {(user.user_metadata?.full_name || user.user_metadata?.name) && (
+                <span className="truncate text-xs text-gray-400">
+                  {user.email}
+                </span>
+              )}
             </div>
+            <button
+              onClick={handleSignOut}
+              disabled={signingOut}
+              title={t('auth.signOut')}
+              className="shrink-0 rounded p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+            >
+              <IconLogout className="h-4 w-4" />
+            </button>
           </div>
-          <button
-            type="button"
-            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors"
-          >
-            <IconLogout className="h-3.5 w-3.5" />
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );

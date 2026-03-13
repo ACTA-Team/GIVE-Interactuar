@@ -14,12 +14,7 @@ import { useDashboardEntrepreneurs } from '@/features/entrepreneurs/hooks/useDas
 import { createClient } from '@/lib/supabase/client';
 import { CredentialIssuanceModal } from '../ui/CredentialIssuanceModal';
 
-interface CredentialIssuancePageProps {
-  organizationId: string;
-  userId: string;
-}
-
-export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
+export function CredentialIssuancePage() {
   const t = useTranslations('credentials');
   const tc = useTranslations('common');
   const { data: entrepreneurs = [] } = useDashboardEntrepreneurs();

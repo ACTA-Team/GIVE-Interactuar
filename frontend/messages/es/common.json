@@ -4,7 +4,8 @@
     "entrepreneurs": "Emprendedores",
     "credentials": "Credenciales",
     "list": "Lista",
-    "newCredential": "Nueva Credencial"
+    "newCredential": "Nueva Credencial",
+    "vault": "Vault"
   },
   "wallet": {
     "connected": "Wallet conectada",
@@ -62,6 +63,9 @@
   "showing": "Mostrando {count} de {total}",
   "selected": "{count} seleccionados",
   "language": "Idioma",
+  "auth": {
+    "signOut": "Cerrar sesión"
+  },
   "titles": {
     "dashboard": "Inicio - Interactuar",
     "entrepreneurs": "Emprendedores - Interactuar",

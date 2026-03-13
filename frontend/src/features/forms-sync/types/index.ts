@@ -2,7 +2,6 @@ export type SyncStatus = 'running' | 'success' | 'partial_success' | 'failed';
 
 export interface FormSource {
   id: string;
-  organizationId: string;
   provider: string;
   externalFormId: string;
   name: string;

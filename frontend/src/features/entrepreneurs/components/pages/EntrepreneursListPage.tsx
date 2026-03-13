@@ -36,7 +36,6 @@ import { Pagination } from '@/components/ui/pagination';
 import { ROUTES } from '@/lib/constants/routes';
 import { STAGES } from '../../types/stages';
 import { useDashboardEntrepreneurs } from '../../hooks/useDashboardEntrepreneurs';
-import { NewEntrepreneurDialog } from '../ui/NewEntrepreneurDialog';
 
 type SortField = 'name' | 'stage' | 'delinquent' | 'funding';
 type SortDirection = 'asc' | 'desc';
@@ -207,12 +206,9 @@ export function EntrepreneursListPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">{t('title')}</h1>
-          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
-        </div>
-        <NewEntrepreneurDialog />
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">{t('title')}</h1>
+        <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
       </div>
 
       {/* Filters and Search */}

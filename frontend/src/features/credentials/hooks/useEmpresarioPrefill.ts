@@ -8,6 +8,13 @@ export interface EmpresarioPrefill {
   name: string;
   company: string | null;
   sector: string | null;
+  program: string | null;
+  partner: string | null;
+  status: string | null;
+  level: string | null;
+  group: string | null;
+  cohortYear: number | null;
+  growthPct: number | null;
   salesPrevYearCop: number | null;
   salesCop: number | null;
   newJobs: number | null;
@@ -24,6 +31,13 @@ interface EmpresarioPrefillRow {
   name: string;
   company: string | null;
   sector: string | null;
+  program: string | null;
+  partner: string | null;
+  status: string | null;
+  level: string | null;
+  group: string | null;
+  cohort_year: number | null;
+  growth_pct: number | null;
   sales_prev_year_cop: number | null;
   sales_cop: number | null;
   new_jobs: number | null;
@@ -51,6 +65,13 @@ export function useEmpresarioPrefill(id: string | null) {
             'name',
             'company',
             'sector',
+            'program',
+            'partner',
+            'status',
+            'level',
+            '"group"',
+            'cohort_year',
+            'growth_pct',
             'sales_prev_year_cop',
             'sales_cop',
             'new_jobs',
@@ -73,6 +94,13 @@ export function useEmpresarioPrefill(id: string | null) {
         name: data.name,
         company: data.company,
         sector: data.sector,
+        program: data.program,
+        partner: data.partner,
+        status: data.status,
+        level: data.level,
+        group: data.group,
+        cohortYear: data.cohort_year,
+        growthPct: data.growth_pct,
         salesPrevYearCop: data.sales_prev_year_cop,
         salesCop: data.sales_cop,
         newJobs: data.new_jobs,

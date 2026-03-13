@@ -14,7 +14,7 @@ type BadgeVariant =
 const variantClasses: Record<BadgeVariant, string> = {
   default: 'bg-gray-100 text-gray-700 border-gray-200',
   secondary: 'bg-secondary text-secondary-foreground border-secondary',
-  success: 'bg-success/10 text-success border-success/30',
+  success: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   warning: 'bg-warning/10 text-warning-foreground border-warning/30',
   danger: 'bg-destructive/10 text-destructive border-destructive/30',
   info: 'bg-blue-100 text-blue-700 border-blue-200',

@@ -41,6 +41,7 @@ export interface DashboardEntrepreneur {
   partner?: string;
   municipality?: string;
   level?: string;
+  mbaEligible?: boolean;
 }
 
 export const STAGES: Stage[] = [

@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/select';
 import {
   Search,
+  ChevronLeft,
   ChevronRight,
   AlertTriangle,
   CheckCircle,
@@ -52,12 +53,18 @@ export function EntrepreneursListPage() {
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
-  const handleFilterStage = (value: string | null) =>
+  const handleFilterStage = (value: string | null) => {
     setFilterStage(value ?? 'all');
-  const handleFilterStatus = (value: string | null) =>
+    setPage(1);
+  };
+  const handleFilterStatus = (value: string | null) => {
     setFilterStatus(value ?? 'all');
-  const handleFilterGender = (value: string | null) =>
+    setPage(1);
+  };
+  const handleFilterGender = (value: string | null) => {
     setFilterGender(value ?? 'all');
+    setPage(1);
+  };
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
@@ -155,10 +162,10 @@ export function EntrepreneursListPage() {
   };
 
   const handleSelectAll = () => {
-    if (selectedIds.size === filteredAndSortedEntrepreneurs.length) {
+    if (pageItems.every((e) => selectedIds.has(e.id))) {
       setSelectedIds(new Set());
     } else {
-      setSelectedIds(new Set(filteredAndSortedEntrepreneurs.map((e) => e.id)));
+      setSelectedIds(new Set(pageItems.map((e) => e.id)));
     }
   };
 
@@ -185,6 +192,7 @@ export function EntrepreneursListPage() {
       setSortField(field);
       setSortDirection('asc');
     }
+    setPage(1);
   };
 
   const formatCurrency = (amount: number) => {
@@ -297,41 +305,6 @@ export function EntrepreneursListPage() {
         </CardContent>
       </Card>
 
-      {/* Pagination summary */}
-      {filteredAndSortedEntrepreneurs.length > 0 && (
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <p>
-            {tc('showing', {
-              count: pageItems.length,
-              total: filteredAndSortedEntrepreneurs.length,
-            })}
-          </p>
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="xs"
-              disabled={currentPage === 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-            >
-              Anterior
-            </Button>
-            <span>
-              Página {currentPage} de {totalPages}
-            </span>
-            <Button
-              type="button"
-              variant="outline"
-              size="xs"
-              disabled={currentPage === totalPages}
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            >
-              Siguiente
-            </Button>
-          </div>
-        </div>
-      )}
-
       {/* Table */}
       <Card>
         <CardContent className="pt-6">
@@ -342,9 +315,8 @@ export function EntrepreneursListPage() {
                   <TableHead className="w-[50px]">
                     <Checkbox
                       checked={
-                        selectedIds.size ===
-                          filteredAndSortedEntrepreneurs.length &&
-                        filteredAndSortedEntrepreneurs.length > 0
+                        pageItems.length > 0 &&
+                        pageItems.every((e) => selectedIds.has(e.id))
                       }
                       onCheckedChange={handleSelectAll}
                     />
@@ -493,10 +465,72 @@ export function EntrepreneursListPage() {
           <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
             <p>
               {tc('showing', {
-                count: filteredAndSortedEntrepreneurs.length,
-                total: entrepreneurs.length,
+                count: pageItems.length,
+                total: filteredAndSortedEntrepreneurs.length,
               })}
             </p>
+
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="flex h-8 w-8 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+
+              {(() => {
+                const pair: number[] =
+                  currentPage < totalPages
+                    ? [currentPage, currentPage + 1]
+                    : totalPages > 1
+                      ? [currentPage - 1, currentPage]
+                      : [currentPage];
+
+                const showEllipsis =
+                  totalPages > 1 && pair[pair.length - 1] < totalPages;
+
+                return (
+                  <>
+                    {pair.map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => setPage(p)}
+                        className={`flex h-8 w-8 items-center justify-center rounded-md border text-sm font-medium transition-colors ${
+                          currentPage === p
+                            ? 'border-primary bg-primary text-primary-foreground'
+                            : 'border-border hover:bg-muted'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    ))}
+                    {showEllipsis && (
+                      <>
+                        <span className="flex h-8 items-center justify-center px-1 text-muted-foreground">
+                          …
+                        </span>
+                        <button
+                          onClick={() => setPage(totalPages)}
+                          className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-sm font-medium transition-colors hover:bg-muted"
+                        >
+                          {totalPages}
+                        </button>
+                      </>
+                    )}
+                  </>
+                );
+              })()}
+
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="flex h-8 w-8 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+
             {selectedIds.size > 0 && (
               <Button
                 variant="ghost"

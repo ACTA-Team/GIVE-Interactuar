@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants/routes';
@@ -25,6 +25,7 @@ import {
   BarChart3,
   Link2,
 } from 'lucide-react';
+import { Pagination } from '@/components/ui/pagination';
 
 export interface VaultClientSummary {
   id: string;
@@ -48,9 +49,14 @@ export interface VaultClientSummary {
 
 interface CredentialsListPageProps {
   clients: VaultClientSummary[];
+  /** Hide internal pagination when parent handles it (e.g. server-side) */
+  hidePagination?: boolean;
 }
 
-export function CredentialsListPage({ clients }: CredentialsListPageProps) {
+export function CredentialsListPage({
+  clients,
+  hidePagination = false,
+}: CredentialsListPageProps) {
   const t = useTranslations('credentials');
   const tc = useTranslations('common');
   const [search, setSearch] = useState('');
@@ -66,6 +72,8 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
   const [hasCredentialsFilter, setHasCredentialsFilter] = useState<
     'all' | 'with' | 'without'
   >('all');
+  const [page, setPage] = useState(1);
+  const pageSize = 12;
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
@@ -108,6 +116,23 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
     });
   }, [
     clients,
+    search,
+    filterType,
+    fundingFilter,
+    onChainFilter,
+    hasCredentialsFilter,
+  ]);
+
+  const totalPages = filtered.length
+    ? Math.ceil(filtered.length / pageSize)
+    : 1;
+  const currentPage = Math.min(page, totalPages);
+  const startIndex = (currentPage - 1) * pageSize;
+  const pageItems = filtered.slice(startIndex, startIndex + pageSize);
+
+  useEffect(() => {
+    setPage(1);
+  }, [
     search,
     filterType,
     fundingFilter,
@@ -198,6 +223,12 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                       | 'profile',
                   )
                 }
+                items={{
+                  all: t('vault.allTypes'),
+                  impact: t('vault.impact'),
+                  behavior: t('vault.behavior'),
+                  profile: t('vault.profile'),
+                }}
               >
                 <SelectTrigger className="w-[170px]">
                   <SelectValue placeholder={t('vault.filterByType')} />
@@ -223,6 +254,12 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                       | 'delinquent',
                   )
                 }
+                items={{
+                  all: t('vault.fundingAny'),
+                  funded: t('vault.fundingFunded'),
+                  'not-funded': t('vault.fundingNotFunded'),
+                  delinquent: t('vault.fundingDelinquent'),
+                }}
               >
                 <SelectTrigger className="w-[190px]">
                   <SelectValue placeholder={t('vault.filterByFundingStatus')} />
@@ -248,6 +285,11 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                     (value ?? 'all') as 'all' | 'with' | 'without',
                   )
                 }
+                items={{
+                  all: t('vault.onChainAny'),
+                  with: t('vault.onChainWith'),
+                  without: t('vault.onChainWithout'),
+                }}
               >
                 <SelectTrigger className="w-[190px]">
                   <SelectValue placeholder={t('vault.filterByOnChain')} />
@@ -268,6 +310,11 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
                     (value ?? 'all') as 'all' | 'with' | 'without',
                   )
                 }
+                items={{
+                  all: t('vault.hasCredentialsAny'),
+                  with: t('vault.hasCredentialsWith'),
+                  without: t('vault.hasCredentialsWithout'),
+                }}
               >
                 <SelectTrigger className="w-[210px]">
                   <SelectValue
@@ -307,7 +354,7 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
             </Card>
           </div>
         ) : (
-          filtered.map((client) => (
+          (hidePagination ? filtered : pageItems).map((client) => (
             <Link
               key={client.id}
               href={ROUTES.credentials.client(client.id)}
@@ -428,10 +475,18 @@ export function CredentialsListPage({ clients }: CredentialsListPageProps) {
         )}
       </div>
 
-      {/* Footer count */}
-      <p className="text-sm text-muted-foreground">
-        {tc('showing', { count: filtered.length, total: clients.length })}
-      </p>
+      {/* Pagination */}
+      {!hidePagination && filtered.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          showingLabel={tc('showing', {
+            count: pageItems.length,
+            total: filtered.length,
+          })}
+        />
+      )}
     </div>
   );
 }

@@ -1,7 +1,8 @@
 export const dynamic = 'force-dynamic';
 
-import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { CredentialsListPage } from '@/features/credentials/components/pages/CredentialsListPage';
+import { Pagination } from '@/components/ui/pagination';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createCredentialRepository } from '@/features/credentials/repositories/credentialRepository';
 import type { VaultClientSummary } from '@/features/credentials/components/pages/CredentialsListPage';
@@ -83,41 +84,22 @@ export default async function Page({
     }),
   );
 
-  const hasPrev = page > 1;
-  const hasNext = page < totalPages;
+  const tc = await getTranslations('common');
+  const showingLabel = tc('showing', {
+    count: clients.length,
+    total,
+  });
 
   return (
     <div className="space-y-4">
-      <CredentialsListPage clients={clients} />
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <div>
-            Página {page} de {totalPages} &mdash; {total} emprendedores totales
-          </div>
-          <div className="flex items-center gap-2">
-            {hasPrev ? (
-              <Link
-                href={`?page=${page - 1}`}
-                className="underline-offset-2 hover:underline"
-              >
-                Anterior
-              </Link>
-            ) : (
-              <span className="opacity-40">Anterior</span>
-            )}
-            <span>|</span>
-            {hasNext ? (
-              <Link
-                href={`?page=${page + 1}`}
-                className="underline-offset-2 hover:underline"
-              >
-                Siguiente
-              </Link>
-            ) : (
-              <span className="opacity-40">Siguiente</span>
-            )}
-          </div>
-        </div>
+      <CredentialsListPage clients={clients} hidePagination />
+      {clients.length > 0 && (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          showingLabel={showingLabel}
+          useServerNavigation
+        />
       )}
     </div>
   );

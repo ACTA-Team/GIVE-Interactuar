@@ -25,7 +25,6 @@ import {
 } from '@/components/ui/select';
 import {
   Search,
-  ChevronLeft,
   ChevronRight,
   AlertTriangle,
   CheckCircle,
@@ -33,6 +32,7 @@ import {
   Shield,
   ArrowUpDown,
 } from 'lucide-react';
+import { Pagination } from '@/components/ui/pagination';
 import { ROUTES } from '@/lib/constants/routes';
 import { STAGES } from '../../types/stages';
 import { useDashboardEntrepreneurs } from '../../hooks/useDashboardEntrepreneurs';
@@ -217,7 +217,7 @@ export function EntrepreneursListPage() {
 
       {/* Filters and Search */}
       <Card>
-        <CardContent className="pt-6">
+        <CardContent>
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -230,7 +230,19 @@ export function EntrepreneursListPage() {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Select value={filterStage} onValueChange={handleFilterStage}>
+              <Select
+                value={filterStage}
+                onValueChange={handleFilterStage}
+                items={{
+                  all: t('allStages'),
+                  ...Object.fromEntries(
+                    STAGES.map((s) => [
+                      s.id.toString(),
+                      `${t('table.stage')} ${s.id}: ${t(`stages.${s.id}`)}`,
+                    ]),
+                  ),
+                }}
+              >
                 <SelectTrigger className="w-[160px]">
                   <SelectValue placeholder={t('filterByStage')} />
                 </SelectTrigger>
@@ -244,14 +256,21 @@ export function EntrepreneursListPage() {
                 </SelectContent>
               </Select>
 
-              <Select value={filterStatus} onValueChange={handleFilterStatus}>
+              <Select
+                value={filterStatus}
+                onValueChange={handleFilterStatus}
+                items={{
+                  all: t('allStatuses'),
+                  funded: td('filters.funded'),
+                  'not-funded': td('filters.notFunded'),
+                  delinquent: td('filters.delinquent'),
+                }}
+              >
                 <SelectTrigger className="w-[160px]">
                   <SelectValue placeholder={t('filterByStatus')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">
-                    {td('filters.allStatuses')}
-                  </SelectItem>
+                  <SelectItem value="all">{t('allStatuses')}</SelectItem>
                   <SelectItem value="funded">{td('filters.funded')}</SelectItem>
                   <SelectItem value="not-funded">
                     {td('filters.notFunded')}
@@ -262,7 +281,16 @@ export function EntrepreneursListPage() {
                 </SelectContent>
               </Select>
 
-              <Select value={filterGender} onValueChange={handleFilterGender}>
+              <Select
+                value={filterGender}
+                onValueChange={handleFilterGender}
+                items={{
+                  all: t('allGenders'),
+                  female: t('genderFemale'),
+                  male: t('genderMale'),
+                  unknown: t('genderUnknown'),
+                }}
+              >
                 <SelectTrigger className="w-[160px]">
                   <SelectValue placeholder={t('filterByGender')} />
                 </SelectTrigger>
@@ -462,85 +490,26 @@ export function EntrepreneursListPage() {
             </Table>
           </div>
 
-          <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
-            <p>
-              {tc('showing', {
-                count: pageItems.length,
-                total: filteredAndSortedEntrepreneurs.length,
-              })}
-            </p>
-
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-
-              {(() => {
-                const pair: number[] =
-                  currentPage < totalPages
-                    ? [currentPage, currentPage + 1]
-                    : totalPages > 1
-                      ? [currentPage - 1, currentPage]
-                      : [currentPage];
-
-                const showEllipsis =
-                  totalPages > 1 && pair[pair.length - 1] < totalPages;
-
-                return (
-                  <>
-                    {pair.map((p) => (
-                      <button
-                        key={p}
-                        onClick={() => setPage(p)}
-                        className={`flex h-8 w-8 items-center justify-center rounded-md border text-sm font-medium transition-colors ${
-                          currentPage === p
-                            ? 'border-primary bg-primary text-primary-foreground'
-                            : 'border-border hover:bg-muted'
-                        }`}
-                      >
-                        {p}
-                      </button>
-                    ))}
-                    {showEllipsis && (
-                      <>
-                        <span className="flex h-8 items-center justify-center px-1 text-muted-foreground">
-                          …
-                        </span>
-                        <button
-                          onClick={() => setPage(totalPages)}
-                          className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-sm font-medium transition-colors hover:bg-muted"
-                        >
-                          {totalPages}
-                        </button>
-                      </>
-                    )}
-                  </>
-                );
-              })()}
-
-              <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            {selectedIds.size > 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSelectedIds(new Set())}
-              >
-                {t('clearSelection')}
-              </Button>
-            )}
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            showingLabel={tc('showing', {
+              count: pageItems.length,
+              total: filteredAndSortedEntrepreneurs.length,
+            })}
+            rightSlot={
+              selectedIds.size > 0 ? (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedIds(new Set())}
+                >
+                  {t('clearSelection')}
+                </Button>
+              ) : undefined
+            }
+          />
         </CardContent>
       </Card>
     </div>

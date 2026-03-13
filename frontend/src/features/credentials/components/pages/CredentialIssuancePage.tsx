@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { IconCertificate, IconSearch } from '@tabler/icons-react';
-import { Building2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Building2 } from 'lucide-react';
+import { Pagination } from '@/components/ui/pagination';
 import { useDashboardEntrepreneurs } from '@/features/entrepreneurs/hooks/useDashboardEntrepreneurs';
 import { CredentialIssuanceModal } from '../ui/CredentialIssuanceModal';
 
@@ -17,6 +18,7 @@ interface CredentialIssuancePageProps {
 
 export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
   const t = useTranslations('credentials');
+  const tc = useTranslations('common');
   const { data: entrepreneurs = [] } = useDashboardEntrepreneurs();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -141,72 +143,15 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
       </div>
 
       {filtered.length > 0 && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <p>
-            Mostrando {pageItems.length} de {filtered.length} emprendedores
-          </p>
-
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="flex h-8 w-8 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-
-            {(() => {
-              const pair: number[] =
-                currentPage < totalPages
-                  ? [currentPage, currentPage + 1]
-                  : totalPages > 1
-                    ? [currentPage - 1, currentPage]
-                    : [currentPage];
-
-              const showEllipsis =
-                totalPages > 1 && pair[pair.length - 1] < totalPages;
-
-              return (
-                <>
-                  {pair.map((p) => (
-                    <button
-                      key={p}
-                      onClick={() => setPage(p)}
-                      className={`flex h-8 w-8 items-center justify-center rounded-md border text-sm font-medium transition-colors ${
-                        currentPage === p
-                          ? 'border-primary bg-primary text-primary-foreground'
-                          : 'border-border hover:bg-muted'
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  ))}
-                  {showEllipsis && (
-                    <>
-                      <span className="flex h-8 items-center justify-center px-1 text-muted-foreground">
-                        …
-                      </span>
-                      <button
-                        onClick={() => setPage(totalPages)}
-                        className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-sm font-medium transition-colors hover:bg-muted"
-                      >
-                        {totalPages}
-                      </button>
-                    </>
-                  )}
-                </>
-              );
-            })()}
-
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="flex h-8 w-8 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          showingLabel={tc('showing', {
+            count: pageItems.length,
+            total: filtered.length,
+          })}
+        />
       )}
 
       {selectedEntrepreneur && (

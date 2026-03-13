@@ -347,7 +347,7 @@ export function ClientCredentialsPage({
                     {empresario.status}
                   </Badge>
                 )}
-                {mbaEligible && (
+                {mbaEligible && mbaCount === 0 && (
                   <Badge variant="success" className="gap-1 text-xs">
                     <GraduationCap className="h-3 w-3" />
                     MBA listo para credencial

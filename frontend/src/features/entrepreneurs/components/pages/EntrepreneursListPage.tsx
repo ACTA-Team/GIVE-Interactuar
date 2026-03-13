@@ -216,7 +216,7 @@ export function EntrepreneursListPage() {
       </div>
 
       {/* Filters and Search */}
-      <Card>
+      <Card className="shadow-sm">
         <CardContent>
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="relative flex-1">
@@ -334,7 +334,7 @@ export function EntrepreneursListPage() {
       </Card>
 
       {/* Table */}
-      <Card>
+      <Card className="shadow-sm">
         <CardContent className="pt-6">
           <div className="rounded-lg border overflow-hidden">
             <Table>

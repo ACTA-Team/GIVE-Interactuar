@@ -171,7 +171,7 @@ export function CredentialsListPage({
 
       {/* Stats by type */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
+        <Card className="shadow-sm">
           <CardContent className="flex items-center gap-3 py-4">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10">
               <BarChart3 className="h-4.5 w-4.5 text-blue-600" />
@@ -184,7 +184,7 @@ export function CredentialsListPage({
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-sm">
           <CardContent className="flex items-center gap-3 py-4">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10">
               <Activity className="h-4.5 w-4.5 text-amber-600" />
@@ -197,7 +197,7 @@ export function CredentialsListPage({
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-sm">
           <CardContent className="flex items-center gap-3 py-4">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/10">
               <UserCheck className="h-4.5 w-4.5 text-violet-600" />
@@ -213,7 +213,7 @@ export function CredentialsListPage({
       </div>
 
       {/* Search & Filters */}
-      <Card>
+      <Card className="shadow-sm">
         <CardContent className="py-4">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
@@ -357,7 +357,7 @@ export function CredentialsListPage({
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.length === 0 ? (
           <div className="sm:col-span-2 lg:col-span-3">
-            <Card>
+            <Card className="shadow-sm">
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <Search className="h-8 w-8 text-muted-foreground/40" />
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -375,7 +375,7 @@ export function CredentialsListPage({
               href={ROUTES.credentials.client(client.id)}
               className="group"
             >
-              <Card className="h-full transition-all hover:shadow-md hover:border-primary/20">
+              <Card className="h-full shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/20">
                 <CardContent className="pt-5 pb-4 space-y-4">
                   {/* Client identity */}
                   <div className="flex items-start gap-3">

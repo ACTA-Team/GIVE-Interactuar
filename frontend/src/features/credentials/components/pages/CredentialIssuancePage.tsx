@@ -76,7 +76,7 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
         <p className="text-muted-foreground mt-0.5">{t('issuance.subtitle')}</p>
       </div>
 
-      <Card>
+      <Card className="shadow-sm">
         <CardContent className="py-4">
           <div className="relative">
             <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -103,7 +103,7 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
                 handleSelect(entrepreneur);
               }
             }}
-            className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-xl border border-border bg-card p-4 text-left transition-all hover:border-primary/30 hover:shadow-md"
+            className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/30"
           >
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
@@ -131,7 +131,7 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
         ))}
 
         {filtered.length === 0 && (
-          <Card>
+          <Card className="shadow-sm">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <IconSearch className="h-8 w-8 text-muted-foreground/40" />
               <p className="mt-2 text-sm text-muted-foreground">

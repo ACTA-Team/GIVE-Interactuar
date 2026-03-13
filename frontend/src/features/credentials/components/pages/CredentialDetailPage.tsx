@@ -332,11 +332,21 @@ export function CredentialDetailPage({
 
       {/* Credential metadata */}
       <Card>
-        <CardContent className="pt-5 pb-5">
-          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <Link2 className="h-5 w-5 text-muted-foreground" />
-            {t('detail.credentialInfo')}
-          </h2>
+        <CardContent className="pt-5 pb-5 space-y-4">
+          <div className="flex items-start justify-between gap-4">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <Link2 className="h-5 w-5 text-muted-foreground" />
+              {t('detail.credentialInfo')}
+            </h2>
+            {credential.status === 'issued' && (
+              <Link href={`/credential/${credential.publicId}`} target="_blank">
+                <button className="inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors">
+                  {t('share.openPreview')}
+                </button>
+              </Link>
+            )}
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
               <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">

@@ -132,13 +132,7 @@ export function CredentialsListPage({
 
   useEffect(() => {
     setPage(1);
-  }, [
-    search,
-    filterType,
-    fundingFilter,
-    onChainFilter,
-    hasCredentialsFilter,
-  ]);
+  }, [search, filterType, fundingFilter, onChainFilter, hasCredentialsFilter]);
 
   const totalImpact = clients.reduce((acc, c) => acc + c.impactCount, 0);
   const totalBehavior = clients.reduce((acc, c) => acc + c.behaviorCount, 0);

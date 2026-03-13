@@ -16,11 +16,9 @@ export interface PaginationProps {
 
 const buttonBase =
   'flex h-8 w-8 items-center justify-center rounded-md border text-sm font-medium transition-colors';
-const buttonActive =
-  'border-primary bg-primary text-primary-foreground';
+const buttonActive = 'border-primary bg-primary text-primary-foreground';
 const buttonInactive = 'border-border hover:bg-muted';
-const buttonDisabled =
-  'disabled:pointer-events-none disabled:opacity-40';
+const buttonDisabled = 'disabled:pointer-events-none disabled:opacity-40';
 
 export function Pagination({
   currentPage,
@@ -39,11 +37,9 @@ export function Pagination({
         ? [currentPage - 1, currentPage]
         : [currentPage];
 
-  const showEllipsis =
-    totalPages > 1 && pair[pair.length - 1] < totalPages;
+  const showEllipsis = totalPages > 1 && pair[pair.length - 1] < totalPages;
 
-  const buildHref = (page: number) =>
-    `${pathname}?page=${page}`;
+  const buildHref = (page: number) => `${pathname}?page=${page}`;
 
   const prevPage = Math.max(1, currentPage - 1);
   const nextPage = Math.min(totalPages, currentPage + 1);

@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { IconMenu2 } from '@tabler/icons-react';
-import { Sidebar } from './Sidebar';
 import Image from 'next/image';
+import { Sidebar } from './Sidebar';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
+
 interface DashboardLayoutProps {
   children: ReactNode;
 }
@@ -20,20 +22,28 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       />
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Mobile top bar */}
-        <header className="flex items-center gap-3 border-b border-gray-200 bg-white px-4 lg:hidden">
-          <button
-            onClick={() => setIsMobileOpen(true)}
-            className="rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
-          >
-            <IconMenu2 className="h-5 w-5" />
-          </button>
-          <Image
-            src="/interactuar-logo.svg"
-            alt="Interactuar"
-            width={150}
-            height={150}
-          />
+        {/* Header: menú + logo (móvil) y botones de traducción a la derecha */}
+        <header className="flex shrink-0 items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 py-3">
+          <div className="flex items-center gap-3 lg:hidden">
+            <button
+              onClick={() => setIsMobileOpen(true)}
+              className="rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+              aria-label="Abrir menú"
+            >
+              <IconMenu2 className="h-5 w-5" />
+            </button>
+            <Image
+              src="/assets/interactuar/interactuar-logo.svg"
+              alt="Interactuar"
+              width={130}
+              height={36}
+              className="h-9 w-auto"
+            />
+          </div>
+          <div className="flex-1 min-w-0" />
+          <div className="flex items-center">
+            <LanguageSwitcher />
+          </div>
         </header>
 
         <main className="flex flex-1 flex-col overflow-y-auto">

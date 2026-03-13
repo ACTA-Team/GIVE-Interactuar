@@ -13,6 +13,7 @@ import {
   BarChart3,
   Activity,
   UserCheck,
+  GraduationCap,
   Copy,
   CheckCircle2,
 } from 'lucide-react';
@@ -38,12 +39,14 @@ const TYPE_ICON: Record<CredentialType, typeof BarChart3> = {
   impact: BarChart3,
   behavior: Activity,
   profile: UserCheck,
+  mba: GraduationCap,
 };
 
 const TYPE_COLOR: Record<CredentialType, string> = {
   impact: 'bg-blue-500/10 text-blue-600',
   behavior: 'bg-amber-500/10 text-amber-600',
   profile: 'bg-violet-500/10 text-violet-600',
+  mba: 'bg-emerald-500/10 text-emerald-600',
 };
 
 function CopyButton({ text }: { text: string }) {
@@ -86,7 +89,8 @@ function ClaimsGrid({
       key !== '@context' &&
       key !== 'type' &&
       key !== 'issuer' &&
-      key !== 'validFrom',
+      key !== 'validFrom' &&
+      key !== 'id',
   );
 
   if (entries.length === 0) {
@@ -135,7 +139,18 @@ export function CredentialDetailPage({
   const getClaimLabel = (key: string) => claimLabels[key] ?? key;
 
   const formatClaimValue = (key: string, value: unknown): string => {
+    if (key === 'id') return '—';
     if (value === null || value === undefined) return '—';
+    if (key === 'activeCredit' && typeof value === 'object' && value !== null) {
+      const v = value as { exists?: boolean | null };
+      if (v.exists === true) {
+        return t('forms.creditCurrent');
+      }
+      if (v.exists === false) {
+        return t('forms.notValidated');
+      }
+      return String(value);
+    }
     if (typeof value === 'boolean')
       return value ? t('booleanYes') : t('booleanNo');
     if (typeof value === 'number') {
@@ -177,6 +192,99 @@ export function CredentialDetailPage({
       }
       return JSON.stringify(value);
     }
+    if (typeof value === 'string') {
+      const v = value as string;
+
+      if (key === 'registryValidation') {
+        const map: Record<string, string> = {
+          validated: t('forms.validated'),
+          partially_validated: t('forms.partiallyValidated'),
+          not_validated: t('forms.notValidated'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'monthlyIncomeStability') {
+        const map: Record<string, string> = {
+          high: t('forms.high'),
+          medium: t('forms.medium'),
+          low: t('forms.low'),
+          volatile: t('forms.volatile'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'commercialStability') {
+        const map: Record<string, string> = {
+          stable: t('forms.stable'),
+          seasonal: t('forms.seasonal'),
+          volatile: t('forms.volatile'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'financialTrend') {
+        const map: Record<string, string> = {
+          improving: t('forms.improving'),
+          stable: t('forms.stable'),
+          deteriorating: t('forms.deteriorating'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (
+        key === 'estimatedOperationalCapacity' ||
+        key === 'paymentCapacitySignal'
+      ) {
+        const map: Record<string, string> = {
+          strong: t('forms.signalStrong'),
+          moderate: t('forms.signalModerate'),
+          weak: t('forms.signalWeak'),
+          acceptable: t('forms.signalModerate'),
+          critical: t('forms.signalWeak'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'leverageLevel') {
+        const map: Record<string, string> = {
+          low: t('forms.levelLow'),
+          moderate: t('forms.levelMedium'),
+          high: t('forms.levelHigh'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'traceabilityLevel' || key === 'formalizationLevel') {
+        const map: Record<string, string> = {
+          high: t('forms.levelHigh'),
+          medium: t('forms.levelMedium'),
+          low: t('forms.levelLow'),
+          none: t('forms.levelNone'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'applicantStabilitySignal') {
+        const map: Record<string, string> = {
+          strong: t('forms.signalStrong'),
+          moderate: t('forms.signalModerate'),
+          weak: t('forms.signalWeak'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'creditSegmentStart' || key === 'creditSegmentEnd') {
+        const map: Record<string, string> = {
+          microcredit: t('forms.creditSegments.microcredit'),
+          individual: t('forms.creditSegments.individual'),
+          solidary: t('forms.creditSegments.solidary'),
+          communal: t('forms.creditSegments.communal'),
+        };
+        if (map[v]) return map[v];
+      }
+    }
+
     const trendLabels: Record<string, string> = {
       growing: t('trendLabels.growing'),
       stable: t('trendLabels.stable'),
@@ -224,11 +332,21 @@ export function CredentialDetailPage({
 
       {/* Credential metadata */}
       <Card>
-        <CardContent className="pt-5 pb-5">
-          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <Link2 className="h-5 w-5 text-muted-foreground" />
-            {t('detail.credentialInfo')}
-          </h2>
+        <CardContent className="pt-5 pb-5 space-y-4">
+          <div className="flex items-start justify-between gap-4">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <Link2 className="h-5 w-5 text-muted-foreground" />
+              {t('detail.credentialInfo')}
+            </h2>
+            {credential.status === 'issued' && (
+              <Link href={`/credential/${credential.publicId}`} target="_blank">
+                <button className="inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors">
+                  {t('share.openPreview')}
+                </button>
+              </Link>
+            )}
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
               <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
@@ -246,17 +364,6 @@ export function CredentialDetailPage({
                 <Badge variant={STATUS_VARIANT[credential.status]}>
                   {getStatusLabel(credential.status)}
                 </Badge>
-              </div>
-            </div>
-            <div>
-              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-                {t('detail.publicId')}
-              </p>
-              <div className="mt-0.5 flex items-center gap-1">
-                <p className="text-sm font-mono text-foreground truncate">
-                  {credential.publicId}
-                </p>
-                <CopyButton text={credential.publicId} />
               </div>
             </div>
             {credential.issuerDid && (

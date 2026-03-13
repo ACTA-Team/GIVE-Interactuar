@@ -32,7 +32,8 @@
     "viewOnBlockchain": "Ver en blockchain",
     "download": "Descargar",
     "copy": "Copiar",
-    "copied": "Copiado"
+    "copied": "Copiado",
+    "logout": "Cerrar sesión"
   },
   "status": {
     "draft": "Borrador",
@@ -46,12 +47,14 @@
   "credentialTypes": {
     "impact": "Credencial de Impacto",
     "behavior": "Credencial de Comportamiento",
-    "profile": "Credencial de Perfil y Formalización"
+    "profile": "Credencial de Perfil y Formalización",
+    "mba": "Credencial MBA Empresarial"
   },
   "credentialTypeDescriptions": {
     "impact": "Mide el impacto económico y social del empresario",
     "behavior": "Refleja el comportamiento financiero y crediticio",
-    "profile": "Documenta el perfil y nivel de formalización"
+    "profile": "Documenta el perfil y nivel de formalización",
+    "mba": "Acredita participación y cohorte en el MBA Empresarial"
   },
   "toggle": {
     "yes": "Sí",
@@ -62,5 +65,17 @@
   "language": "Idioma",
   "auth": {
     "signOut": "Cerrar sesión"
+  },
+  "titles": {
+    "dashboard": "Inicio - Interactuar",
+    "entrepreneurs": "Emprendedores - Interactuar",
+    "credentials": "Credenciales - Interactuar",
+    "credentialsNew": "Emitir credencial - Interactuar",
+    "credentialsClient": "Cliente - Interactuar",
+    "credentialsDetail": "Detalle de credencial - Interactuar",
+    "entrepreneurDetail": "Detalle de emprendedor - Interactuar",
+    "credentialsStorage": "Almacén de credenciales - Interactuar",
+    "entrepreneurCredentialsList": "Credenciales por emprendedor - Interactuar",
+    "entrepreneurClientDetail": "Detalle de cliente - Interactuar"
   }
 }

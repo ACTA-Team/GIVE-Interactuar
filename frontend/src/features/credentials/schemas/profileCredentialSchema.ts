@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const socialSecurityCoverageSchema = z.object({
-  hasSocialSecurity: z.boolean(),
-  hasPension: z.boolean(),
+  hasSocialSecurity: z.boolean().optional(),
+  hasPension: z.boolean().optional(),
   notes: z.string().optional(),
 });
 

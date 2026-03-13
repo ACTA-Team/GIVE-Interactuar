@@ -48,7 +48,7 @@ const manrope = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'GIVE Interactuar',
+  title: 'Interactuar',
   description: 'Plataforma de credenciales verificables para emprendedores',
 };
 

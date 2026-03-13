@@ -6,6 +6,7 @@ import {
   IconTrendingUp,
   IconShieldCheck,
   IconIdBadge2,
+  IconSchool,
 } from '@tabler/icons-react';
 import type { CredentialType } from '../../types';
 
@@ -28,9 +29,14 @@ const TYPE_CONFIG: Record<
     iconBg: 'bg-blue-50',
     iconColor: 'text-blue-600',
   },
+  mba: {
+    icon: <IconSchool className="h-6 w-6" />,
+    iconBg: 'bg-purple-50',
+    iconColor: 'text-purple-600',
+  },
 };
 
-const TYPES: CredentialType[] = ['impact', 'behavior', 'profile'];
+const TYPES: CredentialType[] = ['impact', 'behavior', 'profile', 'mba'];
 
 interface CredentialTypeSelectorProps {
   selected: CredentialType | null;

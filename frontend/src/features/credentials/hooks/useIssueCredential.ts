@@ -10,11 +10,13 @@ import { CREDENTIAL_TYPE_LABELS } from '../types';
 import type { ImpactCredentialFormInput } from '../schemas/impactCredentialSchema';
 import type { BehaviorCredentialFormInput } from '../schemas/behaviorCredentialSchema';
 import type { ProfileCredentialFormInput } from '../schemas/profileCredentialSchema';
+import type { MbaCredentialFormInput } from '../schemas/mbaCredentialSchema';
 
 type FormData =
   | ImpactCredentialFormInput
   | BehaviorCredentialFormInput
-  | ProfileCredentialFormInput;
+  | ProfileCredentialFormInput
+  | MbaCredentialFormInput;
 
 export type IssuanceStatus =
   | 'idle'

@@ -16,6 +16,7 @@ const TYPE_ICONS: Record<CredentialType, React.ReactNode> = {
   impact: <IconTrendingUp className="h-6 w-6 text-orange-500" />,
   behavior: <IconShieldCheck className="h-6 w-6 text-teal-600" />,
   profile: <IconIdBadge2 className="h-6 w-6 text-blue-600" />,
+  mba: <IconIdBadge2 className="h-6 w-6 text-emerald-600" />,
 };
 
 interface CredentialIssuedSuccessProps {

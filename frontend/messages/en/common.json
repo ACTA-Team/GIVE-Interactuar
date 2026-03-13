@@ -32,7 +32,8 @@
     "viewOnBlockchain": "View on blockchain",
     "download": "Download",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "logout": "Log out"
   },
   "status": {
     "draft": "Draft",
@@ -46,12 +47,14 @@
   "credentialTypes": {
     "impact": "Impact Credential",
     "behavior": "Behavior Credential",
-    "profile": "Profile & Formalization Credential"
+    "profile": "Profile & Formalization Credential",
+    "mba": "MBA Credential"
   },
   "credentialTypeDescriptions": {
     "impact": "Measures the entrepreneur's economic and social impact",
     "behavior": "Reflects financial and credit behavior",
-    "profile": "Documents the profile and formalization level"
+    "profile": "Documents the profile and formalization level",
+    "mba": "Certifies participation and cohort in the MBA program"
   },
   "toggle": {
     "yes": "Yes",
@@ -62,5 +65,17 @@
   "language": "Language",
   "auth": {
     "signOut": "Sign out"
+  },
+  "titles": {
+    "dashboard": "Home - Interactuar",
+    "entrepreneurs": "Entrepreneurs - Interactuar",
+    "credentials": "Credentials - Interactuar",
+    "credentialsNew": "Issue credential - Interactuar",
+    "credentialsClient": "Client - Interactuar",
+    "credentialsDetail": "Credential detail - Interactuar",
+    "entrepreneurDetail": "Entrepreneur detail - Interactuar",
+    "credentialsStorage": "Credentials storage - Interactuar",
+    "entrepreneurCredentialsList": "Credentials by entrepreneur - Interactuar",
+    "entrepreneurClientDetail": "Client detail - Interactuar"
   }
 }

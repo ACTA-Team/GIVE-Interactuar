@@ -6,9 +6,15 @@ export type EmpresarioRow = {
   gender: string | null;
   company: string | null;
   sector: string | null;
+  program: string | null;
+  partner: string | null;
+  municipality: string | null;
+  level: string | null;
   active_credit: string | null;
   delinquent: string | null;
   created_at: string;
+  group?: string | null;
+  cohort_year?: number | null;
 };
 
 const normalizeYesNo = (value: string | null): boolean => {
@@ -27,6 +33,13 @@ export function mapEmpresarioToDashboardEntrepreneur(
 ): DashboardEntrepreneur {
   const hasFunding = normalizeYesNo(row.active_credit);
   const isDelinquent = normalizeYesNo(row.delinquent);
+
+  const hasMbaProgram =
+    typeof row.program === 'string' &&
+    row.program.toLowerCase().includes('mba');
+  const hasMbaMetadata =
+    !!row.partner && !!row.level && !!row.group && row.cohort_year != null;
+  const mbaEligible = hasMbaProgram && hasMbaMetadata;
 
   return {
     id: row.id,
@@ -48,5 +61,10 @@ export function mapEmpresarioToDashboardEntrepreneur(
     createdAt: row.created_at,
     // No advisor info in the dataset yet, keep a placeholder
     advisorId: 'advisor-1',
+    program: row.program ?? undefined,
+    partner: row.partner ?? undefined,
+    municipality: row.municipality ?? undefined,
+    level: row.level ?? undefined,
+    mbaEligible,
   };
 }

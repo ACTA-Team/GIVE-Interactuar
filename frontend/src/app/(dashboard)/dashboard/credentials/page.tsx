@@ -1,10 +1,19 @@
 export const dynamic = 'force-dynamic';
 
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { CredentialsListPage } from '@/features/credentials/components/pages/CredentialsListPage';
 import { MOCK_ENTREPRENEURS } from '@/features/entrepreneurs/data/mock-entrepreneurs';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createCredentialRepository } from '@/features/credentials/repositories/credentialRepository';
 import type { VaultClientSummary } from '@/features/credentials/components/pages/CredentialsListPage';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('common');
+  return {
+    title: t('titles.credentials'),
+  };
+}
 
 export default async function Page() {
   const supabase = await createServerSupabaseClient();

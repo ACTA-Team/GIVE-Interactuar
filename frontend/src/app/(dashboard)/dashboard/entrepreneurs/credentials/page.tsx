@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { CredentialsListPage } from '@/features/credentials/components/pages/CredentialsListPage';
 import { Pagination } from '@/components/ui/pagination';
@@ -10,6 +11,13 @@ import {
   mapEmpresarioToDashboardEntrepreneur,
   type EmpresarioRow,
 } from '@/features/entrepreneurs/mappers/empresariosDashboardMapper';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('common');
+  return {
+    title: t('titles.entrepreneurCredentialsList'),
+  };
+}
 
 export default async function Page({
   searchParams,
@@ -36,7 +44,7 @@ export default async function Page({
   } = await supabase
     .from('empresarios')
     .select(
-      'id, name, company, sector, active_credit, delinquent, created_at',
+      'id, name, company, sector, active_credit, delinquent, created_at, program, partner, level, "group", cohort_year',
       { count: 'exact' },
     )
     .range(from, to);
@@ -58,6 +66,7 @@ export default async function Page({
         impact: credentials.filter((c) => c.credentialType === 'impact'),
         behavior: credentials.filter((c) => c.credentialType === 'behavior'),
         profile: credentials.filter((c) => c.credentialType === 'profile'),
+        mba: credentials.filter((c) => c.credentialType === 'mba'),
       };
 
       const issued = credentials.filter((c) => c.status === 'issued');
@@ -79,6 +88,7 @@ export default async function Page({
         impactCount: byType.impact.length,
         behaviorCount: byType.behavior.length,
         profileCount: byType.profile.length,
+        mbaCount: byType.mba.length,
         hasOnChain: credentials.some((c) => !!c.actaVcId),
       };
     }),

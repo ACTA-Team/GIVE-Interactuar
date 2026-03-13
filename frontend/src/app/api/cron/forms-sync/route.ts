@@ -30,7 +30,10 @@ export async function POST(request: Request) {
       .eq('active', true);
 
     if (sourcesError) {
-      console.error('[forms-sync cron] Failed to load form_sources:', sourcesError);
+      console.error(
+        '[forms-sync cron] Failed to load form_sources:',
+        sourcesError,
+      );
       return NextResponse.json(
         { error: 'Failed to load form sources' },
         { status: 500 },

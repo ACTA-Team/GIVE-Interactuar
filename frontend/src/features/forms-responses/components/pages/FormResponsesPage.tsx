@@ -109,12 +109,10 @@ export function FormResponsesPage() {
   }, []);
 
   const getPrimaryAnswer = (row: FormSubmissionRow): string | null => {
-    const answers = row.raw_answers as
-      | Record<
-          string,
-          { textAnswers?: { answers: Array<{ value: string }> } } | unknown
-        >
-      | null;
+    const answers = row.raw_answers as Record<
+      string,
+      { textAnswers?: { answers: Array<{ value: string }> } } | unknown
+    > | null;
 
     if (!answers) return null;
 

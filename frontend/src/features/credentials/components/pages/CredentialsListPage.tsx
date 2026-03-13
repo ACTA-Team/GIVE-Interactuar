@@ -7,25 +7,7 @@ import { ROUTES } from '@/lib/constants/routes';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/Badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Search,
-  ChevronRight,
-  ShieldCheck,
-  AlertTriangle,
-  DollarSign,
-  Activity,
-  UserCheck,
-  BarChart3,
-  Link2,
-  GraduationCap,
-} from 'lucide-react';
+import { Search, ChevronRight, ShieldCheck, AlertTriangle, DollarSign, Activity, UserCheck, BarChart3, Link2, GraduationCap } from 'lucide-react';
 import { Pagination } from '@/components/ui/pagination';
 import {
   CREDENTIAL_TYPE_CONFIG,
@@ -68,15 +50,8 @@ export function CredentialsListPage({
   const tc = useTranslations('common');
   const [search, setSearch] = useState('');
   const [selectedTypes, setSelectedTypes] = useState<CredentialTypeId[]>([]);
-  const [fundingFilter, setFundingFilter] = useState<
-    'all' | 'funded' | 'not-funded' | 'delinquent'
-  >('all');
-  const [onChainFilter, setOnChainFilter] = useState<
-    'all' | 'with' | 'without'
-  >('all');
-  const [hasCredentialsFilter, setHasCredentialsFilter] = useState<
-    'all' | 'with' | 'without'
-  >('all');
+  const [fundingFilter, setFundingFilter] = useState<'all' | 'funded'>('all');
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 12;
 
@@ -101,36 +76,19 @@ export function CredentialsListPage({
 
       const matchesFunding =
         fundingFilter === 'all' ||
-        (fundingFilter === 'funded' && c.hasFunding) ||
-        (fundingFilter === 'not-funded' && !c.hasFunding) ||
-        (fundingFilter === 'delinquent' && c.isDelinquent);
+        (fundingFilter === 'funded' && c.hasFunding);
 
-      const matchesOnChain =
-        onChainFilter === 'all' ||
-        (onChainFilter === 'with' && c.hasOnChain) ||
-        (onChainFilter === 'without' && !c.hasOnChain);
-
-      const matchesHasCredentials =
-        hasCredentialsFilter === 'all' ||
-        (hasCredentialsFilter === 'with' && c.totalCredentials > 0) ||
-        (hasCredentialsFilter === 'without' && c.totalCredentials === 0);
+      const matchesVerified =
+        !verifiedOnly || (verifiedOnly && c.hasOnChain);
 
       return (
         matchesSearch &&
         matchesType &&
         matchesFunding &&
-        matchesOnChain &&
-        matchesHasCredentials
+        matchesVerified
       );
     });
-  }, [
-    clients,
-    search,
-    selectedTypes,
-    fundingFilter,
-    onChainFilter,
-    hasCredentialsFilter,
-  ]);
+  }, [clients, search, selectedTypes, fundingFilter, verifiedOnly]);
 
   const totalPages = filtered.length
     ? Math.ceil(filtered.length / pageSize)
@@ -149,21 +107,6 @@ export function CredentialsListPage({
     );
     setPage(1);
   };
-  const handleFundingFilter = (
-    value: 'all' | 'funded' | 'not-funded' | 'delinquent',
-  ) => {
-    setFundingFilter(value);
-    setPage(1);
-  };
-  const handleOnChainFilter = (value: 'all' | 'with' | 'without') => {
-    setOnChainFilter(value);
-    setPage(1);
-  };
-  const handleHasCredentialsFilter = (value: 'all' | 'with' | 'without') => {
-    setHasCredentialsFilter(value);
-    setPage(1);
-  };
-
   const totalImpact = clients.reduce((acc, c) => acc + c.impactCount, 0);
   const totalBehavior = clients.reduce((acc, c) => acc + c.behaviorCount, 0);
   const totalProfile = clients.reduce((acc, c) => acc + c.profileCount, 0);
@@ -225,110 +168,53 @@ export function CredentialsListPage({
 
       {/* Search & Filters */}
       <Card className="shadow-sm">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder={t('vault.searchPlaceholder')}
-              className="pl-9"
-              value={search}
-              onChange={(e) => handleSearch(e.target.value)}
-            />
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center">
+            <div className="relative flex-1 min-w-0">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder={t('vault.searchPlaceholder')}
+                className="pl-9"
+                value={search}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setVerifiedOnly((prev) => !prev);
+                setPage(1);
+              }}
+              className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors shrink-0 ${
+                verifiedOnly
+                  ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200'
+                  : 'border-border bg-background text-muted-foreground hover:border-emerald-400'
+              }`}
+              aria-pressed={verifiedOnly}
+            >
+              <ShieldCheck className="h-3.5 w-3.5" />
+              {t('vault.onlyVerified')}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setFundingFilter((prev) => (prev === 'funded' ? 'all' : 'funded'));
+                setPage(1);
+              }}
+              className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors shrink-0 ${
+                fundingFilter === 'funded'
+                  ? 'border-sky-500 bg-sky-50 text-sky-700 dark:bg-sky-900/30 dark:text-sky-200'
+                  : 'border-border bg-background text-muted-foreground hover:border-sky-400'
+              }`}
+              aria-pressed={fundingFilter === 'funded'}
+            >
+              <DollarSign className="h-3.5 w-3.5" />
+              {t('vault.fundingFunded')}
+            </button>
           </div>
-
-          <div className="flex flex-wrap gap-3">
-            <Select
-              value={fundingFilter}
-              onValueChange={(value) =>
-                handleFundingFilter(
-                  (value ?? 'all') as
-                    | 'all'
-                    | 'funded'
-                    | 'not-funded'
-                    | 'delinquent',
-                )
-              }
-              items={{
-                all: t('vault.fundingAny'),
-                funded: t('vault.fundingFunded'),
-                'not-funded': t('vault.fundingNotFunded'),
-                delinquent: t('vault.fundingDelinquent'),
-              }}
-            >
-              <SelectTrigger className="w-[190px]">
-                <SelectValue placeholder={t('vault.filterByFundingStatus')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('vault.fundingAny')}</SelectItem>
-                <SelectItem value="funded">
-                  {t('vault.fundingFunded')}
-                </SelectItem>
-                <SelectItem value="not-funded">
-                  {t('vault.fundingNotFunded')}
-                </SelectItem>
-                <SelectItem value="delinquent">
-                  {t('vault.fundingDelinquent')}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={onChainFilter}
-              onValueChange={(value) =>
-                handleOnChainFilter(
-                  (value ?? 'all') as 'all' | 'with' | 'without',
-                )
-              }
-              items={{
-                all: t('vault.onChainAny'),
-                with: t('vault.onChainWith'),
-                without: t('vault.onChainWithout'),
-              }}
-            >
-              <SelectTrigger className="w-[190px]">
-                <SelectValue placeholder={t('vault.filterByOnChain')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('vault.onChainAny')}</SelectItem>
-                <SelectItem value="with">{t('vault.onChainWith')}</SelectItem>
-                <SelectItem value="without">
-                  {t('vault.onChainWithout')}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={hasCredentialsFilter}
-              onValueChange={(value) =>
-                handleHasCredentialsFilter(
-                  (value ?? 'all') as 'all' | 'with' | 'without',
-                )
-              }
-              items={{
-                all: t('vault.hasCredentialsAny'),
-                with: t('vault.hasCredentialsWith'),
-                without: t('vault.hasCredentialsWithout'),
-              }}
-            >
-              <SelectTrigger className="w-[210px]">
-                <SelectValue
-                  placeholder={t('vault.filterByCredentialPresence')}
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">
-                  {t('vault.hasCredentialsAny')}
-                </SelectItem>
-                <SelectItem value="with">
-                  {t('vault.hasCredentialsWith')}
-                </SelectItem>
-                <SelectItem value="without">
-                  {t('vault.hasCredentialsWithout')}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        </CardContent>
       </Card>
 
       {/* Client cards */}
@@ -437,13 +323,21 @@ export function CredentialsListPage({
                           )}
                         </div>
 
-                        {/* On-chain indicator */}
-                        {client.hasOnChain && (
-                          <div className="flex items-center gap-1 text-xs text-emerald-600">
-                            <Link2 className="h-3 w-3" />
-                            {t('vault.onChainCredentials')}
-                          </div>
-                        )}
+                        {/* Verified credentials and funding indicators */}
+                        <div className="flex flex-wrap gap-1.5">
+                          {client.hasOnChain && (
+                            <div className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200">
+                              <ShieldCheck className="h-3 w-3" />
+                              {t('vault.verifiedCredentials')}
+                            </div>
+                          )}
+                          {client.hasFunding && (
+                            <div className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-medium text-sky-700 dark:bg-sky-900/40 dark:text-sky-200">
+                              <DollarSign className="h-3 w-3" />
+                              {t('vault.fundingFunded')}
+                            </div>
+                          )}
+                        </div>
                       </>
                     ) : (
                       <p className="text-xs text-muted-foreground text-center py-2">
@@ -453,12 +347,6 @@ export function CredentialsListPage({
 
                     {/* Flags */}
                     <div className="flex items-center gap-2 flex-wrap">
-                      {client.hasFunding && (
-                        <Badge variant="info" className="gap-1 text-[10px]">
-                          <DollarSign className="h-3 w-3" />
-                          {t('vault.funded')}
-                        </Badge>
-                      )}
                       {client.isDelinquent && (
                         <Badge variant="danger" className="gap-1 text-[10px]">
                           <AlertTriangle className="h-3 w-3" />

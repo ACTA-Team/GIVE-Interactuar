@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  BarChart3,
-  GraduationCap,
-  Activity,
-  UserCheck,
-} from 'lucide-react';
+import { BarChart3, GraduationCap, Activity, UserCheck } from 'lucide-react';
 
 export type CredentialTypeId = 'impact' | 'mba' | 'behavior' | 'profile';
 

@@ -17,8 +17,7 @@ import {
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
 import { SidebarNavGroup } from './SidebarNavGroup';
-import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
-import { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 interface NavItemProps {
   icon: ReactNode;
@@ -73,8 +72,8 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
           <Image
             src="/assets/interactuar/interactuar-logo.svg"
             alt="Interactuar"
-            width={150}
-            height={150}
+            width={130}
+            height={36}
           />
         </div>
         <button
@@ -133,14 +132,8 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-gray-100 px-4 py-4 space-y-3">
-        {/* Language switcher row (where the green wallet box was) */}
-        <div className="flex justify-start">
-          <LanguageSwitcher />
-        </div>
-
-        {/* Organization + logout */}
-        <div className="flex items-center justify-between gap-3 pt-2 border-t border-gray-100">
+      <div className="border-t border-gray-100 px-4 py-4">
+        <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
               GI

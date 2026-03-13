@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ClientCredentialsPage } from '@/features/credentials/components/pages/ClientCredentialsPage';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
@@ -6,6 +8,13 @@ import {
   mapEmpresarioToDashboardEntrepreneur,
   type EmpresarioRow,
 } from '@/features/entrepreneurs/mappers/empresariosDashboardMapper';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('common');
+  return {
+    title: t('titles.credentialsClient'),
+  };
+}
 
 interface PageProps {
   params: Promise<{ entrepreneurId: string }>;

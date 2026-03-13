@@ -61,5 +61,17 @@
   },
   "showing": "Mostrando {count} de {total}",
   "selected": "{count} seleccionados",
-  "language": "Idioma"
+  "language": "Idioma",
+  "titles": {
+    "dashboard": "Inicio - Interactuar",
+    "entrepreneurs": "Emprendedores - Interactuar",
+    "credentials": "Credenciales - Interactuar",
+    "credentialsNew": "Emitir credencial - Interactuar",
+    "credentialsClient": "Cliente - Interactuar",
+    "credentialsDetail": "Detalle de credencial - Interactuar",
+    "entrepreneurDetail": "Detalle de emprendedor - Interactuar",
+    "credentialsStorage": "Almacén de credenciales - Interactuar",
+    "entrepreneurCredentialsList": "Credenciales por emprendedor - Interactuar",
+    "entrepreneurClientDetail": "Detalle de cliente - Interactuar"
+  }
 }

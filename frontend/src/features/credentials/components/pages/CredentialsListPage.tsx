@@ -7,7 +7,17 @@ import { ROUTES } from '@/lib/constants/routes';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/Badge';
-import { Search, ChevronRight, ShieldCheck, AlertTriangle, DollarSign, Activity, UserCheck, BarChart3, GraduationCap } from 'lucide-react';
+import {
+  Search,
+  ChevronRight,
+  ShieldCheck,
+  AlertTriangle,
+  DollarSign,
+  Activity,
+  UserCheck,
+  BarChart3,
+  GraduationCap,
+} from 'lucide-react';
 import { Pagination } from '@/components/ui/pagination';
 import {
   CREDENTIAL_TYPE_CONFIG,
@@ -75,18 +85,11 @@ export function CredentialsListPage({
         });
 
       const matchesFunding =
-        fundingFilter === 'all' ||
-        (fundingFilter === 'funded' && c.hasFunding);
+        fundingFilter === 'all' || (fundingFilter === 'funded' && c.hasFunding);
 
-      const matchesVerified =
-        !verifiedOnly || (verifiedOnly && c.hasOnChain);
+      const matchesVerified = !verifiedOnly || (verifiedOnly && c.hasOnChain);
 
-      return (
-        matchesSearch &&
-        matchesType &&
-        matchesFunding &&
-        matchesVerified
-      );
+      return matchesSearch && matchesType && matchesFunding && matchesVerified;
     });
   }, [clients, search, selectedTypes, fundingFilter, verifiedOnly]);
 
@@ -200,7 +203,9 @@ export function CredentialsListPage({
             <button
               type="button"
               onClick={() => {
-                setFundingFilter((prev) => (prev === 'funded' ? 'all' : 'funded'));
+                setFundingFilter((prev) =>
+                  prev === 'funded' ? 'all' : 'funded',
+                );
                 setPage(1);
               }}
               className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors shrink-0 ${

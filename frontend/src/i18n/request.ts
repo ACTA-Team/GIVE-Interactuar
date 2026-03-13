@@ -21,6 +21,8 @@ export default getRequestConfig(async () => {
     verification: (await import(`../../messages/${locale}/verification.json`))
       .default,
     errors: (await import(`../../messages/${locale}/errors.json`)).default,
+    setupWallet: (await import(`../../messages/${locale}/setupWallet.json`))
+      .default,
   };
 
   return { locale, messages };

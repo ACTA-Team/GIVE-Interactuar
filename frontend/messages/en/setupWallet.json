@@ -1,0 +1,39 @@
+{
+  "titleSetup": "Set up your wallet",
+  "titleReconnect": "Verify your identity",
+  "titleConfiguring": "Setting up your account",
+  "descNew": "Create a Stellar wallet secured with your fingerprint or Face ID. You don't need to remember any password.",
+  "descReconnect": "Authenticate with your fingerprint or Face ID to continue.",
+  "descConfiguring": "Creating your vault and permissions. Sign each step with your fingerprint or Face ID.",
+  "steps": {
+    "wallet": "Wallet",
+    "vault": "Vault",
+    "permissions": "Permissions"
+  },
+  "account": "Account",
+  "descCardConfiguring": "Sign with your passkey to complete setup.",
+  "descCardReconnect": "Confirm your wallet with passkey to access the dashboard.",
+  "descCardNew": "Your wallet will be linked to this email and protected with passkey.",
+  "creatingVault": "Creating vault...",
+  "configuringPermissions": "Configuring permissions...",
+  "saving": "Saving...",
+  "signPrompt": "Sign with your fingerprint or Face ID when the dialog appears.",
+  "retrySetup": "Retry setup",
+  "creatingWallet": "Creating wallet...",
+  "createNewWallet": "Create new wallet",
+  "continueWithPasskey": "Continue with passkey",
+  "connectExisting": "Connect existing wallet",
+  "connecting": "Connecting...",
+  "or": "or",
+  "errors": {
+    "noSession": "No session",
+    "saveFailed": "Error saving wallet",
+    "vaultFailed": "Error creating vault",
+    "authFailed": "Error authorizing issuer",
+    "createCancelled": "Creation cancelled. Try again.",
+    "createFailed": "Error creating wallet",
+    "connectCancelled": "Selection cancelled. Try again.",
+    "connectFailed": "Error connecting wallet"
+  },
+  "copyright": "© {year} Interactuar. All rights reserved."
+}

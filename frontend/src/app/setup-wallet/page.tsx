@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import {
   Loader2,
   AlertTriangle,
@@ -24,13 +25,15 @@ import { useVaultSetup } from '@/features/vault/hooks/useVaultSetup';
 
 type Phase = 'wallet' | 'vault_create' | 'vault_authorize' | 'saving';
 
-const STEPS = [
-  { key: 'wallet', label: 'Wallet' },
-  { key: 'vault_create', label: 'Vault' },
-  { key: 'vault_authorize', label: 'Permisos' },
+const STEP_KEYS = ['wallet', 'vault_create', 'vault_authorize'] as const;
+const STEP_LABEL_KEYS = [
+  'steps.wallet',
+  'steps.vault',
+  'steps.permissions',
 ] as const;
 
 export default function SetupWalletPage() {
+  const t = useTranslations('setupWallet');
   const router = useRouter();
   const searchParams = useSearchParams();
   const isReconnect = searchParams.get('reconnect') === '1';
@@ -74,7 +77,7 @@ export default function SetupWalletPage() {
         const {
           data: { user },
         } = await supabase.auth.getUser();
-        if (!user) throw new Error('Sin sesion');
+        if (!user) throw new Error(t('errors.noSession'));
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sb = supabase as any;
@@ -97,11 +100,11 @@ export default function SetupWalletPage() {
 
         router.replace('/dashboard');
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error guardando wallet');
+        setError(err instanceof Error ? err.message : t('errors.saveFailed'));
         setPhase('wallet');
       }
     },
-    [supabase, router, isReconnect, needsVaultSetup],
+    [supabase, router, isReconnect, needsVaultSetup, t],
   );
 
   const runVaultSetup = useCallback(
@@ -114,7 +117,7 @@ export default function SetupWalletPage() {
       if (vaultTx === null) {
         // "already exists" → continue; real errors → abort
         if (vaultStatus === 'error' && !isAlreadyDone(vaultError)) {
-          setError(vaultError ?? 'Error creando vault');
+          setError(vaultError ?? t('errors.vaultFailed'));
           setPhase('wallet');
           return;
         }
@@ -125,7 +128,7 @@ export default function SetupWalletPage() {
       const authTx = await handleAuthorizeIssuer(contractId);
       if (authTx === null) {
         if (vaultStatus === 'error' && !isAlreadyDone(vaultError)) {
-          setError(vaultError ?? 'Error autorizando emisor');
+          setError(vaultError ?? t('errors.authFailed'));
           setPhase('wallet');
           return;
         }
@@ -139,13 +142,14 @@ export default function SetupWalletPage() {
       vaultStatus,
       vaultError,
       saveWalletAndRedirect,
+      t,
     ],
   );
 
   const handleCreate = async () => {
     setError(null);
     try {
-      const result = await createWallet(userEmail ?? 'usuario');
+      const result = await createWallet(userEmail ?? 'user');
       if (result?.contractId) {
         setWalletContractId(result.contractId);
         await runVaultSetup(result.contractId);
@@ -154,8 +158,8 @@ export default function SetupWalletPage() {
       const e = err as Error;
       setError(
         e.name === 'NotAllowedError'
-          ? 'Creacion cancelada. Intenta de nuevo.'
-          : (e.message ?? 'Error creando la wallet'),
+          ? t('errors.createCancelled')
+          : (e.message ?? t('errors.createFailed')),
       );
     }
   };
@@ -179,8 +183,8 @@ export default function SetupWalletPage() {
       const e = err as Error;
       setError(
         e.name === 'NotAllowedError'
-          ? 'Seleccion cancelada. Intenta de nuevo.'
-          : (e.message ?? 'Error conectando la wallet'),
+          ? t('errors.connectCancelled')
+          : (e.message ?? t('errors.connectFailed')),
       );
     }
   };
@@ -223,28 +227,28 @@ export default function SetupWalletPage() {
             </div>
             <h1 className="text-2xl font-bold text-foreground">
               {showVaultProgress
-                ? 'Configurando tu cuenta'
+                ? t('titleConfiguring')
                 : isReconnect
-                  ? 'Verifica tu identidad'
-                  : 'Configura tu wallet'}
+                  ? t('titleReconnect')
+                  : t('titleSetup')}
             </h1>
             <p className="text-sm text-muted-foreground">
               {showVaultProgress
-                ? 'Creando tu vault y permisos. Firma cada paso con tu huella o Face ID.'
+                ? t('descConfiguring')
                 : isReconnect
-                  ? 'Autentica con tu huella o Face ID para continuar.'
-                  : 'Crea una wallet de Stellar protegida con tu huella o Face ID. No necesitas recordar ninguna clave.'}
+                  ? t('descReconnect')
+                  : t('descNew')}
             </p>
           </div>
 
           {/* Progress Steps */}
           {showVaultProgress && (
             <div className="flex items-center justify-center gap-2">
-              {STEPS.map((step, idx) => {
+              {STEP_KEYS.map((stepKey, idx) => {
                 const done = idx < currentStepIdx;
                 const active = idx === currentStepIdx - 1 && phase !== 'saving';
                 return (
-                  <div key={step.key} className="flex items-center gap-2">
+                  <div key={stepKey} className="flex items-center gap-2">
                     {idx > 0 && (
                       <div
                         className={`h-px w-6 ${done ? 'bg-primary' : 'bg-border'}`}
@@ -269,7 +273,7 @@ export default function SetupWalletPage() {
                       <span
                         className={`text-xs ${active ? 'font-medium text-foreground' : 'text-muted-foreground'}`}
                       >
-                        {step.label}
+                        {t(STEP_LABEL_KEYS[idx])}
                       </span>
                     </div>
                   </div>
@@ -283,17 +287,17 @@ export default function SetupWalletPage() {
               <CardTitle className="text-base">
                 {userEmail && (
                   <span className="font-normal text-muted-foreground">
-                    Cuenta:{' '}
+                    {t('account')}:{' '}
                   </span>
                 )}
                 {userEmail}
               </CardTitle>
               <CardDescription>
                 {showVaultProgress
-                  ? 'Firma con tu passkey para completar la configuracion.'
+                  ? t('descCardConfiguring')
                   : isReconnect
-                    ? 'Confirma tu wallet con passkey para acceder al dashboard.'
-                    : 'Tu wallet estara vinculada a este correo y protegida con passkey.'}
+                    ? t('descCardReconnect')
+                    : t('descCardNew')}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
@@ -310,14 +314,13 @@ export default function SetupWalletPage() {
                   <Loader2 className="h-5 w-5 animate-spin text-primary" />
                   <div>
                     <p className="text-sm font-medium text-foreground">
-                      {phase === 'vault_create' && 'Creando vault...'}
+                      {phase === 'vault_create' && t('creatingVault')}
                       {phase === 'vault_authorize' &&
-                        'Configurando permisos...'}
-                      {phase === 'saving' && 'Guardando...'}
+                        t('configuringPermissions')}
+                      {phase === 'saving' && t('saving')}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {phase !== 'saving' &&
-                        'Firma con tu huella o Face ID cuando aparezca el dialogo.'}
+                      {phase !== 'saving' && t('signPrompt')}
                     </p>
                   </div>
                 </div>
@@ -331,7 +334,7 @@ export default function SetupWalletPage() {
                   disabled={isBusy}
                 >
                   <Vault className="h-4 w-4" />
-                  Reintentar configuracion
+                  {t('retrySetup')}
                 </Button>
               )}
 
@@ -348,29 +351,27 @@ export default function SetupWalletPage() {
                         {isCreating ? (
                           <>
                             <Loader2 className="h-4 w-4 animate-spin" />
-                            Creando wallet...
+                            {t('creatingWallet')}
                           </>
                         ) : (
                           <>
                             <Fingerprint className="h-4 w-4" />
-                            Crear nueva wallet
+                            {t('createNewWallet')}
                           </>
                         )}
                       </Button>
-
                       <div className="relative my-1">
                         <div className="absolute inset-0 flex items-center">
                           <span className="w-full border-t" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
                           <span className="bg-card px-2 text-muted-foreground">
-                            o
+                            {t('or')}
                           </span>
                         </div>
                       </div>
                     </>
                   )}
-
                   <Button
                     variant={isReconnect ? 'default' : 'outline'}
                     className="w-full h-11 gap-2"
@@ -380,14 +381,14 @@ export default function SetupWalletPage() {
                     {isConnecting ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        Conectando...
+                        {t('connecting')}
                       </>
                     ) : (
                       <>
                         <ShieldCheck className="h-4 w-4" />
                         {isReconnect
-                          ? 'Continuar con passkey'
-                          : 'Conectar wallet existente'}
+                          ? t('continueWithPasskey')
+                          : t('connectExisting')}
                       </>
                     )}
                   </Button>
@@ -397,8 +398,9 @@ export default function SetupWalletPage() {
           </Card>
 
           <p className="text-center text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Interactuar. Todos los derechos
-            reservados.
+            {t('copyright', {
+              year: new Date().getFullYear(),
+            })}
           </p>
         </div>
       </div>

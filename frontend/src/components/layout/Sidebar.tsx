@@ -17,7 +17,6 @@ import {
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
 import { SidebarNavGroup } from './SidebarNavGroup';
-import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState, type ReactNode } from 'react';
 import type { User } from '@supabase/supabase-js';

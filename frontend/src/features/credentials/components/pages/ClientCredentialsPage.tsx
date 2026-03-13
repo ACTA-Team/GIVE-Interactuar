@@ -98,7 +98,11 @@ const TYPE_COLOR: Record<CredentialType, string> = {
 
 function CredentialRow({ credential }: { credential: Credential }) {
   const tc = useTranslations('common');
+  const t = useTranslations('credentials');
   const Icon = TYPE_ICON[credential.credentialType];
+
+  const claimLabels = t.raw('claimLabels') as Record<string, string>;
+  const getClaimLabel = (key: string) => claimLabels[key] ?? key;
 
   const getStatusLabel = (status: Credential['status']) => {
     const labels: Record<Credential['status'], string> = {
@@ -172,14 +176,52 @@ function CredentialRow({ credential }: { credential: Credential }) {
               <div className="mt-3 grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">
                 {Object.entries(credential.publicClaims)
                   .slice(0, 6)
-                  .map(([key, value]) => (
-                    <div key={key} className="text-xs">
-                      <span className="text-muted-foreground">{key}:</span>{' '}
-                      <span className="font-medium text-foreground">
-                        {String(value)}
-                      </span>
-                    </div>
-                  ))}
+                  .map(([key, value]) => {
+                    if (
+                      value !== null &&
+                      typeof value === 'object' &&
+                      key !== 'assessmentPeriod'
+                    ) {
+                      // Skip complex objects in the preview to avoid [object Object]
+                      return null;
+                    }
+
+                    let displayValue: string;
+
+                    if (
+                      key === 'assessmentPeriod' &&
+                      value &&
+                      typeof value === 'object'
+                    ) {
+                      const period = value as {
+                        startDate?: string;
+                        endDate?: string;
+                      };
+                      const formatDate = (d?: string) =>
+                        d
+                          ? new Date(d).toLocaleDateString('es-CO', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                            })
+                          : '';
+                      displayValue =
+                        `${formatDate(period.startDate)} — ${formatDate(period.endDate)}`.trim();
+                    } else {
+                      displayValue = String(value);
+                    }
+
+                    const label = getClaimLabel(key);
+
+                    return (
+                      <div key={key} className="text-xs">
+                        <span className="text-muted-foreground">{label}:</span>{' '}
+                        <span className="font-medium text-foreground">
+                          {displayValue}
+                        </span>
+                      </div>
+                    );
+                  })}
               </div>
             )}
         </div>
@@ -343,7 +385,10 @@ export function ClientCredentialsPage({
               </h2>
               <div className="flex flex-wrap items-center gap-2">
                 {empresario.status && (
-                  <Badge variant="outline" className="text-xs">
+                  <Badge
+                    variant="success"
+                    className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200"
+                  >
                     {empresario.status}
                   </Badge>
                 )}
@@ -476,41 +521,47 @@ export function ClientCredentialsPage({
       )}
 
       {/* Stats by type */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
-          <CardContent className="flex items-center gap-3 py-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10">
-              <BarChart3 className="h-4.5 w-4.5 text-blue-600" />
+          <CardContent className="flex items-center gap-2 py-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10">
+              <BarChart3 className="h-4 w-4 text-blue-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold tabular-nums">{impactCount}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xl font-semibold tabular-nums">
+                {impactCount}
+              </p>
+              <p className="text-[11px] text-muted-foreground">
                 {t('vault.impact')}
               </p>
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="flex items-center gap-3 py-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10">
-              <Activity className="h-4.5 w-4.5 text-amber-600" />
+          <CardContent className="flex items-center gap-2 py-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10">
+              <Activity className="h-4 w-4 text-amber-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold tabular-nums">{behaviorCount}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xl font-semibold tabular-nums">
+                {behaviorCount}
+              </p>
+              <p className="text-[11px] text-muted-foreground">
                 {t('vault.behavior')}
               </p>
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="flex items-center gap-3 py-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/10">
-              <UserCheck className="h-4.5 w-4.5 text-violet-600" />
+          <CardContent className="flex items-center gap-2 py-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10">
+              <UserCheck className="h-4 w-4 text-violet-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold tabular-nums">{profileCount}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xl font-semibold tabular-nums">
+                {profileCount}
+              </p>
+              <p className="text-[11px] text-muted-foreground">
                 {t('vault.profile')}
               </p>
             </div>
@@ -518,13 +569,13 @@ export function ClientCredentialsPage({
         </Card>
         {mbaEligible && (
           <Card>
-            <CardContent className="flex items-center gap-3 py-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10">
-                <GraduationCap className="h-4.5 w-4.5 text-emerald-600" />
+            <CardContent className="flex items-center gap-2 py-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
+                <GraduationCap className="h-4 w-4 text-emerald-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold tabular-nums">{mbaCount}</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xl font-semibold tabular-nums">{mbaCount}</p>
+                <p className="text-[11px] text-muted-foreground">
                   Credenciales MBA
                 </p>
               </div>

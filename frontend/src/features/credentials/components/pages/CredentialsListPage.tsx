@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants/routes';
 import { Card, CardContent } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/Badge';
 import {
@@ -139,17 +140,21 @@ export function CredentialsListPage({
                   : totalProfile;
           const isSelected = selectedTypes.includes(typeId);
           return (
-            <button
+            <label
               key={typeId}
-              type="button"
-              onClick={() => toggleTypeFilter(typeId)}
-              aria-pressed={isSelected}
               className={`
-                relative flex items-center gap-3 rounded-2xl px-4 py-4 text-left
-                transition-all duration-200 hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
+                relative flex cursor-pointer items-center gap-3 rounded-2xl px-4 py-4 text-left
+                transition-all duration-200 hover:scale-[1.02] hover:shadow-md active:scale-[0.99]
+                focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2
                 ${isSelected ? config.activeClasses : config.colorClasses}
               `}
             >
+              <Checkbox
+                checked={isSelected}
+                onCheckedChange={() => toggleTypeFilter(typeId)}
+                className="absolute right-3 top-3 shrink-0 border-2 border-foreground/40 data-[checked]:border-primary"
+                aria-label={t(`vault.${config.labelKey}`)}
+              />
               <div
                 className={`
                   flex h-10 w-10 shrink-0 items-center justify-center rounded-xl
@@ -158,13 +163,13 @@ export function CredentialsListPage({
               >
                 {config.icon}
               </div>
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0 flex-1 pr-6">
                 <p className="text-2xl font-bold tabular-nums">{total}</p>
                 <p className="text-xs font-medium text-muted-foreground">
                   {t(`vault.${config.labelKey}`)}
                 </p>
               </div>
-            </button>
+            </label>
           );
         })}
       </div>

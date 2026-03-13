@@ -21,7 +21,7 @@
     "business": "Negocio",
     "stage": "Etapa",
     "status": "Estado",
-    "delinquent": "Moroso ({days}d)",
+    "delinquent": "Cartera vencida ({days}d)",
     "upToDate": "Al día",
     "noResults": "No se encontraron empresarios"
   },

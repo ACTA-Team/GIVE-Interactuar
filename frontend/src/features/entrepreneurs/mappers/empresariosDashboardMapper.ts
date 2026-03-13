@@ -30,7 +30,7 @@ export function mapEmpresarioToDashboardEntrepreneur(
 
   return {
     id: row.id,
-    name: row.name,
+    name: row.name?.trim() || row.company?.trim() || 'Empresario',
     gender: row.gender ?? undefined,
     email: '',
     phone: '',

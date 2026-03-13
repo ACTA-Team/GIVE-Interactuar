@@ -32,6 +32,12 @@ type FormSubmissionRow = {
   raw_answers: Record<string, unknown> | null;
 };
 
+type TextAnswer = {
+  textAnswers?: { answers: Array<{ value: string }> };
+};
+
+type AnswersMap = Record<string, TextAnswer | unknown>;
+
 function baseParsed(dateString: string) {
   const d = new Date(dateString);
   const day = String(d.getDate()).padStart(2, '0');
@@ -88,10 +94,9 @@ export function FormResponsesPage() {
   const [selected, setSelected] = useState<FormSubmissionRow | null>(null);
 
   useEffect(() => {
-    const supabase = createClient();
-
     void (async () => {
-      const { data, error } = await (supabase as any)
+      const supabase = createClient();
+      const { data, error } = await supabase
         .from('form_submissions_raw')
         .select(
           'id, form_source_id, external_response_id, submitted_at, responder_email, raw_answers',
@@ -102,17 +107,13 @@ export function FormResponsesPage() {
       if (!error && data) {
         setRows(data as FormSubmissionRow[]);
       } else {
-        // eslint-disable-next-line no-console
         console.error('[FormResponsesPage] Failed to load submissions', error);
       }
     })();
   }, []);
 
   const getPrimaryAnswer = (row: FormSubmissionRow): string | null => {
-    const answers = row.raw_answers as Record<
-      string,
-      { textAnswers?: { answers: Array<{ value: string }> } } | unknown
-    > | null;
+    const answers = row.raw_answers as AnswersMap | null;
 
     if (!answers) return null;
 
@@ -120,10 +121,12 @@ export function FormResponsesPage() {
       if (
         value &&
         typeof value === 'object' &&
-        'textAnswers' in value &&
-        (value as any).textAnswers?.answers?.[0]?.value
+        'textAnswers' in value
       ) {
-        return String((value as any).textAnswers.answers[0].value);
+        const textValue = (value as TextAnswer).textAnswers?.answers?.[0]?.value;
+        if (typeof textValue === 'string' && textValue.length > 0) {
+          return textValue;
+        }
       }
     }
 

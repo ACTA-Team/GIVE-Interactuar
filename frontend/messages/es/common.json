@@ -31,7 +31,8 @@
     "viewOnBlockchain": "Ver en blockchain",
     "download": "Descargar",
     "copy": "Copiar",
-    "copied": "Copiado"
+    "copied": "Copiado",
+    "logout": "Cerrar sesión"
   },
   "status": {
     "draft": "Borrador",

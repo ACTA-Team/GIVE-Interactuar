@@ -14,6 +14,7 @@ import {
   IconX,
   IconWallet,
   IconPlugOff,
+  IconLogout,
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
@@ -163,42 +164,32 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
 
       {/* Footer */}
       <div className="border-t border-gray-100 px-4 py-4 space-y-3">
-        {mounted && wallet.connected && wallet.walletAddress && (
-          <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2">
-            <IconWallet className="h-4 w-4 text-emerald-600 shrink-0" />
-            <div className="flex flex-col min-w-0 flex-1">
-              <span className="text-[11px] font-medium text-emerald-700">
-                {wallet.walletName ?? t('wallet.connected')}
-              </span>
-              <span className="text-[10px] font-mono text-emerald-600 truncate">
-                {truncateAddress(wallet.walletAddress)}
-              </span>
-            </div>
-            <button
-              onClick={handleDisconnect}
-              disabled={disconnecting}
-              title={t('wallet.disconnect')}
-              className="shrink-0 rounded p-1 text-emerald-500 transition-colors hover:bg-emerald-100 hover:text-red-500 disabled:opacity-50"
-            >
-              <IconPlugOff className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        )}
-        <div className="flex justify-center border-t border-b border-gray-100 py-3">
+        {/* Language switcher row (where the green wallet box was) */}
+        <div className="flex justify-start">
           <LanguageSwitcher />
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
-            GI
+
+        {/* Organization + logout */}
+        <div className="flex items-center justify-between gap-3 pt-2 border-t border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
+              GI
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-gray-900">
+                {t('footer.team')}
+              </span>
+              <span className="text-xs text-gray-400">
+                {t('footer.organization')}
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-900">
-              {t('footer.team')}
-            </span>
-            <span className="text-xs text-gray-400">
-              {t('footer.organization')}
-            </span>
-          </div>
+          <button
+            type="button"
+            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+          >
+            <IconLogout className="h-3.5 w-3.5" />
+          </button>
         </div>
       </div>
     </div>

@@ -118,12 +118,9 @@ export function FormResponsesPage() {
     if (!answers) return null;
 
     for (const value of Object.values(answers)) {
-      if (
-        value &&
-        typeof value === 'object' &&
-        'textAnswers' in value
-      ) {
-        const textValue = (value as TextAnswer).textAnswers?.answers?.[0]?.value;
+      if (value && typeof value === 'object' && 'textAnswers' in value) {
+        const textValue = (value as TextAnswer).textAnswers?.answers?.[0]
+          ?.value;
         if (typeof textValue === 'string' && textValue.length > 0) {
           return textValue;
         }

@@ -139,6 +139,16 @@ export function CredentialDetailPage({
 
   const formatClaimValue = (key: string, value: unknown): string => {
     if (value === null || value === undefined) return '—';
+    if (key === 'activeCredit' && typeof value === 'object' && value !== null) {
+      const v = value as { exists?: boolean | null };
+      if (v.exists === true) {
+        return t('forms.creditCurrent');
+      }
+      if (v.exists === false) {
+        return t('forms.notValidated');
+      }
+      return String(value);
+    }
     if (typeof value === 'boolean')
       return value ? t('booleanYes') : t('booleanNo');
     if (typeof value === 'number') {
@@ -180,6 +190,99 @@ export function CredentialDetailPage({
       }
       return JSON.stringify(value);
     }
+    if (typeof value === 'string') {
+      const v = value as string;
+
+      if (key === 'registryValidation') {
+        const map: Record<string, string> = {
+          validated: t('forms.validated'),
+          partially_validated: t('forms.partiallyValidated'),
+          not_validated: t('forms.notValidated'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'monthlyIncomeStability') {
+        const map: Record<string, string> = {
+          high: t('forms.high'),
+          medium: t('forms.medium'),
+          low: t('forms.low'),
+          volatile: t('forms.volatile'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'commercialStability') {
+        const map: Record<string, string> = {
+          stable: t('forms.stable'),
+          seasonal: t('forms.seasonal'),
+          volatile: t('forms.volatile'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'financialTrend') {
+        const map: Record<string, string> = {
+          improving: t('forms.improving'),
+          stable: t('forms.stable'),
+          deteriorating: t('forms.deteriorating'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (
+        key === 'estimatedOperationalCapacity' ||
+        key === 'paymentCapacitySignal'
+      ) {
+        const map: Record<string, string> = {
+          strong: t('forms.signalStrong'),
+          moderate: t('forms.signalModerate'),
+          weak: t('forms.signalWeak'),
+          acceptable: t('forms.signalModerate'),
+          critical: t('forms.signalWeak'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'leverageLevel') {
+        const map: Record<string, string> = {
+          low: t('forms.levelLow'),
+          moderate: t('forms.levelMedium'),
+          high: t('forms.levelHigh'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'traceabilityLevel' || key === 'formalizationLevel') {
+        const map: Record<string, string> = {
+          high: t('forms.levelHigh'),
+          medium: t('forms.levelMedium'),
+          low: t('forms.levelLow'),
+          none: t('forms.levelNone'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'applicantStabilitySignal') {
+        const map: Record<string, string> = {
+          strong: t('forms.signalStrong'),
+          moderate: t('forms.signalModerate'),
+          weak: t('forms.signalWeak'),
+        };
+        if (map[v]) return map[v];
+      }
+
+      if (key === 'creditSegmentStart' || key === 'creditSegmentEnd') {
+        const map: Record<string, string> = {
+          microcredit: t('forms.creditSegments.microcredit'),
+          individual: t('forms.creditSegments.individual'),
+          solidary: t('forms.creditSegments.solidary'),
+          communal: t('forms.creditSegments.communal'),
+        };
+        if (map[v]) return map[v];
+      }
+    }
+
     const trendLabels: Record<string, string> = {
       growing: t('trendLabels.growing'),
       stable: t('trendLabels.stable'),

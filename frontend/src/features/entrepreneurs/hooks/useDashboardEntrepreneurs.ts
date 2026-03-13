@@ -16,7 +16,7 @@ export function useDashboardEntrepreneurs() {
       const { data, error } = await supabase
         .from('empresarios')
         .select(
-          'id, name, gender, company, sector, active_credit, delinquent, created_at',
+          'id, name, gender, company, sector, program, partner, municipality, level, active_credit, delinquent, created_at',
         );
 
       if (error) throw error;

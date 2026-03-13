@@ -11,18 +11,21 @@ import { CredentialTypeSelector } from './CredentialTypeSelector';
 import { BehaviorCredentialForm } from './BehaviorCredentialForm';
 import { ImpactCredentialForm } from './ImpactCredentialForm';
 import { ProfileCredentialForm } from './ProfileCredentialForm';
+import { MbaCredentialForm } from './MbaCredentialForm';
 import { CredentialIssuedSuccess } from './CredentialIssuedSuccess';
 import { useIssueCredential } from '../../hooks/useIssueCredential';
 import type { IssuanceStatus } from '../../hooks/useIssueCredential';
 import type { BehaviorCredentialFormInput } from '../../schemas/behaviorCredentialSchema';
 import type { ImpactCredentialFormInput } from '../../schemas/impactCredentialSchema';
 import type { ProfileCredentialFormInput } from '../../schemas/profileCredentialSchema';
+import type { MbaCredentialFormInput } from '../../schemas/mbaCredentialSchema';
 import { useEmpresarioPrefill } from '../../hooks/useEmpresarioPrefill';
 
 type FormData =
   | BehaviorCredentialFormInput
   | ImpactCredentialFormInput
-  | ProfileCredentialFormInput;
+  | ProfileCredentialFormInput
+  | MbaCredentialFormInput;
 
 interface CredentialIssuanceModalProps {
   open: boolean;
@@ -297,6 +300,48 @@ export function CredentialIssuanceModal({
     };
   }, [empresarioPrefill]);
 
+  const mbaDefaults = useMemo<
+    Partial<MbaCredentialFormInput> | undefined
+  >(() => {
+    if (!empresarioPrefill) return undefined;
+
+    const cohortYear = empresarioPrefill.cohortYear ?? 2024;
+    const programName = 'MBA Empresarial';
+    const programLevel = empresarioPrefill.level ?? 'Nivel 2';
+    const programGroup = empresarioPrefill.group ?? 'G7 Centro';
+    const partnerName = empresarioPrefill.partner ?? 'Alianza Comfama';
+
+    const programDisplayTitle = `${programName} · Cohorte ${cohortYear}`;
+    const subtitleParts = [
+      partnerName ? `Aliado: ${partnerName}` : null,
+      programLevel,
+      programGroup,
+    ].filter(Boolean);
+    const programDisplaySubtitle = subtitleParts.join(' · ');
+
+    return {
+      holderName: empresarioPrefill.name,
+      company: empresarioPrefill.company ?? '',
+      programName,
+      cohortYear,
+      cohortLabel: `Cohorte ${cohortYear}`,
+      partnerName,
+      programLevel,
+      programGroup,
+      programDisplayTitle,
+      programDisplaySubtitle,
+      datasetProgram: empresarioPrefill.program ?? null,
+      datasetPartner: empresarioPrefill.partner ?? null,
+      datasetStatus: empresarioPrefill.status ?? null,
+      datasetMunicipality: empresarioPrefill.municipality ?? null,
+      datasetSector: empresarioPrefill.sector ?? null,
+      datasetSalesPrevYearCop: empresarioPrefill.salesPrevYearCop ?? null,
+      datasetSalesCop: empresarioPrefill.salesCop ?? null,
+      datasetGrowthPct: empresarioPrefill.growthPct ?? null,
+      datasetNewJobs: empresarioPrefill.newJobs ?? null,
+    };
+  }, [empresarioPrefill]);
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
@@ -372,6 +417,14 @@ export function CredentialIssuanceModal({
               onSubmit={handleFormSubmit}
               onBack={handleBack}
               defaultValues={profileDefaults}
+            />
+          )}
+
+          {step === 2 && selectedType === 'mba' && (
+            <MbaCredentialForm
+              onSubmit={handleFormSubmit}
+              onBack={handleBack}
+              defaultValues={mbaDefaults}
             />
           )}
 

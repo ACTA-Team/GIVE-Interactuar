@@ -1,14 +1,17 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/Badge';
 import { IconCertificate, IconSearch } from '@tabler/icons-react';
-import { Building2 } from 'lucide-react';
+import { Building2, GraduationCap } from 'lucide-react';
 import { Pagination } from '@/components/ui/pagination';
 import { useDashboardEntrepreneurs } from '@/features/entrepreneurs/hooks/useDashboardEntrepreneurs';
+import { createClient } from '@/lib/supabase/client';
 import { CredentialIssuanceModal } from '../ui/CredentialIssuanceModal';
 
 interface CredentialIssuancePageProps {
@@ -20,6 +23,23 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
   const t = useTranslations('credentials');
   const tc = useTranslations('common');
   const { data: entrepreneurs = [] } = useDashboardEntrepreneurs();
+  const { data: mbaIssuedEntrepreneurs = [] } = useQuery<string[]>({
+    queryKey: ['mba-issued-entrepreneurs'],
+    queryFn: async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from('credentials')
+        .select('entrepreneur_id')
+        .eq('credential_type', 'mba');
+
+      if (error) throw error;
+
+      return (data ?? []).map(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (row: any) => row.entrepreneur_id as string,
+      );
+    },
+  });
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const pageSize = 10;
@@ -29,6 +49,11 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
     businessName: string;
   } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const mbaIssuedSet = useMemo(
+    () => new Set(mbaIssuedEntrepreneurs),
+    [mbaIssuedEntrepreneurs],
+  );
 
   const filtered = useMemo(() => {
     const term = search.toLowerCase().trim();
@@ -114,10 +139,19 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
                   .join('')}
               </div>
               <div>
-                <p className="text-sm font-medium text-foreground">
-                  {entrepreneur.name}
-                </p>
-                <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium text-foreground">
+                    {entrepreneur.name}
+                  </p>
+                  {entrepreneur.mbaEligible &&
+                    !mbaIssuedSet.has(entrepreneur.id) && (
+                    <Badge variant="info" className="gap-1 text-[10px]">
+                      <GraduationCap className="h-3 w-3" />
+                      {t('issuance.mbaPendingBadge')}
+                    </Badge>
+                  )}
+                </div>
+                <p className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
                   <Building2 className="h-3 w-3" />
                   {entrepreneur.businessName}
                 </p>

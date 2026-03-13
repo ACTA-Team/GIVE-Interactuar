@@ -13,6 +13,7 @@ import {
   BarChart3,
   Activity,
   UserCheck,
+  GraduationCap,
   Copy,
   CheckCircle2,
 } from 'lucide-react';
@@ -38,12 +39,14 @@ const TYPE_ICON: Record<CredentialType, typeof BarChart3> = {
   impact: BarChart3,
   behavior: Activity,
   profile: UserCheck,
+  mba: GraduationCap,
 };
 
 const TYPE_COLOR: Record<CredentialType, string> = {
   impact: 'bg-blue-500/10 text-blue-600',
   behavior: 'bg-amber-500/10 text-amber-600',
   profile: 'bg-violet-500/10 text-violet-600',
+  mba: 'bg-emerald-500/10 text-emerald-600',
 };
 
 function CopyButton({ text }: { text: string }) {

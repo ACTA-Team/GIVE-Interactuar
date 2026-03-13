@@ -8,11 +8,13 @@ import { computeImpactDerivedFields } from '@/features/credentials/schemas/impac
 import type { BehaviorCredentialFormInput } from '@/features/credentials/schemas/behaviorCredentialSchema';
 import { computeBehaviorDerivedFields } from '@/features/credentials/schemas/behaviorCredentialSchema';
 import type { ProfileCredentialFormInput } from '@/features/credentials/schemas/profileCredentialSchema';
+import type { MbaCredentialFormInput } from '@/features/credentials/schemas/mbaCredentialSchema';
 
 type FormData =
   | ImpactCredentialFormInput
   | BehaviorCredentialFormInput
-  | ProfileCredentialFormInput;
+  | ProfileCredentialFormInput
+  | MbaCredentialFormInput;
 
 interface VCPayload {
   '@context': string[];
@@ -109,6 +111,34 @@ function buildProfileSubject(
   };
 }
 
+function buildMbaSubject(
+  data: MbaCredentialFormInput,
+  entrepreneurId: string,
+): Record<string, unknown> {
+  return {
+    id: `urn:give:entrepreneur:${entrepreneurId}`,
+    holderName: data.holderName,
+    company: data.company ?? null,
+    programName: data.programName,
+    cohortYear: data.cohortYear,
+    cohortLabel: data.cohortLabel,
+    partnerName: data.partnerName,
+    programLevel: data.programLevel,
+    programGroup: data.programGroup,
+    programDisplayTitle: data.programDisplayTitle,
+    programDisplaySubtitle: data.programDisplaySubtitle,
+    datasetProgram: data.datasetProgram ?? null,
+    datasetPartner: data.datasetPartner ?? null,
+    datasetStatus: data.datasetStatus ?? null,
+    datasetMunicipality: data.datasetMunicipality ?? null,
+    datasetSector: data.datasetSector ?? null,
+    datasetSalesPrevYearCop: data.datasetSalesPrevYearCop ?? null,
+    datasetSalesCop: data.datasetSalesCop ?? null,
+    datasetGrowthPct: data.datasetGrowthPct ?? null,
+    datasetNewJobs: data.datasetNewJobs ?? null,
+  };
+}
+
 export function buildVCPayload(options: BuildVCOptions): VCPayload {
   const { credentialType, formData, entrepreneurId, issuerDid } = options;
 
@@ -121,6 +151,7 @@ export function buildVCPayload(options: BuildVCOptions): VCPayload {
     impact: buildImpactSubject as never,
     behavior: buildBehaviorSubject as never,
     profile: buildProfileSubject as never,
+    mba: buildMbaSubject as never,
   };
 
   const credentialSubject = subjectBuilders[credentialType](

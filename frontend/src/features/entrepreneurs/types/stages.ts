@@ -37,6 +37,7 @@ export interface DashboardEntrepreneur {
   delinquentDays?: number;
   createdAt: string;
   advisorId: string;
+  mbaEligible?: boolean;
 }
 
 export const STAGES: Stage[] = [

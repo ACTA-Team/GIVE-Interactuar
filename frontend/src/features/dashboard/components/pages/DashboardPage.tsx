@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import Link from 'next/link';
+import { useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Card,
@@ -10,38 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Users,
-  AlertTriangle,
-  GraduationCap,
-  ArrowUpRight,
-  ArrowDownRight,
-  CheckCircle2,
-  Shield,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
+import { AlertTriangle, Banknote, GraduationCap } from 'lucide-react';
 import {
   AreaChart,
   Area,
+  BarChart,
+  Bar,
   PieChart,
   Pie,
   Cell,
@@ -51,186 +24,54 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
-import { STAGES } from '@/features/entrepreneurs/types/stages';
-import { useDashboardEntrepreneurs } from '@/features/entrepreneurs/hooks/useDashboardEntrepreneurs';
+import { useDashboardData } from '../../hooks/useDashboardData';
+import { DashboardSkeleton } from '../DashboardSkeleton';
 
-type SortField = 'name' | 'stage' | 'delinquent';
-type SortDirection = 'asc' | 'desc';
+const COLORS = [
+  '#002E5C',
+  '#F15A24',
+  '#ADD8E6',
+  '#10B981',
+  '#8B5CF6',
+  '#F59E0B',
+];
+
+type PieChartId = 'partner' | 'interventionType' | 'gender' | 'level';
 
 export function DashboardPage() {
   const t = useTranslations('dashboard');
-  const tc = useTranslations('common');
+  const [activePieCategory, setActivePieCategory] = useState<
+    Partial<Record<PieChartId, string>>
+  >({});
+
+  const handlePieSelect = useCallback(
+    (chartId: PieChartId, categoryName: string | undefined) => {
+      setActivePieCategory((prev) => ({
+        ...prev,
+        [chartId]:
+          prev[chartId] === categoryName
+            ? undefined
+            : (categoryName ?? undefined),
+      }));
+    },
+    [],
+  );
+
   const {
-    data: entrepreneurs = [],
+    metrics,
     isLoading,
     error,
-  } = useDashboardEntrepreneurs();
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [sortField, setSortField] = useState<SortField>('delinquent');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
-  const [filterStage, setFilterStage] = useState<string>('all');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const PAGE_SIZE = 10;
-
-  const handleFilterStage = (value: string | null) => {
-    setFilterStage(value ?? 'all');
-    setCurrentPage(1);
-  };
-  const handleFilterStatus = (value: string | null) => {
-    setFilterStatus(value ?? 'all');
-    setCurrentPage(1);
-  };
-
-  const totalEntrepreneurs = entrepreneurs.length;
-  const delinquentCount = entrepreneurs.filter((e) => e.isDelinquent).length;
-  const fundedCount = entrepreneurs.filter((e) => e.hasFunding).length;
-  const inTraining = entrepreneurs.filter(
-    (e) => e.currentStage >= 1 && e.currentStage <= 3,
-  ).length;
-
-  const stageDistribution = STAGES.map((stage) => ({
-    name: t(`stages.${stage.id}`),
-    value: entrepreneurs.filter((e) => e.currentStage === stage.id).length,
-    id: stage.id,
-  })).filter((s) => s.value > 0);
-
-  const monthlyData = [
-    { month: t('months.jan'), empresarios: 45, financiados: 12 },
-    { month: t('months.feb'), empresarios: 52, financiados: 15 },
-    { month: t('months.mar'), empresarios: 61, financiados: 18 },
-    { month: t('months.apr'), empresarios: 67, financiados: 22 },
-    { month: t('months.may'), empresarios: 78, financiados: 28 },
-    {
-      month: t('months.jun'),
-      empresarios: totalEntrepreneurs,
-      financiados: fundedCount,
-    },
-  ];
-
-  const COLORS = [
-    '#002E5C',
-    '#F15A24',
-    '#ADD8E6',
-    '#10B981',
-    '#8B5CF6',
-    '#F59E0B',
-  ];
-
-  const filteredAndSortedEntrepreneurs = useMemo(() => {
-    const filtered = entrepreneurs.filter((e) => {
-      const matchesStage =
-        filterStage === 'all' || e.currentStage === parseInt(filterStage);
-      const matchesStatus =
-        filterStatus === 'all' ||
-        (filterStatus === 'delinquent' && e.isDelinquent) ||
-        (filterStatus === 'funded' && e.hasFunding) ||
-        (filterStatus === 'not-funded' && !e.hasFunding);
-      return matchesStage && matchesStatus;
-    });
-
-    return filtered.sort((a, b) => {
-      let comparison = 0;
-      switch (sortField) {
-        case 'name':
-          comparison = a.name.localeCompare(b.name);
-          break;
-        case 'stage':
-          comparison = a.currentStage - b.currentStage;
-          break;
-        case 'delinquent':
-          comparison = (a.isDelinquent ? 1 : 0) - (b.isDelinquent ? 1 : 0);
-          if (comparison === 0) {
-            comparison = (a.delinquentDays || 0) - (b.delinquentDays || 0);
-          }
-          break;
-        // funding removed from dashboard sorting
-      }
-      return sortDirection === 'desc' ? -comparison : comparison;
-    });
-  }, [entrepreneurs, sortField, sortDirection, filterStage, filterStatus]);
-
-  const normalizeGender = (value?: string) => {
-    if (!value) return 'unknown';
-    const normalized = value
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .trim()
-      .toLowerCase();
-
-    if (
-      normalized === 'f' ||
-      normalized === 'femenino' ||
-      normalized === 'mujer'
-    ) {
-      return 'female';
-    }
-    if (
-      normalized === 'm' ||
-      normalized === 'masculino' ||
-      normalized === 'hombre'
-    ) {
-      return 'male';
-    }
-    return 'unknown';
-  };
-
-  const femaleCount = entrepreneurs.filter(
-    (e) => normalizeGender(e.gender) === 'female',
-  ).length;
-  const maleCount = entrepreneurs.filter(
-    (e) => normalizeGender(e.gender) === 'male',
-  ).length;
-
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredAndSortedEntrepreneurs.length / PAGE_SIZE),
-  );
-  const paginatedEntrepreneurs = filteredAndSortedEntrepreneurs.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
-  );
-
-  const handleSelectAll = () => {
-    if (selectedIds.size === paginatedEntrepreneurs.length) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(paginatedEntrepreneurs.map((e) => e.id)));
-    }
-  };
-
-  const handleSelect = (id: string) => {
-    const newSelected = new Set(selectedIds);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-    } else {
-      newSelected.add(id);
-    }
-    setSelectedIds(newSelected);
-  };
-
-  const handleBulkCertify = (stageId: number) => {
-    // TODO: wire to certify service
-    console.log('Bulk certify', Array.from(selectedIds), 'stage', stageId);
-    setSelectedIds(new Set());
-  };
-
-  const toggleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSortField(field);
-      setSortDirection('desc');
-    }
-    setCurrentPage(1);
-  };
+    monthlyData,
+    interventionTypeDistribution,
+    partnerDistribution,
+    municipalityDistribution,
+    genderDistribution,
+    levelDistribution,
+    formatCurrency,
+  } = useDashboardData();
 
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <p className="text-muted-foreground">{t('loading')}</p>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (error) {
@@ -249,121 +90,60 @@ export function DashboardPage() {
         <p className="text-muted-foreground mt-1">{t('welcome')}</p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {/* Métricas principales */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              {t('stats.totalEntrepreneurs')}
+              {t('stats.totalFinanciado')}
             </CardTitle>
             <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Users className="h-4 w-4 text-primary" />
+              <Banknote className="h-4 w-4 text-primary" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{totalEntrepreneurs}</div>
-            <div className="flex items-center gap-1 mt-1 text-sm text-success">
-              <ArrowUpRight className="h-4 w-4" />
-              <span>{t('stats.thisMonth')}</span>
+            <div className="text-2xl font-bold">
+              {formatCurrency(metrics?.totalFinanciado ?? 0)}
             </div>
           </CardContent>
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary/20">
-            <div className="h-full bg-primary" style={{ width: '75%' }} />
-          </div>
-        </Card>
-
-        <Card className="relative overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              {t('stats.inTraining')}
-            </CardTitle>
-            <div className="h-8 w-8 rounded-full bg-[#ADD8E6]/30 flex items-center justify-center">
-              <GraduationCap className="h-4 w-4 text-primary" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{inTraining}</div>
-            <div className="flex items-center gap-1 mt-1 text-sm text-muted-foreground">
-              <span>{t('stats.stages1to3')}</span>
-            </div>
-          </CardContent>
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#ADD8E6]/40">
-            <div
-              className="h-full bg-[#ADD8E6]"
-              style={{
-                width: `${(inTraining / totalEntrepreneurs) * 100}%`,
-              }}
-            />
-          </div>
         </Card>
 
         <Card
-          className={`relative overflow-hidden ${delinquentCount > 0 ? 'border-destructive/50' : ''}`}
+          className={`relative overflow-hidden ${(metrics?.montoCarteraVencida ?? 0) > 0 ? 'border-destructive/50' : ''}`}
         >
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              {t('stats.delinquent')}
+              {t('stats.montoCarteraVencida')}
             </CardTitle>
             <div
-              className={`h-8 w-8 rounded-full ${delinquentCount > 0 ? 'bg-destructive/10' : 'bg-muted'} flex items-center justify-center`}
+              className={`h-8 w-8 rounded-full ${(metrics?.montoCarteraVencida ?? 0) > 0 ? 'bg-destructive/10' : 'bg-muted'} flex items-center justify-center`}
             >
               <AlertTriangle
-                className={`h-4 w-4 ${delinquentCount > 0 ? 'text-destructive' : 'text-muted-foreground'}`}
+                className={`h-4 w-4 ${(metrics?.montoCarteraVencida ?? 0) > 0 ? 'text-destructive' : 'text-muted-foreground'}`}
               />
             </div>
           </CardHeader>
           <CardContent>
             <div
-              className={`text-3xl font-bold ${delinquentCount > 0 ? 'text-destructive' : ''}`}
+              className={`text-2xl font-bold ${(metrics?.montoCarteraVencida ?? 0) > 0 ? 'text-destructive' : ''}`}
             >
-              {delinquentCount}
-            </div>
-            <div className="flex items-center gap-1 mt-1 text-sm">
-              {delinquentCount > 0 ? (
-                <span className="text-destructive flex items-center gap-1">
-                  <ArrowDownRight className="h-4 w-4" />
-                  {t('stats.needsAttention')}
-                </span>
-              ) : (
-                <span className="text-success flex items-center gap-1">
-                  <CheckCircle2 className="h-4 w-4" />
-                  {t('stats.allUpToDate')}
-                </span>
-              )}
+              {formatCurrency(metrics?.montoCarteraVencida ?? 0)}
             </div>
           </CardContent>
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-destructive/20">
-            <div
-              className="h-full bg-destructive"
-              style={{
-                width: `${(delinquentCount / Math.max(fundedCount, 1)) * 100}%`,
-              }}
-            />
-          </div>
         </Card>
 
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              {t('stats.genderDistribution')}
+              {t('stats.empresariosEnFormacion')}
             </CardTitle>
+            <div className="h-8 w-8 rounded-full bg-[#10B981]/20 flex items-center justify-center">
+              <GraduationCap className="h-4 w-4 text-[#10B981]" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-sm space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">
-                  {t('stats.female')}
-                </span>
-                <span className="font-semibold">
-                  {femaleCount} / {totalEntrepreneurs}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">{t('stats.male')}</span>
-                <span className="font-semibold">
-                  {maleCount} / {totalEntrepreneurs}
-                </span>
-              </div>
+            <div className="text-2xl font-bold">
+              {metrics?.personasEnPrograma ?? 0}
             </div>
           </CardContent>
         </Card>
@@ -448,28 +228,37 @@ export function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>{t('charts.stageDistribution')}</CardTitle>
-            <CardDescription>
-              {t('charts.stageDistributionDesc')}
-            </CardDescription>
+            <CardTitle>{t('charts.partnerPie')}</CardTitle>
+            <CardDescription>{t('charts.partnerPieDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[280px] flex items-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={stageDistribution}
+                    data={partnerDistribution}
                     cx="50%"
                     cy="50%"
                     innerRadius={60}
                     outerRadius={100}
                     paddingAngle={2}
                     dataKey="value"
+                    onClick={(sectorData, _index) =>
+                      handlePieSelect('partner', sectorData?.name ?? undefined)
+                    }
+                    style={{ cursor: 'pointer' }}
                   >
-                    {stageDistribution.map((_, index) => (
+                    {partnerDistribution.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}
+                        opacity={
+                          activePieCategory.partner == null ||
+                          entry.name === activePieCategory.partner
+                            ? 1
+                            : 0.35
+                        }
+                        style={{ cursor: 'pointer' }}
                       />
                     ))}
                   </Pie>
@@ -480,9 +269,8 @@ export function DashboardPage() {
                       borderRadius: '8px',
                       boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                     }}
-                    formatter={(value, name) => [
+                    formatter={(value) => [
                       t('charts.entrepreneursCount', { count: Number(value) }),
-                      `${name}`,
                     ]}
                   />
                   <Legend
@@ -490,6 +278,21 @@ export function DashboardPage() {
                     verticalAlign="middle"
                     align="right"
                     wrapperStyle={{ paddingLeft: '20px' }}
+                    onClick={(payload) =>
+                      handlePieSelect('partner', payload?.value ?? undefined)
+                    }
+                    formatter={(value) => (
+                      <span
+                        className={
+                          activePieCategory.partner === value
+                            ? 'font-semibold opacity-100'
+                            : 'opacity-70'
+                        }
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {value}
+                      </span>
+                    )}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -498,328 +301,285 @@ export function DashboardPage() {
         </Card>
       </div>
 
-      {/* Sortable Table - Top 10 */}
-      <Card>
+      {/* Gráfico grande: Distribución por tipo de intervención */}
+      <Card className="w-full">
         <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <CardTitle>{t('table.title')}</CardTitle>
-              <CardDescription>{t('table.top10Description')}</CardDescription>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <Select
-                value={filterStage}
-                onValueChange={handleFilterStage}
-                items={{
-                  all: t('filters.allStages'),
-                  ...Object.fromEntries(
-                    STAGES.map((s) => [
-                      s.id.toString(),
-                      t('table.stageLabel', { id: s.id }),
-                    ]),
-                  ),
-                }}
-              >
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder={t('filters.stage')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('filters.allStages')}</SelectItem>
-                  {STAGES.map((stage) => (
-                    <SelectItem key={stage.id} value={stage.id.toString()}>
-                      {t('table.stageLabel', { id: stage.id })}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={filterStatus}
-                onValueChange={handleFilterStatus}
-                items={{
-                  all: t('filters.allStatuses'),
-                  delinquent: t('filters.delinquent'),
-                  funded: t('filters.funded'),
-                  'not-funded': t('filters.notFunded'),
-                }}
-              >
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder={t('filters.status')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">
-                    {t('filters.allStatuses')}
-                  </SelectItem>
-                  <SelectItem value="delinquent">
-                    {t('filters.delinquent')}
-                  </SelectItem>
-                  <SelectItem value="funded">{t('filters.funded')}</SelectItem>
-                  <SelectItem value="not-funded">
-                    {t('filters.notFunded')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-
-              {selectedIds.size > 0 && (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">
-                    {tc('selected', { count: selectedIds.size })}
-                  </span>
-                  <Select
-                    onValueChange={(value: string | null) =>
-                      value && handleBulkCertify(parseInt(value))
-                    }
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <Shield className="h-4 w-4 mr-2" />
-                      <SelectValue placeholder={t('table.certifyStage')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {STAGES.map((stage) => (
-                        <SelectItem key={stage.id} value={stage.id.toString()}>
-                          {t('table.stageWithName', {
-                            id: stage.id,
-                            name: t(`stages.${stage.id}`),
-                          })}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-            </div>
-          </div>
+          <CardTitle className="text-xl">
+            {t('charts.interventionTypePie')}
+          </CardTitle>
+          <CardDescription className="text-base">
+            {t('charts.interventionTypePieDesc')}
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-lg border overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/50">
-                  <TableHead className="w-[50px]">
-                    <Checkbox
-                      checked={
-                        paginatedEntrepreneurs.length > 0 &&
-                        paginatedEntrepreneurs.every((e) =>
-                          selectedIds.has(e.id),
-                        )
+          <div className="h-[500px] flex items-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={interventionTypeDistribution}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={120}
+                  outerRadius={200}
+                  paddingAngle={2}
+                  dataKey="value"
+                  onClick={(sectorData, _index) =>
+                    handlePieSelect(
+                      'interventionType',
+                      sectorData?.name ?? undefined,
+                    )
+                  }
+                  style={{ cursor: 'pointer' }}
+                >
+                  {interventionTypeDistribution.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                      opacity={
+                        activePieCategory.interventionType == null ||
+                        entry.name === activePieCategory.interventionType
+                          ? 1
+                          : 0.35
                       }
-                      onCheckedChange={handleSelectAll}
+                      style={{ cursor: 'pointer' }}
                     />
-                  </TableHead>
-                  <TableHead>
-                    <button
-                      onClick={() => toggleSort('name')}
-                      className="flex items-center gap-1 hover:text-foreground transition-colors"
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #E2E8F0',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                  }}
+                  formatter={(value, name) => [
+                    t('charts.entrepreneursCount', { count: Number(value) }),
+                    name,
+                  ]}
+                />
+                <Legend
+                  layout="vertical"
+                  verticalAlign="middle"
+                  align="right"
+                  wrapperStyle={{ paddingLeft: '24px' }}
+                  iconSize={14}
+                  iconType="circle"
+                  onClick={(payload) =>
+                    handlePieSelect(
+                      'interventionType',
+                      payload?.value ?? undefined,
+                    )
+                  }
+                  formatter={(value) => (
+                    <span
+                      className={
+                        activePieCategory.interventionType === value
+                          ? 'font-semibold opacity-100'
+                          : 'opacity-70'
+                      }
+                      style={{ cursor: 'pointer' }}
                     >
-                      {t('table.entrepreneur')}
-                      {sortField === 'name' && (
-                        <span className="text-primary">
-                          {sortDirection === 'asc' ? '↑' : '↓'}
-                        </span>
-                      )}
-                    </button>
-                  </TableHead>
-                  <TableHead>{t('table.business')}</TableHead>
-                  <TableHead>
-                    <button
-                      onClick={() => toggleSort('stage')}
-                      className="flex items-center gap-1 hover:text-foreground transition-colors"
-                    >
-                      {t('table.stage')}
-                      {sortField === 'stage' && (
-                        <span className="text-primary">
-                          {sortDirection === 'asc' ? '↑' : '↓'}
-                        </span>
-                      )}
-                    </button>
-                  </TableHead>
-                  <TableHead>
-                    <button
-                      onClick={() => toggleSort('delinquent')}
-                      className="flex items-center gap-1 hover:text-foreground transition-colors"
-                    >
-                      {t('table.status')}
-                      {sortField === 'delinquent' && (
-                        <span className="text-primary">
-                          {sortDirection === 'asc' ? '↑' : '↓'}
-                        </span>
-                      )}
-                    </button>
-                  </TableHead>
-                  {/* Funding column removed from dashboard table */}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedEntrepreneurs.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="h-32 text-center">
-                      <p className="text-muted-foreground">
-                        {t('table.noResults')}
-                      </p>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  paginatedEntrepreneurs.map((entrepreneur) => {
-                    const currentStage = STAGES.find(
-                      (s) => s.id === entrepreneur.currentStage,
-                    );
-                    return (
-                      <TableRow
-                        key={entrepreneur.id}
-                        className={
-                          selectedIds.has(entrepreneur.id) ? 'bg-primary/5' : ''
-                        }
-                      >
-                        <TableCell>
-                          <Checkbox
-                            checked={selectedIds.has(entrepreneur.id)}
-                            onCheckedChange={() =>
-                              handleSelect(entrepreneur.id)
-                            }
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary font-medium text-sm">
-                              {entrepreneur.name
-                                .split(' ')
-                                .map((n) => n[0])
-                                .join('')
-                                .slice(0, 2)}
-                            </div>
-                            <div>
-                              <p className="font-medium">{entrepreneur.name}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {entrepreneur.email}
-                              </p>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <p className="font-medium">
-                            {entrepreneur.businessName}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {entrepreneur.businessType}
-                          </p>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="secondary" className="font-normal">
-                            {entrepreneur.currentStage}: {currentStage?.name}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {entrepreneur.isDelinquent ? (
-                            <Badge variant="danger" className="gap-1">
-                              <AlertTriangle className="h-3 w-3" />
-                              {t('table.delinquent', {
-                                days: entrepreneur.delinquentDays ?? 0,
-                              })}
-                            </Badge>
-                          ) : entrepreneur.hasFunding ? (
-                            <Badge variant="success" className="gap-1">
-                              <CheckCircle2 className="h-3 w-3" />
-                              {t('table.upToDate')}
-                            </Badge>
-                          ) : (
-                            <Badge
-                              variant="default"
-                              className="text-muted-foreground"
-                            >
-                              {t('table.notFunded')}
-                            </Badge>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </div>
-
-          <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
-            <p>
-              {tc('showing', {
-                count: paginatedEntrepreneurs.length,
-                total: filteredAndSortedEntrepreneurs.length,
-              })}
-            </p>
-
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-
-              {(() => {
-                // Always show exactly 2 consecutive boxes: [current, current+1]
-                // or [current-1, current] when on the last page.
-                const pair: number[] =
-                  currentPage < totalPages
-                    ? [currentPage, currentPage + 1]
-                    : totalPages > 1
-                      ? [currentPage - 1, currentPage]
-                      : [currentPage];
-
-                const showEllipsis =
-                  totalPages > 1 && pair[pair.length - 1] < totalPages;
-
-                return (
-                  <>
-                    {pair.map((page) => (
-                      <button
-                        key={page}
-                        onClick={() => setCurrentPage(page)}
-                        className={`flex h-8 w-8 items-center justify-center rounded-md border text-sm font-medium transition-colors ${
-                          currentPage === page
-                            ? 'border-primary bg-primary text-primary-foreground'
-                            : 'border-border hover:bg-muted'
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ))}
-                    {showEllipsis && (
-                      <>
-                        <span className="flex h-8 items-center justify-center px-1 text-muted-foreground">
-                          …
-                        </span>
-                        <button
-                          onClick={() => setCurrentPage(totalPages)}
-                          className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-sm font-medium transition-colors hover:bg-muted"
-                        >
-                          {totalPages}
-                        </button>
-                      </>
-                    )}
-                  </>
-                );
-              })()}
-
-              <button
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(totalPages, p + 1))
-                }
-                disabled={currentPage === totalPages}
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            <Link href="/dashboard/entrepreneurs">
-              <Button variant="link" className="gap-1 p-0">
-                {tc('buttons.viewAll')}
-                <ArrowUpRight className="h-4 w-4" />
-              </Button>
-            </Link>
+                      {value}
+                    </span>
+                  )}
+                />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
         </CardContent>
       </Card>
+
+      {/* Gráficos por género, etapas MBA y municipio */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('charts.genderPie')}</CardTitle>
+            <CardDescription>{t('charts.genderPieDesc')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[280px] flex items-center">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={genderDistribution}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={2}
+                    dataKey="value"
+                    onClick={(sectorData, _index) =>
+                      handlePieSelect('gender', sectorData?.name ?? undefined)
+                    }
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {genderDistribution.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                        opacity={
+                          activePieCategory.gender == null ||
+                          entry.name === activePieCategory.gender
+                            ? 1
+                            : 0.35
+                        }
+                        style={{ cursor: 'pointer' }}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    }}
+                    formatter={(value) => [
+                      t('charts.entrepreneursCount', { count: Number(value) }),
+                    ]}
+                  />
+                  <Legend
+                    layout="vertical"
+                    verticalAlign="middle"
+                    align="right"
+                    wrapperStyle={{ paddingLeft: '20px' }}
+                    onClick={(payload) =>
+                      handlePieSelect('gender', payload?.value ?? undefined)
+                    }
+                    formatter={(value) => (
+                      <span
+                        className={
+                          activePieCategory.gender === value
+                            ? 'font-semibold opacity-100'
+                            : 'opacity-70'
+                        }
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {value}
+                      </span>
+                    )}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('charts.levelPie')}</CardTitle>
+            <CardDescription>{t('charts.levelPieDesc')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[280px] flex items-center">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={levelDistribution}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={2}
+                    dataKey="value"
+                    onClick={(sectorData, _index) =>
+                      handlePieSelect('level', sectorData?.name ?? undefined)
+                    }
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {levelDistribution.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                        opacity={
+                          activePieCategory.level == null ||
+                          entry.name === activePieCategory.level
+                            ? 1
+                            : 0.35
+                        }
+                        style={{ cursor: 'pointer' }}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    }}
+                    formatter={(value) => [
+                      t('charts.entrepreneursCount', { count: Number(value) }),
+                    ]}
+                  />
+                  <Legend
+                    layout="vertical"
+                    verticalAlign="middle"
+                    align="right"
+                    wrapperStyle={{ paddingLeft: '20px' }}
+                    onClick={(payload) =>
+                      handlePieSelect('level', payload?.value ?? undefined)
+                    }
+                    formatter={(value) => (
+                      <span
+                        className={
+                          activePieCategory.level === value
+                            ? 'font-semibold opacity-100'
+                            : 'opacity-70'
+                        }
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {value}
+                      </span>
+                    )}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>{t('charts.municipalityPie')}</CardTitle>
+            <CardDescription>{t('charts.municipalityPieDesc')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[450px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={municipalityDistribution}
+                  margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
+                >
+                  <XAxis
+                    type="number"
+                    tick={{ fill: '#64748B', fontSize: 12 }}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    width={90}
+                    tick={{ fill: '#64748B', fontSize: 11 }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #E2E8F0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    }}
+                    formatter={(value) => [
+                      t('charts.entrepreneursCount', { count: Number(value) }),
+                    ]}
+                  />
+                  <Bar dataKey="value" fill="#002E5C" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

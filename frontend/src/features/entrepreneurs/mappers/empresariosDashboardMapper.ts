@@ -6,12 +6,13 @@ export type EmpresarioRow = {
   gender: string | null;
   company: string | null;
   sector: string | null;
+  program: string | null;
+  partner: string | null;
+  municipality: string | null;
+  level: string | null;
   active_credit: string | null;
   delinquent: string | null;
   created_at: string;
-  program?: string | null;
-  partner?: string | null;
-  level?: string | null;
   group?: string | null;
   cohort_year?: number | null;
 };
@@ -60,6 +61,10 @@ export function mapEmpresarioToDashboardEntrepreneur(
     createdAt: row.created_at,
     // No advisor info in the dataset yet, keep a placeholder
     advisorId: 'advisor-1',
+    program: row.program ?? undefined,
+    partner: row.partner ?? undefined,
+    municipality: row.municipality ?? undefined,
+    level: row.level ?? undefined,
     mbaEligible,
   };
 }

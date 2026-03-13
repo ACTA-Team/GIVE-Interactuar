@@ -16,21 +16,7 @@ export function useDashboardEntrepreneurs() {
       const { data, error } = await supabase
         .from('empresarios')
         .select(
-          [
-            'id',
-            'name',
-            'gender',
-            'company',
-            'sector',
-            'active_credit',
-            'delinquent',
-            'created_at',
-            'program',
-            'partner',
-            'level',
-            '"group"',
-            'cohort_year',
-          ].join(', '),
+          'id, name, gender, company, sector, program, partner, municipality, level, active_credit, delinquent, created_at, "group", cohort_year',
         );
 
       if (error) throw error;
@@ -53,7 +39,7 @@ export function useDashboardEntrepreneur(id: string | null) {
       const { data, error } = await supabase
         .from('empresarios')
         .select(
-          'id, name, company, sector, active_credit, delinquent, created_at',
+          'id, name, gender, company, sector, program, partner, municipality, level, active_credit, delinquent, created_at, "group", cohort_year',
         )
         .eq('id', id)
         .maybeSingle();

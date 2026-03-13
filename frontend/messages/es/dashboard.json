@@ -15,7 +15,10 @@
     "allUpToDate": "Todo al día",
     "genderDistribution": "Distribución por género",
     "female": "Mujeres",
-    "male": "Hombres"
+    "male": "Hombres",
+    "totalFinanciado": "Total financiado",
+    "montoCarteraVencida": "Monto cartera vencida",
+    "empresariosEnFormacion": "Empresarios en formación"
   },
   "charts": {
     "growthTrend": "Tendencia de Crecimiento",
@@ -24,7 +27,20 @@
     "stageDistributionDesc": "Estado actual de empresarios en el proceso",
     "entrepreneurs": "Empresarios",
     "funded": "Financiados",
-    "entrepreneursCount": "{count} empresarios"
+    "entrepreneursCount": "{count} empresarios",
+    "programPie": "Distribución por programa",
+    "programPieDesc": "Empresarios por programa",
+    "interventionTypePie": "Distribución por tipo de intervención",
+    "interventionTypePieDesc": "Registros por tipo de intervención (escuela)",
+    "partnerPie": "Distribución por partner",
+    "partnerPieDesc": "Empresarios por partner/aliado",
+    "municipalityPie": "Distribución por municipio",
+    "municipalityPieDesc": "Empresarios por municipio",
+    "unknown": "Sin especificar",
+    "genderPie": "Distribución por género",
+    "genderPieDesc": "Empresarios por género",
+    "levelPie": "Empresarios por etapa MBA",
+    "levelPieDesc": "Distribución por etapas del MicroMBA"
   },
   "stages": {
     "0": "Registro",

@@ -15,7 +15,10 @@
     "allUpToDate": "All up to date",
     "genderDistribution": "Gender distribution",
     "female": "Women",
-    "male": "Men"
+    "male": "Men",
+    "totalFinanciado": "Total funded",
+    "montoCarteraVencida": "Overdue portfolio amount",
+    "empresariosEnFormacion": "Entrepreneurs in training"
   },
   "charts": {
     "growthTrend": "Growth Trend",
@@ -24,7 +27,20 @@
     "stageDistributionDesc": "Current status of entrepreneurs in the process",
     "entrepreneurs": "Entrepreneurs",
     "funded": "Funded",
-    "entrepreneursCount": "{count} entrepreneurs"
+    "entrepreneursCount": "{count} entrepreneurs",
+    "programPie": "Distribution by program",
+    "programPieDesc": "Entrepreneurs by program",
+    "interventionTypePie": "Distribution by intervention type",
+    "interventionTypePieDesc": "Records by intervention type (escuela)",
+    "partnerPie": "Distribution by partner",
+    "partnerPieDesc": "Entrepreneurs by partner",
+    "municipalityPie": "Distribution by municipality",
+    "municipalityPieDesc": "Entrepreneurs by municipality",
+    "unknown": "Not specified",
+    "genderPie": "Gender distribution",
+    "genderPieDesc": "Entrepreneurs by gender",
+    "levelPie": "Entrepreneurs by MBA stage",
+    "levelPieDesc": "Distribution by MicroMBA stages"
   },
   "stages": {
     "0": "Registration",

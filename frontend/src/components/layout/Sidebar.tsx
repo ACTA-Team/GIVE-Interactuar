@@ -12,26 +12,13 @@ import {
   IconCertificate,
   IconPlus,
   IconX,
-  IconWallet,
-  IconPlugOff,
   IconLogout,
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
 import { SidebarNavGroup } from './SidebarNavGroup';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
-import { useWalletContext } from '@/lib/stellar/WalletContext';
-import { useWalletKit } from '@/lib/stellar/useWalletKit';
-import { useSyncExternalStore, useState, type ReactNode } from 'react';
-
-const subscribe = () => () => {};
-function useIsMounted() {
-  return useSyncExternalStore(
-    subscribe,
-    () => true,
-    () => false,
-  );
-}
+import { type ReactNode } from 'react';
 
 interface NavItemProps {
   icon: ReactNode;
@@ -68,26 +55,9 @@ interface SidebarProps {
   onMobileClose: () => void;
 }
 
-function truncateAddress(addr: string) {
-  return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-}
-
 export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
   const t = useTranslations('common');
-  const wallet = useWalletContext();
-  const mounted = useIsMounted();
-  const { disconnectWalletKit } = useWalletKit();
-  const [disconnecting, setDisconnecting] = useState(false);
-
-  const handleDisconnect = async () => {
-    setDisconnecting(true);
-    try {
-      await disconnectWalletKit();
-    } finally {
-      setDisconnecting(false);
-    }
-  };
 
   const isDashboardActive = pathname === ROUTES.dashboard;
   const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);

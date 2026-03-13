@@ -89,7 +89,8 @@ function ClaimsGrid({
       key !== '@context' &&
       key !== 'type' &&
       key !== 'issuer' &&
-      key !== 'validFrom',
+      key !== 'validFrom' &&
+      key !== 'id',
   );
 
   if (entries.length === 0) {
@@ -138,6 +139,7 @@ export function CredentialDetailPage({
   const getClaimLabel = (key: string) => claimLabels[key] ?? key;
 
   const formatClaimValue = (key: string, value: unknown): string => {
+    if (key === 'id') return '—';
     if (value === null || value === undefined) return '—';
     if (key === 'activeCredit' && typeof value === 'object' && value !== null) {
       const v = value as { exists?: boolean | null };

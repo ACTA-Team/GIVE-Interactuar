@@ -177,6 +177,9 @@ function CredentialRow({ credential }: { credential: Credential }) {
                 {Object.entries(credential.publicClaims)
                   .slice(0, 6)
                   .map(([key, value]) => {
+                    if (key === 'id') {
+                      return null;
+                    }
                     if (
                       value !== null &&
                       typeof value === 'object' &&

@@ -174,7 +174,6 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
 
       {/* Footer */}
       <div className="border-t border-gray-100 px-4 py-4 space-y-3">
-
         {user && (
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import {
@@ -14,10 +15,20 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Wallet, Loader2, AlertTriangle } from 'lucide-react';
 import { useWalletKit } from '@/lib/stellar/useWalletKit';
+import { useWalletContext } from '@/lib/stellar/WalletContext';
 
 export default function LoginPage() {
   const t = useTranslations('login');
   const tc = useTranslations('common');
+  const router = useRouter();
+  const { connected } = useWalletContext();
+
+  useEffect(() => {
+    if (connected) {
+      router.replace('/dashboard');
+    }
+  }, [connected, router]);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);

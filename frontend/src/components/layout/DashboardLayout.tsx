@@ -1,16 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import { IconMenu2 } from '@tabler/icons-react';
 import { Sidebar } from './Sidebar';
 import Image from 'next/image';
+import { useWalletContext } from '@/lib/stellar/WalletContext';
+
 interface DashboardLayoutProps {
   children: ReactNode;
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { connected } = useWalletContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!connected) {
+      router.replace('/');
+    }
+  }, [connected, router]);
+
+  if (!connected) return null;
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">

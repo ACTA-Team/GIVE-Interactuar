@@ -1,5 +1,5 @@
 -- =============================================================================
--- Migration: Recolección consolidado
+-- Migration: Data Collection Consolidated (Recolección consolidado)
 -- Source: Recolección ene-mar + abr + may (00. Medición de Impacto MicroMBA.xlsm)
 -- Generated: 2026-03-12
 -- =============================================================================
@@ -9,51 +9,51 @@
 -- has already been created in a prior migration (e.g. 20260312000000_credentials.sql).
 
 create table public.recoleccion (
-  id                          uuid            primary key default gen_random_uuid(),
-  cedula                      text            not null,
-  nombre_completo             text,
-  empresa                     text,
-  privacidad_aceptada         text,
+  id                      uuid            primary key default gen_random_uuid(),
+  document_number         text            not null,
+  full_name               text,
+  company                 text,
+  privacy_accepted        text,
 
-  -- Ingresos por mes (COP)
-  ventas_enero                bigint,
-  ventas_febrero              bigint,
-  ventas_marzo                bigint,
-  ventas_abril                bigint,
-  ventas_mayo                 bigint,
+  -- Monthly revenue (COP)
+  sales_january           bigint,
+  sales_february          bigint,
+  sales_march             bigint,
+  sales_april             bigint,
+  sales_may               bigint,
 
-  -- Costos y gastos por mes (COP)
-  costos_enero                bigint,
-  costos_febrero              bigint,
-  costos_marzo                bigint,
-  costos_abril                bigint,
-  costos_mayo                 bigint,
+  -- Monthly costs and expenses (COP)
+  costs_january           bigint,
+  costs_february          bigint,
+  costs_march             bigint,
+  costs_april             bigint,
+  costs_may               bigint,
 
-  -- Balance (disponible según hoja)
-  activos                     bigint,
-  pasivos                     bigint,
+  -- Balance sheet
+  assets                  bigint,
+  liabilities             bigint,
 
-  -- Cualitativos
-  factores_externos           text,
-  practicas_estrategias       text,
-  observaciones               text,
+  -- Qualitative
+  external_factors        text,
+  practices_strategies    text,
+  observations            text,
 
-  -- Crédito
-  necesita_credito            text,
-  monto_requerido             text,
-  destino_inversion           text,
+  -- Credit
+  needs_credit            text,
+  required_amount         text,
+  investment_destination  text,
 
-  -- Metadatos
-  hoja_origen                 text            not null,   -- 'Recolección ene-mar' | 'Recolección abr' | 'Recolección may'
-  created_at                  timestamptz     not null default now(),
-  updated_at                  timestamptz     not null default now()
+  -- Metadata
+  source_sheet            text            not null,   -- 'Recolección ene-mar' | 'Recolección abr' | 'Recolección may'
+  created_at              timestamptz     not null default now(),
+  updated_at              timestamptz     not null default now()
 );
 
-create index recoleccion_cedula_idx
-  on public.recoleccion(cedula);
+create index recoleccion_document_number_idx
+  on public.recoleccion(document_number);
 
-create index recoleccion_hoja_origen_idx
-  on public.recoleccion(hoja_origen);
+create index recoleccion_source_sheet_idx
+  on public.recoleccion(source_sheet);
 
 create trigger recoleccion_updated_at
   before update on public.recoleccion

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useQueryClient } from '@tanstack/react-query';
+import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,31 +29,47 @@ import { BUSINESS_TYPES } from '../../types/stages';
 export function NewEntrepreneurDialog() {
   const t = useTranslations('entrepreneurs');
   const tc = useTranslations('common');
+  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [businessType, setBusinessType] = useState('');
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!name || !email || !phone || !businessName || !businessType) return;
 
-    // TODO: wire to entrepreneur service
-    console.log('Create entrepreneur', {
-      name,
-      email,
-      phone,
-      businessName,
-      businessType,
-    });
+    setIsSubmitting(true);
+    try {
+      const supabase = createClient();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (supabase as any).from('empresarios').insert({
+        name,
+        company: businessName,
+        sector: businessType,
+        credit_requested: 'No',
+        delinquent: 'No',
+      });
 
-    setName('');
-    setEmail('');
-    setPhone('');
-    setBusinessName('');
-    setBusinessType('');
-    setIsOpen(false);
+      if (error) throw error;
+
+      await queryClient.invalidateQueries({
+        queryKey: ['dashboard-entrepreneurs'],
+      });
+
+      setName('');
+      setEmail('');
+      setPhone('');
+      setBusinessName('');
+      setBusinessType('');
+      setIsOpen(false);
+    } catch (err) {
+      console.error('Error creating entrepreneur:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -139,7 +157,12 @@ export function NewEntrepreneurDialog() {
           <Button
             onClick={handleCreate}
             disabled={
-              !name || !email || !phone || !businessName || !businessType
+              isSubmitting ||
+              !name ||
+              !email ||
+              !phone ||
+              !businessName ||
+              !businessType
             }
           >
             {t('newDialog.submit')}

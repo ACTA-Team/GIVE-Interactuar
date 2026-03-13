@@ -7,7 +7,7 @@ import { ROUTES } from '@/lib/constants/routes';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/Badge';
-import { Search, ChevronRight, ShieldCheck, AlertTriangle, DollarSign, Activity, UserCheck, BarChart3, Link2, GraduationCap } from 'lucide-react';
+import { Search, ChevronRight, ShieldCheck, AlertTriangle, DollarSign, Activity, UserCheck, BarChart3, GraduationCap } from 'lucide-react';
 import { Pagination } from '@/components/ui/pagination';
 import {
   CREDENTIAL_TYPE_CONFIG,

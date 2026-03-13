@@ -1,6 +1,11 @@
 import { z } from 'zod';
 
-export const CredentialTypeSchema = z.enum(['impact', 'behavior', 'profile']);
+export const CredentialTypeSchema = z.enum([
+  'impact',
+  'behavior',
+  'profile',
+  'mba',
+]);
 export const CredentialStatusSchema = z.enum([
   'draft',
   'issued',

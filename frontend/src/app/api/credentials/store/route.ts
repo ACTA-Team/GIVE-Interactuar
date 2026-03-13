@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const StoreCredentialSchema = z.object({
   entrepreneurId: z.string().min(1),
-  credentialType: z.enum(['impact', 'behavior', 'profile']),
+  credentialType: z.enum(['impact', 'behavior', 'profile', 'mba']),
   title: z.string().min(1),
   description: z.string().optional(),
   actaVcId: z.string().min(1),

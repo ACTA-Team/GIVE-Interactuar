@@ -45,12 +45,14 @@
   "credentialTypes": {
     "impact": "Credencial de Impacto",
     "behavior": "Credencial de Comportamiento",
-    "profile": "Credencial de Perfil y Formalización"
+    "profile": "Credencial de Perfil y Formalización",
+    "mba": "Credencial MBA Empresarial"
   },
   "credentialTypeDescriptions": {
     "impact": "Mide el impacto económico y social del empresario",
     "behavior": "Refleja el comportamiento financiero y crediticio",
-    "profile": "Documenta el perfil y nivel de formalización"
+    "profile": "Documenta el perfil y nivel de formalización",
+    "mba": "Acredita participación y cohorte en el MBA Empresarial"
   },
   "toggle": {
     "yes": "Sí",

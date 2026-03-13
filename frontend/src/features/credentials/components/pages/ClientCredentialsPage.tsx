@@ -18,6 +18,7 @@ import {
   BarChart3,
   Activity,
   UserCheck,
+  GraduationCap,
   Link2,
   ExternalLink,
   FileWarning,
@@ -85,12 +86,14 @@ const TYPE_ICON: Record<CredentialType, typeof BarChart3> = {
   impact: BarChart3,
   behavior: Activity,
   profile: UserCheck,
+  mba: GraduationCap,
 };
 
 const TYPE_COLOR: Record<CredentialType, string> = {
   impact: 'bg-blue-500/10 text-blue-600',
   behavior: 'bg-amber-500/10 text-amber-600',
   profile: 'bg-violet-500/10 text-violet-600',
+  mba: 'bg-emerald-500/10 text-emerald-600',
 };
 
 function CredentialRow({ credential }: { credential: Credential }) {
@@ -187,8 +190,6 @@ function CredentialRow({ credential }: { credential: Credential }) {
   );
 }
 
-const CREDENTIAL_TYPES: CredentialType[] = ['impact', 'behavior', 'profile'];
-
 export function ClientCredentialsPage({
   client,
   credentials,
@@ -196,6 +197,19 @@ export function ClientCredentialsPage({
 }: ClientCredentialsPageProps) {
   const t = useTranslations('credentials');
   const tc = useTranslations('common');
+
+  const mbaEligible =
+    !!empresario &&
+    !!empresario.program &&
+    empresario.program.toLowerCase().includes('mba') &&
+    !!empresario.partner &&
+    !!empresario.level &&
+    !!empresario.groupName &&
+    empresario.cohortYear != null;
+
+  const CREDENTIAL_TYPES: CredentialType[] = mbaEligible
+    ? ['impact', 'behavior', 'profile', 'mba']
+    : ['impact', 'behavior', 'profile'];
 
   const groupedCredentials = CREDENTIAL_TYPES.map((type) => ({
     type,
@@ -213,6 +227,7 @@ export function ClientCredentialsPage({
   const profileCount = credentials.filter(
     (c) => c.credentialType === 'profile',
   ).length;
+  const mbaCount = credentials.filter((c) => c.credentialType === 'mba').length;
 
   const displayName =
     client.name?.trim() ||
@@ -322,15 +337,23 @@ export function ClientCredentialsPage({
       {empresario && (
         <Card>
           <CardContent className="pt-5 pb-4 space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold text-foreground">
                 Información del empresario
               </h2>
-              {empresario.status && (
-                <Badge variant="outline" className="text-xs">
-                  {empresario.status}
-                </Badge>
-              )}
+              <div className="flex flex-wrap items-center gap-2">
+                {empresario.status && (
+                  <Badge variant="outline" className="text-xs">
+                    {empresario.status}
+                  </Badge>
+                )}
+                {mbaEligible && (
+                  <Badge variant="success" className="gap-1 text-xs">
+                    <GraduationCap className="h-3 w-3" />
+                    MBA listo para credencial
+                  </Badge>
+                )}
+              </div>
             </div>
 
             <div className="grid gap-4 md:grid-cols-3">
@@ -493,6 +516,21 @@ export function ClientCredentialsPage({
             </div>
           </CardContent>
         </Card>
+        {mbaEligible && (
+          <Card>
+            <CardContent className="flex items-center gap-3 py-4">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10">
+                <GraduationCap className="h-4.5 w-4.5 text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold tabular-nums">{mbaCount}</p>
+                <p className="text-xs text-muted-foreground">
+                  Credenciales MBA
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Credential sections by type */}

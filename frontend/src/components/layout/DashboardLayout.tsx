@@ -29,7 +29,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <IconMenu2 className="h-5 w-5" />
           </button>
           <Image
-            src="/interactuar-logo.svg"
+            src="/assets/interactuar/interactuar-logo.svg"
             alt="Interactuar"
             width={150}
             height={150}

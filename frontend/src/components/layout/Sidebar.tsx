@@ -101,7 +101,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
       <div className="flex items-center justify-between px-4">
         <div className="flex items-center gap-1">
           <Image
-            src="/interactuar-logo.svg"
+            src="/assets/interactuar/interactuar-logo.svg"
             alt="Interactuar"
             width={150}
             height={150}

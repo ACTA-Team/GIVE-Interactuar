@@ -214,6 +214,9 @@ export function ClientCredentialsPage({
     (c) => c.credentialType === 'profile',
   ).length;
 
+  const displayName =
+    client.name?.trim() || client.businessName?.trim() || t('client.unknownEntrepreneur');
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -226,7 +229,7 @@ export function ClientCredentialsPage({
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-foreground">
-              {client.name}
+              {displayName}
             </h1>
             <p className="text-muted-foreground mt-0.5">
               {t('client.vaultSubtitle')}
@@ -246,26 +249,43 @@ export function ClientCredentialsPage({
         <CardContent className="pt-5 pb-5">
           <div className="flex items-start gap-4">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-lg">
-              {client.name
+              {displayName
                 .split(' ')
                 .map((n) => n[0])
                 .join('')
                 .slice(0, 2)
-                .toUpperCase()}
+                .toUpperCase() || '?'}
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="flex items-center gap-2 text-sm">
-                  <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <span className="truncate">{client.businessName}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Briefcase className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <span>{client.businessType}</span>
+            <div className="flex-1 min-w-0 space-y-4">
+              <div>
+                <p className="font-semibold text-foreground">{displayName}</p>
+                <div className="mt-2 grid gap-x-6 gap-y-2 sm:grid-cols-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        {t('client.business')}
+                      </p>
+                      <p className="truncate font-medium">
+                        {client.businessName || '—'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Briefcase className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        {t('client.sector')}
+                      </p>
+                      <p className="font-medium">
+                        {client.businessType || '—'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 mt-3 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap">
                 {client.hasFunding && (
                   <Badge variant="info" className="gap-1">
                     <DollarSign className="h-3 w-3" />
@@ -282,6 +302,12 @@ export function ClientCredentialsPage({
                     {client.delinquentDays
                       ? ` ${t('client.delinquencyDays', { days: client.delinquentDays })}`
                       : ''}
+                  </Badge>
+                )}
+                {!client.hasFunding && !client.isDelinquent && (
+                  <Badge variant="secondary" className="gap-1">
+                    <DollarSign className="h-3 w-3" />
+                    {t('client.notFunded')}
                   </Badge>
                 )}
               </div>

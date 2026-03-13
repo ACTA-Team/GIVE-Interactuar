@@ -2,14 +2,8 @@
   "brand": "Interactuar",
   "subtitle": "Advisors Panel",
   "title": "Sign In",
-  "description": "Enter your credentials or connect your Stellar wallet",
-  "email": "Email",
-  "emailPlaceholder": "advisor@interactuar.com",
-  "password": "Password",
-  "passwordPlaceholder": "Minimum 6 characters",
-  "submit": "Sign In",
-  "submitting": "Signing in...",
-  "orContinueWith": "Or continue with",
-  "invalidCredentials": "Invalid credentials. Password must be at least 6 characters.",
-  "walletError": "Could not connect wallet."
+  "description": "Use your Google account to access the panel",
+  "continueWithGoogle": "Continue with Google",
+  "signingIn": "Signing in...",
+  "authError": "Could not sign in. Please try again."
 }

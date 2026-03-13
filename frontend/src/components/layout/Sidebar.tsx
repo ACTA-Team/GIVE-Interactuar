@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -12,25 +12,15 @@ import {
   IconCertificate,
   IconPlus,
   IconX,
-  IconWallet,
-  IconPlugOff,
+  IconLogout,
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
 import { SidebarNavGroup } from './SidebarNavGroup';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
-import { useWalletContext } from '@/lib/stellar/WalletContext';
-import { useWalletKit } from '@/lib/stellar/useWalletKit';
-import { useSyncExternalStore, useState, type ReactNode } from 'react';
-
-const subscribe = () => () => {};
-function useIsMounted() {
-  return useSyncExternalStore(
-    subscribe,
-    () => true,
-    () => false,
-  );
-}
+import { createClient } from '@/lib/supabase/client';
+import { useEffect, useState, type ReactNode } from 'react';
+import type { User } from '@supabase/supabase-js';
 
 interface NavItemProps {
   icon: ReactNode;
@@ -67,24 +57,45 @@ interface SidebarProps {
   onMobileClose: () => void;
 }
 
-function truncateAddress(addr: string) {
-  return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+function getUserInitials(user: User): string {
+  const name =
+    user.user_metadata?.full_name ??
+    user.user_metadata?.name ??
+    user.email ??
+    '';
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part: string) => part[0]?.toUpperCase() ?? '')
+    .join('');
 }
 
 export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations('common');
-  const wallet = useWalletContext();
-  const mounted = useIsMounted();
-  const { disconnectWalletKit } = useWalletKit();
-  const [disconnecting, setDisconnecting] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [signingOut, setSigningOut] = useState(false);
 
-  const handleDisconnect = async () => {
-    setDisconnecting(true);
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      },
+    );
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    setSigningOut(true);
     try {
-      await disconnectWalletKit();
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      router.push('/');
     } finally {
-      setDisconnecting(false);
+      setSigningOut(false);
     }
   };
 
@@ -163,43 +174,37 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
 
       {/* Footer */}
       <div className="border-t border-gray-100 px-4 py-4 space-y-3">
-        {mounted && wallet.connected && wallet.walletAddress && (
-          <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2">
-            <IconWallet className="h-4 w-4 text-emerald-600 shrink-0" />
-            <div className="flex flex-col min-w-0 flex-1">
-              <span className="text-[11px] font-medium text-emerald-700">
-                {wallet.walletName ?? t('wallet.connected')}
+        <div className="flex justify-center border-b border-gray-100 pb-3">
+          <LanguageSwitcher />
+        </div>
+
+        {user && (
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
+              {getUserInitials(user)}
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col">
+              <span className="truncate text-sm font-medium text-gray-900">
+                {user.user_metadata?.full_name ??
+                  user.user_metadata?.name ??
+                  user.email}
               </span>
-              <span className="text-[10px] font-mono text-emerald-600 truncate">
-                {truncateAddress(wallet.walletAddress)}
-              </span>
+              {(user.user_metadata?.full_name || user.user_metadata?.name) && (
+                <span className="truncate text-xs text-gray-400">
+                  {user.email}
+                </span>
+              )}
             </div>
             <button
-              onClick={handleDisconnect}
-              disabled={disconnecting}
-              title={t('wallet.disconnect')}
-              className="shrink-0 rounded p-1 text-emerald-500 transition-colors hover:bg-emerald-100 hover:text-red-500 disabled:opacity-50"
+              onClick={handleSignOut}
+              disabled={signingOut}
+              title={t('auth.signOut')}
+              className="shrink-0 rounded p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
             >
-              <IconPlugOff className="h-3.5 w-3.5" />
+              <IconLogout className="h-4 w-4" />
             </button>
           </div>
         )}
-        <div className="flex justify-center border-t border-b border-gray-100 py-3">
-          <LanguageSwitcher />
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
-            GI
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium text-gray-900">
-              {t('footer.team')}
-            </span>
-            <span className="text-xs text-gray-400">
-              {t('footer.organization')}
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   );

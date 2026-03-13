@@ -11,12 +11,7 @@ import { Pagination } from '@/components/ui/pagination';
 import { useDashboardEntrepreneurs } from '@/features/entrepreneurs/hooks/useDashboardEntrepreneurs';
 import { CredentialIssuanceModal } from '../ui/CredentialIssuanceModal';
 
-interface CredentialIssuancePageProps {
-  organizationId: string;
-  userId: string;
-}
-
-export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
+export function CredentialIssuancePage() {
   const t = useTranslations('credentials');
   const tc = useTranslations('common');
   const { data: entrepreneurs = [] } = useDashboardEntrepreneurs();

@@ -60,7 +60,6 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
       const { data, error } = await (client as any)
         .from('issuance_drafts')
         .insert({
-          organization_id: draft.organizationId,
           entrepreneur_id: draft.entrepreneurId,
           template_id: draft.templateId,
           latest_snapshot_id: draft.latestSnapshotId,

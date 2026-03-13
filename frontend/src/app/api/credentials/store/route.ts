@@ -10,8 +10,7 @@ const StoreCredentialSchema = z.object({
   actaVcId: z.string().min(1),
   issuerDid: z.string().min(1),
   publicClaims: z.record(z.unknown()).optional(),
-  organizationId: z.string().default('dev-org'),
-  createdBy: z.string().default('dev-user'),
+  createdBy: z.string().optional(),
 });
 
 /**
@@ -39,7 +38,6 @@ export async function POST(request: Request) {
       actaVcId,
       issuerDid,
       publicClaims,
-      organizationId,
       createdBy,
     } = parsed.data;
 
@@ -49,7 +47,6 @@ export async function POST(request: Request) {
     const { data, error } = await (supabase as any)
       .from('credentials')
       .insert({
-        organization_id: organizationId,
         entrepreneur_id: entrepreneurId,
         credential_type: credentialType,
         status: 'issued',

@@ -11,7 +11,6 @@ type RawRow = Record<string, unknown>;
 export function mapEntrepreneur(row: RawRow): Entrepreneur {
   return {
     id: row.id as string,
-    organizationId: row.organization_id as string,
     firstName: row.first_name as string,
     lastName: row.last_name as string,
     fullName: row.full_name as string,

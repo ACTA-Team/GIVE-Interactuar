@@ -2,9 +2,9 @@
 
 import { useState, useCallback } from 'react';
 import { useCredential } from '@acta-team/acta-sdk';
-import { useWalletContext } from '@/lib/stellar/WalletContext';
-import { useWalletKit } from '@/lib/stellar/useWalletKit';
+import { buildSignTransaction } from '@/lib/acta/signTransaction';
 import { buildVCPayload, generateVcId } from '@/lib/acta/vcPayloadBuilder';
+import { useSmartWallet } from '@/hooks/useSmartWallet';
 import type { CredentialType } from '../types';
 import { CREDENTIAL_TYPE_LABELS } from '../types';
 import type { ImpactCredentialFormInput } from '../schemas/impactCredentialSchema';
@@ -18,7 +18,6 @@ type FormData =
 
 export type IssuanceStatus =
   | 'idle'
-  | 'connecting_wallet'
   | 'building_payload'
   | 'issuing'
   | 'success'
@@ -31,10 +30,10 @@ export interface IssuanceResult {
   issuerDid: string;
 }
 
+
 export function useIssueCredential() {
   const { issue } = useCredential();
-  const { walletAddress, connected, signTransaction } = useWalletContext();
-  const { connectWithWalletKit } = useWalletKit();
+  const { wallet, contractId } = useSmartWallet();
 
   const [status, setStatus] = useState<IssuanceStatus>('idle');
   const [error, setError] = useState<string | null>(null);
@@ -51,17 +50,16 @@ export function useIssueCredential() {
       setError(null);
       setResult(null);
 
+      if (!wallet || !contractId) {
+        setError('No hay wallet conectada. Reconectá tu passkey.');
+        setStatus('error');
+        return null;
+      }
+
       try {
-        let address = walletAddress;
-
-        if (!connected || !address) {
-          setStatus('connecting_wallet');
-          address = await connectWithWalletKit();
-        }
-
         const network = process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? 'testnet';
-        const issuerDid = `did:pkh:stellar:${network}:${address}`;
-        const holderDid = `did:pkh:stellar:${network}:${address}`;
+        const issuerDid = `did:pkh:stellar:${network}:${contractId}`;
+        const holderDid = issuerDid;
         const vcId = generateVcId(params.credentialType, params.entrepreneurId);
 
         setStatus('building_payload');
@@ -77,11 +75,13 @@ export function useIssueCredential() {
 
         setStatus('issuing');
 
+        const signTransaction = buildSignTransaction();
+
         const { txId } = await issue({
-          owner: address,
+          owner: contractId,
           vcId,
           vcData: JSON.stringify(vcPayload),
-          issuer: address,
+          issuer: contractId,
           holder: holderDid,
           issuerDid,
           signTransaction,
@@ -90,53 +90,39 @@ export function useIssueCredential() {
         const issuanceResult: IssuanceResult = {
           vcId,
           txId,
-          issuerAddress: address,
+          issuerAddress: contractId,
           issuerDid,
         };
 
         setResult(issuanceResult);
         setStatus('success');
 
-        try {
-          await fetch('/api/credentials/store', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              entrepreneurId: params.entrepreneurId,
-              credentialType: params.credentialType,
-              title: `${CREDENTIAL_TYPE_LABELS[params.credentialType]} — ${params.entrepreneurName}`,
-              description: `Credencial emitida para ${params.businessName}`,
-              actaVcId: vcId,
-              issuerDid,
-              publicClaims: vcPayload.credentialSubject,
-            }),
-          });
-        } catch {
+        // Persist to Supabase (non-blocking)
+        fetch('/api/credentials/store', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            entrepreneurId: params.entrepreneurId,
+            credentialType: params.credentialType,
+            title: `${CREDENTIAL_TYPE_LABELS[params.credentialType]} — ${params.entrepreneurName}`,
+            description: `Credencial emitida para ${params.businessName}`,
+            actaVcId: vcId,
+            issuerDid,
+            publicClaims: vcPayload.credentialSubject,
+          }),
+        }).catch(() => {
           // Non-blocking: credential was issued on-chain even if local persistence fails
-        }
+        });
 
         return issuanceResult;
       } catch (err) {
         const message =
-          err instanceof Error
-            ? err.message
-            : 'Error desconocido al emitir la credencial';
+          err instanceof Error ? err.message : 'Error desconocido al emitir la credencial';
 
-        if (message.includes('denied') || message.includes('cancel')) {
-          setError('Transacción cancelada por el usuario.');
+        if (message.includes('denied') || message.includes('cancel') || message.includes('NotAllowed')) {
+          setError('Firma cancelada por el usuario.');
         } else if (message.includes('authorized')) {
-          setError(
-            'El emisor no está autorizado. Debes autorizar tu wallet en el vault primero.',
-          );
-        } else if (
-          message.includes('Freighter') ||
-          message.includes('wallet') ||
-          message.includes('instalado') ||
-          message.includes('WalletKit')
-        ) {
-          setError(
-            'No se pudo conectar la wallet. Asegúrate de tener Freighter instalado.',
-          );
+          setError('El emisor no está autorizado. Autorizá tu wallet en el vault primero.');
         } else {
           setError(message);
         }
@@ -145,7 +131,7 @@ export function useIssueCredential() {
         return null;
       }
     },
-    [issue, walletAddress, connected, signTransaction, connectWithWalletKit],
+    [issue, wallet, contractId],
   );
 
   const reset = useCallback(() => {
@@ -160,7 +146,7 @@ export function useIssueCredential() {
     error,
     result,
     reset,
-    walletAddress,
-    walletConnected: connected,
+    walletAddress: contractId,
+    walletConnected: !!wallet,
   };
 }

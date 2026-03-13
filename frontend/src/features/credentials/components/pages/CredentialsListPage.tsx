@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants/routes';
@@ -130,9 +130,11 @@ export function CredentialsListPage({
   const startIndex = (currentPage - 1) * pageSize;
   const pageItems = filtered.slice(startIndex, startIndex + pageSize);
 
-  useEffect(() => {
-    setPage(1);
-  }, [search, filterType, fundingFilter, onChainFilter, hasCredentialsFilter]);
+  const handleSearch = (value: string) => { setSearch(value); setPage(1); };
+  const handleFilterType = (value: 'all' | 'impact' | 'behavior' | 'profile') => { setFilterType(value); setPage(1); };
+  const handleFundingFilter = (value: 'all' | 'funded' | 'not-funded' | 'delinquent') => { setFundingFilter(value); setPage(1); };
+  const handleOnChainFilter = (value: 'all' | 'with' | 'without') => { setOnChainFilter(value); setPage(1); };
+  const handleHasCredentialsFilter = (value: 'all' | 'with' | 'without') => { setHasCredentialsFilter(value); setPage(1); };
 
   const totalImpact = clients.reduce((acc, c) => acc + c.impactCount, 0);
   const totalBehavior = clients.reduce((acc, c) => acc + c.behaviorCount, 0);
@@ -201,7 +203,7 @@ export function CredentialsListPage({
                 placeholder={t('vault.searchPlaceholder')}
                 className="pl-9"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
 
@@ -209,7 +211,7 @@ export function CredentialsListPage({
               <Select
                 value={filterType}
                 onValueChange={(value) =>
-                  setFilterType(
+                  handleFilterType(
                     (value ?? 'all') as
                       | 'all'
                       | 'impact'
@@ -240,7 +242,7 @@ export function CredentialsListPage({
               <Select
                 value={fundingFilter}
                 onValueChange={(value) =>
-                  setFundingFilter(
+                  handleFundingFilter(
                     (value ?? 'all') as
                       | 'all'
                       | 'funded'
@@ -275,7 +277,7 @@ export function CredentialsListPage({
               <Select
                 value={onChainFilter}
                 onValueChange={(value) =>
-                  setOnChainFilter(
+                  handleOnChainFilter(
                     (value ?? 'all') as 'all' | 'with' | 'without',
                   )
                 }
@@ -300,7 +302,7 @@ export function CredentialsListPage({
               <Select
                 value={hasCredentialsFilter}
                 onValueChange={(value) =>
-                  setHasCredentialsFilter(
+                  handleHasCredentialsFilter(
                     (value ?? 'all') as 'all' | 'with' | 'without',
                   )
                 }

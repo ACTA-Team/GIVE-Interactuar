@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Table,
@@ -21,48 +21,16 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/Button';
 import { useTranslations as useFormsTranslations } from 'next-intl';
+import { createClient } from '@/lib/supabase/client';
 
-type FormResponse = {
+type FormSubmissionRow = {
   id: string;
-  submittedAt: string;
-  nombre: string;
-  email: string;
-  telefono?: string | null;
-  fuente?: string | null;
-  estado?: string | null;
-  payload: Record<string, unknown>;
+  form_source_id: string;
+  external_response_id: string;
+  submitted_at: string | null;
+  responder_email: string | null;
+  raw_answers: Record<string, unknown> | null;
 };
-
-const MOCK_RESPONSES: FormResponse[] = [
-  {
-    id: '1',
-    submittedAt: new Date().toISOString(),
-    nombre: 'Ana Gómez',
-    email: 'ana@example.com',
-    telefono: '+57 300 123 4567',
-    fuente: 'Formulario web',
-    estado: 'Nuevo',
-    payload: {
-      proyecto: 'Emprendimiento gastronómico',
-      ciudad: 'Medellín',
-      comentario: 'Quiero recibir acompañamiento para formalizar mi negocio.',
-    },
-  },
-  {
-    id: '2',
-    submittedAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-    nombre: 'Carlos Ruiz',
-    email: 'carlos@example.com',
-    telefono: '+57 310 987 6543',
-    fuente: 'Google Forms',
-    estado: 'En revisión',
-    payload: {
-      proyecto: 'Servicios de reparación de bicicletas',
-      ciudad: 'Bogotá',
-      comentario: 'Busco financiación para ampliar mi taller.',
-    },
-  },
-];
 
 function baseParsed(dateString: string) {
   const d = new Date(dateString);
@@ -116,9 +84,53 @@ function formatFull(dateString: string) {
 export function FormResponsesPage() {
   const t = useTranslations('dashboard.forms');
   const tf = useFormsTranslations('forms.forms');
-  const [selected, setSelected] = useState<FormResponse | null>(null);
+  const [rows, setRows] = useState<FormSubmissionRow[]>([]);
+  const [selected, setSelected] = useState<FormSubmissionRow | null>(null);
 
-  const rows = useMemo(() => MOCK_RESPONSES, []);
+  useEffect(() => {
+    const supabase = createClient();
+
+    void (async () => {
+      const { data, error } = await (supabase as any)
+        .from('form_submissions_raw')
+        .select(
+          'id, form_source_id, external_response_id, submitted_at, responder_email, raw_answers',
+        )
+        .order('submitted_at', { ascending: false })
+        .limit(100);
+
+      if (!error && data) {
+        setRows(data as FormSubmissionRow[]);
+      } else {
+        // eslint-disable-next-line no-console
+        console.error('[FormResponsesPage] Failed to load submissions', error);
+      }
+    })();
+  }, []);
+
+  const getPrimaryAnswer = (row: FormSubmissionRow): string | null => {
+    const answers = row.raw_answers as
+      | Record<
+          string,
+          { textAnswers?: { answers: Array<{ value: string }> } } | unknown
+        >
+      | null;
+
+    if (!answers) return null;
+
+    for (const value of Object.values(answers)) {
+      if (
+        value &&
+        typeof value === 'object' &&
+        'textAnswers' in value &&
+        (value as any).textAnswers?.answers?.[0]?.value
+      ) {
+        return String((value as any).textAnswers.answers[0].value);
+      }
+    }
+
+    return null;
+  };
 
   return (
     <div className="space-y-6">
@@ -160,21 +172,25 @@ export function FormResponsesPage() {
                 <TableRow key={response.id}>
                   <TableCell>
                     <span className="block text-xs text-gray-500">
-                      {formatDate(response.submittedAt)}
+                      {response.submitted_at
+                        ? formatDate(response.submitted_at)
+                        : '—'}
                     </span>
                     <span className="text-sm font-medium text-gray-800">
-                      {formatTime(response.submittedAt)}
+                      {response.submitted_at
+                        ? formatTime(response.submitted_at)
+                        : '—'}
                     </span>
                   </TableCell>
                   <TableCell className="text-sm text-gray-900">
-                    {response.nombre}
+                    {getPrimaryAnswer(response) ?? '—'}
                   </TableCell>
                   <TableCell className="text-sm text-gray-600">
-                    {response.email}
+                    {response.responder_email ?? '—'}
                   </TableCell>
                   <TableCell>
                     <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
-                      {response.estado ?? 'Sin estado'}
+                      {t('status.unknown')}
                     </span>
                   </TableCell>
                   <TableCell className="text-sm text-gray-500">
@@ -203,7 +219,7 @@ export function FormResponsesPage() {
                                 {t('detail.fields.name')}
                               </p>
                               <p className="mt-0.5 text-gray-900">
-                                {response.nombre}
+                                {getPrimaryAnswer(response) ?? '—'}
                               </p>
                             </div>
                             <div>
@@ -211,25 +227,18 @@ export function FormResponsesPage() {
                                 {t('detail.fields.email')}
                               </p>
                               <p className="mt-0.5 text-gray-900">
-                                {response.email}
+                                {response.responder_email ?? '—'}
                               </p>
                             </div>
-                            {response.telefono && (
-                              <div>
-                                <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-                                  {t('detail.fields.phone')}
-                                </p>
-                                <p className="mt-0.5 text-gray-900">
-                                  {response.telefono}
-                                </p>
-                              </div>
-                            )}
+                            {/* Phone is not currently stored separately; slot kept for future mapping */}
                             <div>
                               <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
                                 {t('detail.fields.arrivalAt')}
                               </p>
                               <p className="mt-0.5 text-gray-900">
-                                {formatFull(response.submittedAt)}
+                                {response.submitted_at
+                                  ? formatFull(response.submitted_at)
+                                  : '—'}
                               </p>
                             </div>
                             <div>
@@ -257,21 +266,23 @@ export function FormResponsesPage() {
                               {t('detail.fields.payload')}
                             </p>
                             <div className="space-y-2 rounded-lg bg-gray-50 p-3">
-                              {Object.entries(response.payload).map(
-                                ([key, value]) => (
-                                  <div
-                                    key={key}
-                                    className="flex items-start justify-between gap-4"
-                                  >
-                                    <span className="text-xs font-medium text-gray-500">
-                                      {key}
-                                    </span>
-                                    <span className="flex-1 text-right text-sm text-gray-900">
-                                      {String(value)}
-                                    </span>
-                                  </div>
-                                ),
-                              )}
+                              {response.raw_answers
+                                ? Object.entries(response.raw_answers).map(
+                                    ([key, value]) => (
+                                      <div
+                                        key={key}
+                                        className="flex items-start justify-between gap-4"
+                                      >
+                                        <span className="text-xs font-medium text-gray-500">
+                                          {key}
+                                        </span>
+                                        <span className="flex-1 text-right text-xs text-gray-900 break-all">
+                                          {JSON.stringify(value)}
+                                        </span>
+                                      </div>
+                                    ),
+                                  )
+                                : null}
                             </div>
                           </div>
                         </div>

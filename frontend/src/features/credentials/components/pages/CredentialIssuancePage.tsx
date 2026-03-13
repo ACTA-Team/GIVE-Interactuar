@@ -145,11 +145,11 @@ export function CredentialIssuancePage({}: CredentialIssuancePageProps) {
                   </p>
                   {entrepreneur.mbaEligible &&
                     !mbaIssuedSet.has(entrepreneur.id) && (
-                    <Badge variant="info" className="gap-1 text-[10px]">
-                      <GraduationCap className="h-3 w-3" />
-                      {t('issuance.mbaPendingBadge')}
-                    </Badge>
-                  )}
+                      <Badge variant="info" className="gap-1 text-[10px]">
+                        <GraduationCap className="h-3 w-3" />
+                        {t('issuance.mbaPendingBadge')}
+                      </Badge>
+                    )}
                 </div>
                 <p className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
                   <Building2 className="h-3 w-3" />

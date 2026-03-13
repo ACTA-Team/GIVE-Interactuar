@@ -227,9 +227,7 @@ export function ClientCredentialsPage({
   const profileCount = credentials.filter(
     (c) => c.credentialType === 'profile',
   ).length;
-  const mbaCount = credentials.filter(
-    (c) => c.credentialType === 'mba',
-  ).length;
+  const mbaCount = credentials.filter((c) => c.credentialType === 'mba').length;
 
   const displayName =
     client.name?.trim() ||

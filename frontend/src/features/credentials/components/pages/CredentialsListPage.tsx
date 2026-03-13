@@ -195,9 +195,7 @@ export function CredentialsListPage({
               </div>
               <div>
                 <p className="text-2xl font-bold tabular-nums">{totalMba}</p>
-                <p className="text-xs text-muted-foreground">
-                  MBA
-                </p>
+                <p className="text-xs text-muted-foreground">MBA</p>
               </div>
             </CardContent>
           </Card>
@@ -472,8 +470,7 @@ export function CredentialsListPage({
                               className="gap-1 text-[10px] bg-orange-50 text-orange-600 border-transparent"
                             >
                               <GraduationCap className="h-3 w-3" />
-                              {client.mbaCount}{' '}
-                              MBA
+                              {client.mbaCount} MBA
                             </Badge>
                           )}
                         </div>

@@ -27,4 +27,3 @@ export const mbaCredentialFormSchema = z.object({
 });
 
 export type MbaCredentialFormInput = z.infer<typeof mbaCredentialFormSchema>;
-

@@ -41,8 +41,7 @@ export function MbaCredentialForm({
       programLevel: 'Nivel 2',
       programGroup: 'G7 Centro',
       programDisplayTitle: 'MBA Empresarial · Cohorte 2024',
-      programDisplaySubtitle:
-        'Aliado: Alianza Comfama · Nivel 2 · G7 Centro',
+      programDisplaySubtitle: 'Aliado: Alianza Comfama · Nivel 2 · G7 Centro',
       ...defaultValues,
     },
   });
@@ -93,7 +92,11 @@ export function MbaCredentialForm({
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="cohortYear">{t('forms.mbaCohortYear')}</Label>
-          <Input type="number" {...register('cohortYear', { valueAsNumber: true })} readOnly />
+          <Input
+            type="number"
+            {...register('cohortYear', { valueAsNumber: true })}
+            readOnly
+          />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="cohortLabel">{t('forms.mbaCohortLabel')}</Label>
@@ -130,4 +133,3 @@ export function MbaCredentialForm({
     </form>
   );
 }
-

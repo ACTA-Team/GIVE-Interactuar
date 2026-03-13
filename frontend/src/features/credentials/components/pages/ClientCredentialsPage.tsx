@@ -201,7 +201,8 @@ function CredentialRow({ credential }: { credential: Credential }) {
                               year: 'numeric',
                             })
                           : '';
-                      displayValue = `${formatDate(period.startDate)} — ${formatDate(period.endDate)}`.trim();
+                      displayValue =
+                        `${formatDate(period.startDate)} — ${formatDate(period.endDate)}`.trim();
                     } else {
                       displayValue = String(value);
                     }
@@ -372,7 +373,7 @@ export function ClientCredentialsPage({
       {empresario && (
         <Card>
           <CardContent className="pt-5 pb-4 space-y-4">
-              <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold text-foreground">
                 Información del empresario
               </h2>
@@ -521,7 +522,9 @@ export function ClientCredentialsPage({
               <BarChart3 className="h-4 w-4 text-blue-600" />
             </div>
             <div>
-              <p className="text-xl font-semibold tabular-nums">{impactCount}</p>
+              <p className="text-xl font-semibold tabular-nums">
+                {impactCount}
+              </p>
               <p className="text-[11px] text-muted-foreground">
                 {t('vault.impact')}
               </p>

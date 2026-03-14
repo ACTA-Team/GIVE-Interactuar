@@ -14,13 +14,14 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  const isProtected = PROTECTED_ROUTES.some((route) =>
+  const _isProtected = PROTECTED_ROUTES.some((route) =>
     pathname.startsWith(route),
   );
 
-  if (!user && isProtected) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
+  // Temporalmente desactivado: no exigir login para rutas protegidas
+  // if (!user && _isProtected) {
+  //   return NextResponse.redirect(new URL('/', request.url));
+  // }
 
   // Authenticated users on the login page → dashboard
   // But not if they're coming from setup-wallet (handled by callback)

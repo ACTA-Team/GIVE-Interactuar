@@ -205,21 +205,21 @@ export function EntrepreneursListPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-md:space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between max-md:flex-col max-md:items-stretch max-md:gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">{t('title')}</h1>
-          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
+          <h1 className="text-2xl font-bold text-foreground max-md:text-xl">{t('title')}</h1>
+          <p className="text-muted-foreground mt-1 max-md:text-sm">{t('subtitle')}</p>
         </div>
         <NewEntrepreneurDialog />
       </div>
 
       {/* Filters and Search */}
       <Card className="shadow-sm">
-        <CardContent>
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
+        <CardContent className="max-md:p-3">
+          <div className="flex flex-col lg:flex-row gap-4 max-md:gap-3">
+            <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder={t('search')}
@@ -229,7 +229,7 @@ export function EntrepreneursListPage() {
               />
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 max-md:gap-2">
               <Select
                 value={filterStage}
                 onValueChange={handleFilterStage}
@@ -243,7 +243,7 @@ export function EntrepreneursListPage() {
                   ),
                 }}
               >
-                <SelectTrigger className="w-[160px]">
+                <SelectTrigger className="w-[160px] max-md:w-full max-md:min-w-0">
                   <SelectValue placeholder={t('filterByStage')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -266,7 +266,7 @@ export function EntrepreneursListPage() {
                   delinquent: td('filters.delinquent'),
                 }}
               >
-                <SelectTrigger className="w-[160px]">
+                <SelectTrigger className="w-[160px] max-md:w-full max-md:min-w-0">
                   <SelectValue placeholder={t('filterByStatus')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -291,7 +291,7 @@ export function EntrepreneursListPage() {
                   unknown: t('genderUnknown'),
                 }}
               >
-                <SelectTrigger className="w-[160px]">
+                <SelectTrigger className="w-[160px] max-md:w-full max-md:min-w-0">
                   <SelectValue placeholder={t('filterByGender')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -303,7 +303,7 @@ export function EntrepreneursListPage() {
               </Select>
 
               {selectedIds.size > 0 && (
-                <div className="flex items-center gap-2 pl-2 border-l">
+                <div className="flex items-center gap-2 pl-2 border-l max-md:border-l-0 max-md:pl-0 max-md:border-t max-md:pt-3 max-md:mt-2 max-md:w-full">
                   <Badge variant="secondary" className="gap-1">
                     <CheckCircle className="h-3 w-3" />
                     {tc('selected', { count: selectedIds.size })}
@@ -313,7 +313,7 @@ export function EntrepreneursListPage() {
                       value && handleBulkCertify(parseInt(value))
                     }
                   >
-                    <SelectTrigger className="w-[200px]">
+                    <SelectTrigger className="w-[200px] max-md:w-full max-md:min-w-0">
                       <Shield className="h-4 w-4 mr-2" />
                       <SelectValue placeholder={t('certifyStageAction')} />
                     </SelectTrigger>
@@ -335,7 +335,7 @@ export function EntrepreneursListPage() {
 
       {/* Table */}
       <Card className="shadow-sm">
-        <CardContent className="pt-6">
+        <CardContent className="pt-6 max-md:pt-4 max-md:px-3">
           <div className="rounded-lg border overflow-hidden">
             <Table>
               <TableHeader>

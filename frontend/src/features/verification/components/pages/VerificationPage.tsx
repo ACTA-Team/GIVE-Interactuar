@@ -12,8 +12,8 @@ export function VerificationPage({ status }: VerificationPageProps) {
   const t = useTranslations('verification');
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-6 max-sm:px-3 max-sm:py-4">
+      <div className="w-full max-w-md min-w-0">
         <div className="mb-8 text-center">
           <p className="text-sm text-gray-500">{t('portalTitle')}</p>
         </div>

@@ -52,6 +52,12 @@ export const metadata: Metadata = {
   description: 'Plataforma de credenciales verificables para emprendedores',
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{

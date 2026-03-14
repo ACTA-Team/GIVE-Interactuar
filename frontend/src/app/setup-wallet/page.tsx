@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import {
   Loader2,
   AlertTriangle,
-  ShieldCheck,
   Fingerprint,
   Vault,
   CheckCircle2,
@@ -164,7 +163,7 @@ export default function SetupWalletPage() {
     }
   };
 
-  const handleConnect = async () => {
+  const _handleConnect = async () => {
     setError(null);
     try {
       if (isReconnect) await disconnect();
@@ -213,8 +212,8 @@ export default function SetupWalletPage() {
           : 0;
 
   return (
-    <div className="flex min-h-svh w-full items-center justify-center bg-background p-6 md:p-10">
-      <div className="w-full max-w-md">
+    <div className="flex min-h-svh w-full items-center justify-center bg-background p-6 md:p-10 max-sm:p-4">
+      <div className="w-full max-w-md min-w-0">
         <div className="flex flex-col gap-8">
           {/* Header */}
           <div className="flex flex-col items-center gap-2 text-center">
@@ -243,7 +242,7 @@ export default function SetupWalletPage() {
 
           {/* Progress Steps */}
           {showVaultProgress && (
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex flex-wrap items-center justify-center gap-2 max-sm:gap-1.5">
               {STEP_KEYS.map((stepKey, idx) => {
                 const done = idx < currentStepIdx;
                 const active = idx === currentStepIdx - 1 && phase !== 'saving';

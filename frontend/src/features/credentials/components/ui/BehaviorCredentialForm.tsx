@@ -127,7 +127,7 @@ export function BehaviorCredentialForm({
   const formatRatio = (n: number) => n.toFixed(2);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 min-w-0">
       <div className="flex items-center gap-2 pb-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
           <IconShieldCheck className="h-5 w-5" />
@@ -135,7 +135,7 @@ export function BehaviorCredentialForm({
         <h3 className="text-base font-semibold">{t('forms.behaviorTitle')}</h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="creditSegmentStart">{t('forms.segmentStart')}</Label>
           <Controller
@@ -197,7 +197,7 @@ export function BehaviorCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label>{t('forms.activeCredit')}</Label>
           <Controller
@@ -227,7 +227,7 @@ export function BehaviorCredentialForm({
       </div>
 
       {activeCreditExists && (
-        <div className="grid grid-cols-3 gap-4 rounded-lg border border-border bg-muted/30 p-3">
+        <div className="grid grid-cols-3 max-md:grid-cols-1 gap-4 rounded-lg border border-border bg-muted/30 p-3">
           <div className="space-y-1.5">
             <Label>{t('forms.amount')}</Label>
             <Input
@@ -273,7 +273,7 @@ export function BehaviorCredentialForm({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="costsAndExpenses">{t('forms.monthlyCosts')}</Label>
           <Input
@@ -295,7 +295,7 @@ export function BehaviorCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="assets">{t('forms.totalAssets')}</Label>
           <Input
@@ -321,7 +321,7 @@ export function BehaviorCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label>{t('forms.liabilitiesRatio')}</Label>
           <div className="flex h-8 items-center rounded-lg bg-muted px-3 text-sm text-muted-foreground">
@@ -359,7 +359,7 @@ export function BehaviorCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label>{t('forms.registryValidation')}</Label>
           <Controller
@@ -403,7 +403,7 @@ export function BehaviorCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label>{t('forms.incomeStability')}</Label>
           <Controller
@@ -462,13 +462,13 @@ export function BehaviorCredentialForm({
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-border pt-4">
-        <Button type="button" variant="outline" onClick={onBack}>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 max-md:flex-col max-md:items-stretch">
+        <Button type="button" variant="outline" onClick={onBack} className="max-md:w-full">
           &larr; {tc('buttons.back')}
         </Button>
         <Button
           type="submit"
-          className="bg-accent hover:bg-accent/90 text-accent-foreground"
+          className="bg-accent hover:bg-accent/90 text-accent-foreground max-md:w-full"
         >
           {t('issuance.generateCredential')} &rarr;
         </Button>

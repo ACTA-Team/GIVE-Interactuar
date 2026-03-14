@@ -1,9 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants/routes';
 import { Button } from '@/components/ui/Button';
+import { CredentialIssuanceModal } from '../ui/CredentialIssuanceModal';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { formatDate } from '@/lib/helpers/date';
@@ -238,6 +240,7 @@ export function ClientCredentialsPage({
 }: ClientCredentialsPageProps) {
   const t = useTranslations('credentials');
   const tc = useTranslations('common');
+  const [issuanceModalOpen, setIssuanceModalOpen] = useState(false);
 
   const mbaEligible =
     !!empresario &&
@@ -294,12 +297,13 @@ export function ClientCredentialsPage({
             </p>
           </div>
         </div>
-        <Link href={ROUTES.credentials.new} className="max-md:w-full">
-          <Button className="gap-2 max-md:w-full">
-            <Plus className="h-4 w-4" />
-            {t('client.issueCredential')}
-          </Button>
-        </Link>
+        <Button
+          className="gap-2 max-md:w-full"
+          onClick={() => setIssuanceModalOpen(true)}
+        >
+          <Plus className="h-4 w-4" />
+          {t('client.issueCredential')}
+        </Button>
       </div>
 
       {/* Client info card */}
@@ -623,18 +627,29 @@ export function ClientCredentialsPage({
                   <p className="mt-2 text-sm text-muted-foreground">
                     {t('client.noCredentialsOfType')}
                   </p>
-                  <Link href={ROUTES.credentials.new} className="mt-3">
-                    <Button variant="outline" size="sm" className="gap-1.5">
-                      <Plus className="h-3.5 w-3.5" />
-                      {t('client.issueType', { type: label })}
-                    </Button>
-                  </Link>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-3 gap-1.5"
+                    onClick={() => setIssuanceModalOpen(true)}
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    {t('client.issueType', { type: label })}
+                  </Button>
                 </CardContent>
               </Card>
             )}
           </section>
         );
       })}
+
+      <CredentialIssuanceModal
+        open={issuanceModalOpen}
+        onOpenChange={setIssuanceModalOpen}
+        entrepreneurId={client.id}
+        entrepreneurName={client.name}
+        businessName={client.businessName}
+      />
     </div>
   );
 }

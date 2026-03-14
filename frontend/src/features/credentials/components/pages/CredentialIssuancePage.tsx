@@ -158,9 +158,15 @@ export function CredentialIssuancePage() {
               </div>
             </div>
             <Button
+              type="button"
               size="sm"
               variant="outline"
               className="gap-1.5 shrink-0 max-md:px-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleSelect(entrepreneur);
+              }}
             >
               <IconCertificate className="h-4 w-4 max-md:hidden" />
               {t('issuance.issue')}

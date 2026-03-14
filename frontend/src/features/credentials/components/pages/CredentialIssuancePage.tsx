@@ -93,7 +93,9 @@ export function CredentialIssuancePage() {
         <h1 className="text-2xl font-bold text-foreground max-md:text-xl">
           {t('issuance.title')}
         </h1>
-        <p className="text-muted-foreground mt-0.5 max-md:text-sm">{t('issuance.subtitle')}</p>
+        <p className="text-muted-foreground mt-0.5 max-md:text-sm">
+          {t('issuance.subtitle')}
+        </p>
       </div>
 
       <Card className="shadow-sm">
@@ -140,7 +142,10 @@ export function CredentialIssuancePage() {
                   </p>
                   {entrepreneur.mbaEligible &&
                     !mbaIssuedSet.has(entrepreneur.id) && (
-                      <Badge variant="info" className="gap-1 text-[10px] shrink-0">
+                      <Badge
+                        variant="info"
+                        className="gap-1 text-[10px] shrink-0"
+                      >
                         <GraduationCap className="h-3 w-3" />
                         {t('issuance.mbaPendingBadge')}
                       </Badge>
@@ -152,7 +157,11 @@ export function CredentialIssuancePage() {
                 </p>
               </div>
             </div>
-            <Button size="sm" variant="outline" className="gap-1.5 shrink-0 max-md:px-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 shrink-0 max-md:px-2"
+            >
               <IconCertificate className="h-4 w-4 max-md:hidden" />
               {t('issuance.issue')}
             </Button>

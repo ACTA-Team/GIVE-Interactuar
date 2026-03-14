@@ -316,7 +316,9 @@ export function ClientCredentialsPage({
             </div>
             <div className="flex-1 min-w-0 space-y-4 overflow-hidden">
               <div className="min-w-0">
-                <p className="font-semibold text-foreground truncate">{displayName}</p>
+                <p className="font-semibold text-foreground truncate">
+                  {displayName}
+                </p>
                 <div className="mt-2 grid gap-x-6 gap-y-2 sm:grid-cols-2">
                   <div className="flex items-center gap-2 text-sm min-w-0">
                     <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -595,7 +597,9 @@ export function ClientCredentialsPage({
                   <h2 className="text-lg font-semibold text-foreground truncate">
                     {label}
                   </h2>
-                  <p className="text-sm text-muted-foreground truncate">{description}</p>
+                  <p className="text-sm text-muted-foreground truncate">
+                    {description}
+                  </p>
                 </div>
               </div>
               {items.length > 0 && (

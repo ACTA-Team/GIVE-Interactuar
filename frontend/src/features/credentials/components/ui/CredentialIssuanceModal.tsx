@@ -418,11 +418,11 @@ export function CredentialIssuanceModal({
 
           {step === 2 && selectedType === 'mba' && (
             <div className="w-full max-w-full min-w-0 overflow-x-hidden">
-            <MbaCredentialForm
-              onSubmit={handleFormSubmit}
-              onBack={handleBack}
-              defaultValues={mbaDefaults}
-            />
+              <MbaCredentialForm
+                onSubmit={handleFormSubmit}
+                onBack={handleBack}
+                defaultValues={mbaDefaults}
+              />
             </div>
           )}
 

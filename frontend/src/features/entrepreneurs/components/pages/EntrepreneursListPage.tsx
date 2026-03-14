@@ -209,8 +209,12 @@ export function EntrepreneursListPage() {
       {/* Header */}
       <div className="flex items-center justify-between max-md:flex-col max-md:items-stretch max-md:gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-foreground max-md:text-xl">{t('title')}</h1>
-          <p className="text-muted-foreground mt-1 max-md:text-sm">{t('subtitle')}</p>
+          <h1 className="text-2xl font-bold text-foreground max-md:text-xl">
+            {t('title')}
+          </h1>
+          <p className="text-muted-foreground mt-1 max-md:text-sm">
+            {t('subtitle')}
+          </p>
         </div>
         <NewEntrepreneurDialog />
       </div>

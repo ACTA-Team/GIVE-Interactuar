@@ -299,7 +299,10 @@ export function CredentialDetailPage({
       {/* Header */}
       <div className="flex items-start justify-between gap-4 max-md:flex-col max-md:gap-3">
         <div className="flex items-start gap-3 min-w-0">
-          <Link href={ROUTES.credentials.client(credential.entrepreneurId)} className="shrink-0">
+          <Link
+            href={ROUTES.credentials.client(credential.entrepreneurId)}
+            className="shrink-0"
+          >
             <button className="mt-1 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
               <ArrowLeft className="h-5 w-5" />
             </button>

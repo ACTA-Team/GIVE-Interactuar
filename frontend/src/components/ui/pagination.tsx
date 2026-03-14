@@ -164,7 +164,9 @@ export function Pagination({
         {NextButton}
       </div>
 
-      <div className="min-w-[120px] flex justify-end max-sm:justify-center max-sm:order-3">{rightSlot}</div>
+      <div className="min-w-[120px] flex justify-end max-sm:justify-center max-sm:order-3">
+        {rightSlot}
+      </div>
     </div>
   );
 }

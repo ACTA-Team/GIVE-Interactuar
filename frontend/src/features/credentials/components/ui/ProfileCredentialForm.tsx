@@ -457,7 +457,12 @@ export function ProfileCredentialForm({
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 max-md:flex-col max-md:items-stretch">
-        <Button type="button" variant="outline" onClick={onBack} className="max-md:w-full">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onBack}
+          className="max-md:w-full"
+        >
           &larr; {tc('buttons.back')}
         </Button>
         <Button

@@ -86,8 +86,12 @@ export function DashboardPage() {
     <div className="space-y-8 max-md:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground max-md:text-xl">{t('title')}</h1>
-        <p className="text-muted-foreground mt-1 text-sm max-md:text-xs">{t('welcome')}</p>
+        <h1 className="text-2xl font-bold text-foreground max-md:text-xl">
+          {t('title')}
+        </h1>
+        <p className="text-muted-foreground mt-1 text-sm max-md:text-xs">
+          {t('welcome')}
+        </p>
       </div>
 
       {/* Métricas principales */}

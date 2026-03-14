@@ -123,7 +123,9 @@ export function CredentialsListPage({
         <h1 className="text-2xl font-bold text-foreground max-md:text-xl">
           {t('vault.title')}
         </h1>
-        <p className="text-muted-foreground mt-0.5 max-md:text-sm">{t('vault.subtitle')}</p>
+        <p className="text-muted-foreground mt-0.5 max-md:text-sm">
+          {t('vault.subtitle')}
+        </p>
       </div>
 
       {/* Credential type badges (insignias) – multi-select filter */}

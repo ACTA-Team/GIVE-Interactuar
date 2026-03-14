@@ -81,11 +81,11 @@ export function EntrepreneurDetailPage({
   };
 
   return (
-    <div className="h-[calc(100vh-6rem)] flex flex-col">
+    <div className="min-h-0 flex flex-col max-md:h-auto">
       {/* Header */}
-      <div className="shrink-0 pb-4 border-b mb-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-4">
+      <div className="shrink-0 pb-4 border-b mb-4 max-md:pb-3 max-md:mb-3">
+        <div className="flex items-start justify-between gap-4 max-md:flex-col max-md:gap-3">
+          <div className="flex items-center gap-4 max-md:gap-3 min-w-0">
             <Button
               variant="ghost"
               size="icon"
@@ -93,9 +93,9 @@ export function EntrepreneurDetailPage({
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-foreground">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2 gap-y-1">
+                <h1 className="text-2xl font-bold text-foreground max-md:text-xl break-words">
                   {entrepreneur.name}
                 </h1>
                 {entrepreneur.isDelinquent && (
@@ -113,23 +113,23 @@ export function EntrepreneurDetailPage({
                   </Badge>
                 )}
               </div>
-              <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-sm text-muted-foreground max-md:gap-x-1">
                 <span className="font-medium text-foreground">
                   {entrepreneur.businessName}
                 </span>
-                <span className="text-border">|</span>
+                <span className="text-border hidden md:inline">|</span>
                 <span className="flex items-center gap-1">
-                  <Building2 className="h-3 w-3" />
-                  {entrepreneur.businessType}
+                  <Building2 className="h-3 w-3 shrink-0" />
+                  <span className="truncate">{entrepreneur.businessType}</span>
                 </span>
-                <span className="text-border">|</span>
-                <span className="flex items-center gap-1">
-                  <Mail className="h-3 w-3" />
-                  {entrepreneur.email}
+                <span className="text-border hidden md:inline">|</span>
+                <span className="flex items-center gap-1 min-w-0">
+                  <Mail className="h-3 w-3 shrink-0" />
+                  <span className="truncate">{entrepreneur.email}</span>
                 </span>
-                <span className="text-border">|</span>
+                <span className="text-border hidden md:inline">|</span>
                 <span className="flex items-center gap-1">
-                  <Phone className="h-3 w-3" />
+                  <Phone className="h-3 w-3 shrink-0" />
                   {entrepreneur.phone}
                 </span>
               </div>
@@ -137,11 +137,11 @@ export function EntrepreneurDetailPage({
           </div>
 
           {/* Main CTAs */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 max-md:flex-col max-md:w-full max-md:gap-2">
             <Button
               size="lg"
               variant="outline"
-              className="gap-2"
+              className="gap-2 max-md:w-full"
               onClick={() => setIsCredentialModalOpen(true)}
             >
               <IconCertificate className="h-5 w-5" />
@@ -155,7 +155,7 @@ export function EntrepreneurDetailPage({
                 render={
                   <Button
                     size="lg"
-                    className="gap-2 shadow-lg bg-accent hover:bg-accent/90 text-accent-foreground"
+                    className="gap-2 max-md:w-full shadow-lg bg-accent hover:bg-accent/90 text-accent-foreground"
                     disabled={!nextStageToCertify}
                     onClick={() =>
                       nextStageToCertify &&

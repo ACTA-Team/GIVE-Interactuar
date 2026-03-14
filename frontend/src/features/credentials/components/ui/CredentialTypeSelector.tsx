@@ -55,7 +55,7 @@ export function CredentialTypeSelector({
       <p className="text-sm font-medium text-muted-foreground">
         {t('issuance.selectType')}
       </p>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 min-w-0">
         {TYPES.map((type) => {
           const config = TYPE_CONFIG[type];
           const isSelected = selected === type;
@@ -66,7 +66,7 @@ export function CredentialTypeSelector({
               type="button"
               onClick={() => onSelect(type)}
               className={cn(
-                'flex flex-col items-start gap-3 rounded-xl border-2 p-4 text-left transition-all hover:shadow-md',
+                'flex flex-col items-start gap-3 rounded-xl border-2 p-4 text-left transition-all hover:shadow-md min-w-0',
                 isSelected
                   ? 'border-primary bg-primary/5 shadow-sm'
                   : 'border-border bg-card hover:border-muted-foreground/30',
@@ -74,18 +74,18 @@ export function CredentialTypeSelector({
             >
               <div
                 className={cn(
-                  'flex h-10 w-10 items-center justify-center rounded-lg',
+                  'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg',
                   config.iconBg,
                   config.iconColor,
                 )}
               >
                 {config.icon}
               </div>
-              <div>
-                <p className="text-sm font-semibold text-foreground">
+              <div className="min-w-0 w-full">
+                <p className="text-sm font-semibold text-foreground truncate">
                   {tc(`credentialTypes.${type}`)}
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
                   {tc(`credentialTypeDescriptions.${type}`)}
                 </p>
               </div>

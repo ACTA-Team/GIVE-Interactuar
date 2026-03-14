@@ -6,7 +6,7 @@ export default function NotFound() {
 
   return (
     <main
-      className="min-h-screen flex flex-col items-center justify-center px-6"
+      className="min-h-screen flex flex-col items-center justify-center px-6 max-md:px-4"
       style={{ backgroundColor: '#ffffff' }}
     >
       {/* 404 number */}

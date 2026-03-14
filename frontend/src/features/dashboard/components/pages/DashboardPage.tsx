@@ -83,11 +83,15 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-md:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">{t('title')}</h1>
-        <p className="text-muted-foreground mt-1">{t('welcome')}</p>
+        <h1 className="text-2xl font-bold text-foreground max-md:text-xl">
+          {t('title')}
+        </h1>
+        <p className="text-muted-foreground mt-1 text-sm max-md:text-xs">
+          {t('welcome')}
+        </p>
       </div>
 
       {/* Métricas principales */}
@@ -157,7 +161,7 @@ export function DashboardPage() {
             <CardDescription>{t('charts.growthTrendDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-[280px]">
+            <div className="h-[280px] max-md:h-[220px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={monthlyData}>
                   <defs>
@@ -232,7 +236,7 @@ export function DashboardPage() {
             <CardDescription>{t('charts.partnerPieDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-[280px] flex items-center">
+            <div className="h-[280px] max-md:h-[220px] flex items-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -304,15 +308,15 @@ export function DashboardPage() {
       {/* Gráfico grande: Distribución por tipo de intervención */}
       <Card className="w-full">
         <CardHeader>
-          <CardTitle className="text-xl">
+          <CardTitle className="text-xl max-md:text-lg">
             {t('charts.interventionTypePie')}
           </CardTitle>
-          <CardDescription className="text-base">
+          <CardDescription className="text-base max-md:text-sm">
             {t('charts.interventionTypePieDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[500px] flex items-center">
+          <div className="h-[500px] max-md:h-[320px] flex items-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -397,7 +401,7 @@ export function DashboardPage() {
             <CardDescription>{t('charts.genderPieDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-[280px] flex items-center">
+            <div className="h-[280px] max-md:h-[220px] flex items-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -471,7 +475,7 @@ export function DashboardPage() {
             <CardDescription>{t('charts.levelPieDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-[280px] flex items-center">
+            <div className="h-[280px] max-md:h-[220px] flex items-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -545,7 +549,7 @@ export function DashboardPage() {
             <CardDescription>{t('charts.municipalityPieDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-[450px]">
+            <div className="h-[450px] max-md:h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   layout="vertical"

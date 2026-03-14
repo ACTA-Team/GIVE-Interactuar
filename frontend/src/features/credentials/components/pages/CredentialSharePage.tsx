@@ -66,9 +66,9 @@ export function CredentialSharePage({
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-start">
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-start max-lg:grid-cols-1 max-md:gap-4">
       <Card className="overflow-hidden">
-        <CardContent className="bg-white p-4 md:p-6 flex items-center justify-center">
+        <CardContent className="bg-white p-4 md:p-6 max-md:p-3 flex items-center justify-center">
           <div ref={certificateRef} className="w-full max-w-3xl">
             <Certificate
               holderName={holderName}
@@ -80,9 +80,9 @@ export function CredentialSharePage({
       </Card>
 
       <Card>
-        <CardContent className="pt-5 pb-6 space-y-4">
+        <CardContent className="pt-5 pb-6 space-y-4 max-md:pt-4 max-md:pb-4 max-md:px-4">
           <div>
-            <h2 className="text-lg font-semibold text-foreground">
+            <h2 className="text-lg font-semibold text-foreground max-md:text-base">
               {t('share.title')}
             </h2>
             <p className="text-sm text-muted-foreground mt-1">

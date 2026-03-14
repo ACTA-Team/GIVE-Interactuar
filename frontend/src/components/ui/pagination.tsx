@@ -143,10 +143,10 @@ export function Pagination({
   );
 
   return (
-    <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
-      <p>{showingLabel}</p>
+    <div className="flex flex-col gap-3 max-sm:gap-3 mt-4 text-sm text-muted-foreground max-sm:items-stretch md:flex-row md:items-center md:justify-between">
+      <p className="max-sm:order-2 max-sm:text-center">{showingLabel}</p>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center justify-center gap-1 flex-wrap max-sm:justify-center">
         {PrevButton}
 
         {pair.map((page) => (
@@ -164,7 +164,9 @@ export function Pagination({
         {NextButton}
       </div>
 
-      <div className="min-w-[120px] flex justify-end">{rightSlot}</div>
+      <div className="min-w-[120px] flex justify-end max-sm:justify-center max-sm:order-3">
+        {rightSlot}
+      </div>
     </div>
   );
 }

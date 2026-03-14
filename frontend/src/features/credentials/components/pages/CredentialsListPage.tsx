@@ -117,17 +117,19 @@ export function CredentialsListPage({
   const totalMba = clients.reduce((acc, c) => acc + (c.mbaCount ?? 0), 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-md:space-y-4">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">
+        <h1 className="text-2xl font-bold text-foreground max-md:text-xl">
           {t('vault.title')}
         </h1>
-        <p className="text-muted-foreground mt-0.5">{t('vault.subtitle')}</p>
+        <p className="text-muted-foreground mt-0.5 max-md:text-sm">
+          {t('vault.subtitle')}
+        </p>
       </div>
 
       {/* Credential type badges (insignias) – multi-select filter */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 max-sm:grid-cols-1 max-sm:gap-3">
         {CREDENTIAL_TYPE_IDS.map((typeId) => {
           const config = CREDENTIAL_TYPE_CONFIG[typeId];
           const total =
@@ -176,8 +178,8 @@ export function CredentialsListPage({
 
       {/* Search & Filters */}
       <Card className="shadow-sm">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center">
+        <CardContent className="p-4 max-md:p-3">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center max-md:gap-2">
             <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -247,12 +249,12 @@ export function CredentialsListPage({
             <Link
               key={client.id}
               href={ROUTES.credentials.client(client.id)}
-              className="group"
+              className="group min-w-0"
             >
-              <Card className="h-full shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/20">
-                <CardContent className="pt-5 pb-4 space-y-4">
+              <Card className="h-full min-w-0 overflow-hidden shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/20">
+                <CardContent className="pt-5 pb-4 space-y-4 min-w-0">
                   {/* Client identity */}
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-3 min-w-0">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold text-sm">
                       {client.name
                         .split(' ')
@@ -268,7 +270,7 @@ export function CredentialsListPage({
                       <p className="text-sm text-muted-foreground truncate">
                         {client.businessName}
                       </p>
-                      <p className="text-xs text-muted-foreground/70 mt-0.5">
+                      <p className="text-xs text-muted-foreground/70 mt-0.5 truncate">
                         {client.businessType}
                       </p>
                     </div>

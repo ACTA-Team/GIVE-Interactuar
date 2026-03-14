@@ -105,7 +105,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
     pathname.startsWith('/dashboard/credentials/client/');
 
   const content = (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col overflow-y-auto min-h-0">
       {/* Logo */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1 -mb-2 -mt-2">
@@ -230,7 +230,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
               animate={{ x: 0 }}
               exit={{ x: -256 }}
               transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-              className="fixed inset-y-0 left-0 z-50 w-64 border-r border-gray-200 bg-white lg:hidden"
+              className="fixed inset-y-0 left-0 z-50 w-64 max-w-[85vw] border-r border-gray-200 bg-white lg:hidden flex flex-col overflow-hidden"
             >
               {content}
             </motion.aside>

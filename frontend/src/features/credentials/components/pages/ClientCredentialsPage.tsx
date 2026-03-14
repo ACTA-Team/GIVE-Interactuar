@@ -276,26 +276,26 @@ export function ClientCredentialsPage({
     t('client.unknownEntrepreneur');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-w-0">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3">
+      <div className="flex items-start justify-between gap-4 max-md:flex-col max-md:gap-3">
+        <div className="flex items-start gap-3 min-w-0">
           <Link href={ROUTES.entrepreneurs.list}>
             <button className="mt-1 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
               <ArrowLeft className="h-5 w-5" />
             </button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-2xl font-bold text-foreground max-md:text-xl wrap-break-word">
               {displayName}
             </h1>
-            <p className="text-muted-foreground mt-0.5">
+            <p className="text-muted-foreground mt-0.5 max-md:text-sm">
               {t('client.vaultSubtitle')}
             </p>
           </div>
         </div>
-        <Link href={ROUTES.credentials.new}>
-          <Button className="gap-2">
+        <Link href={ROUTES.credentials.new} className="max-md:w-full">
+          <Button className="gap-2 max-md:w-full">
             <Plus className="h-4 w-4" />
             {t('client.issueCredential')}
           </Button>
@@ -303,9 +303,9 @@ export function ClientCredentialsPage({
       </div>
 
       {/* Client info card */}
-      <Card>
-        <CardContent className="pt-5 pb-5">
-          <div className="flex items-start gap-4">
+      <Card className="min-w-0 overflow-hidden">
+        <CardContent className="pt-5 pb-5 max-md:pt-4 max-md:pb-4 max-md:px-4 min-w-0">
+          <div className="flex items-start gap-4 max-md:flex-col max-md:gap-3 min-w-0">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-lg">
               {displayName
                 .split(' ')
@@ -314,13 +314,15 @@ export function ClientCredentialsPage({
                 .slice(0, 2)
                 .toUpperCase() || '?'}
             </div>
-            <div className="flex-1 min-w-0 space-y-4">
-              <div>
-                <p className="font-semibold text-foreground">{displayName}</p>
+            <div className="flex-1 min-w-0 space-y-4 overflow-hidden">
+              <div className="min-w-0">
+                <p className="font-semibold text-foreground truncate">
+                  {displayName}
+                </p>
                 <div className="mt-2 grid gap-x-6 gap-y-2 sm:grid-cols-2">
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex items-center gap-2 text-sm min-w-0">
                     <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-xs text-muted-foreground">
                         {t('client.business')}
                       </p>
@@ -329,13 +331,13 @@ export function ClientCredentialsPage({
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex items-center gap-2 text-sm min-w-0">
                     <Briefcase className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-xs text-muted-foreground">
                         {t('client.sector')}
                       </p>
-                      <p className="font-medium">
+                      <p className="font-medium truncate">
                         {client.businessType || '—'}
                       </p>
                     </div>
@@ -520,13 +522,13 @@ export function ClientCredentialsPage({
       )}
 
       {/* Stats by type */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardContent className="flex items-center gap-2 py-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 min-w-0">
+        <Card className="min-w-0">
+          <CardContent className="flex items-center gap-2 py-3 min-w-0">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10">
               <BarChart3 className="h-4 w-4 text-blue-600" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-xl font-semibold tabular-nums">
                 {impactCount}
               </p>
@@ -536,9 +538,9 @@ export function ClientCredentialsPage({
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="flex items-center gap-2 py-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10">
+        <Card className="min-w-0">
+          <CardContent className="flex items-center gap-2 py-3 min-w-0">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10">
               <Activity className="h-4 w-4 text-amber-600" />
             </div>
             <div>
@@ -551,9 +553,9 @@ export function ClientCredentialsPage({
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="flex items-center gap-2 py-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10">
+        <Card className="min-w-0">
+          <CardContent className="flex items-center gap-2 py-3 min-w-0">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-500/10">
               <UserCheck className="h-4 w-4 text-violet-600" />
             </div>
             <div>
@@ -567,9 +569,9 @@ export function ClientCredentialsPage({
           </CardContent>
         </Card>
         {mbaEligible && (
-          <Card>
-            <CardContent className="flex items-center gap-2 py-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
+          <Card className="min-w-0">
+            <CardContent className="flex items-center gap-2 py-3 min-w-0">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10">
                 <GraduationCap className="h-4 w-4 text-emerald-600" />
               </div>
               <div>
@@ -587,19 +589,21 @@ export function ClientCredentialsPage({
       {groupedCredentials.map(({ type, label, description, items }) => {
         const Icon = TYPE_ICON[type];
         return (
-          <section key={type} className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Icon className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <h2 className="text-lg font-semibold text-foreground">
+          <section key={type} className="space-y-3 min-w-0">
+            <div className="flex items-center justify-between gap-2 min-w-0">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <Icon className="h-5 w-5 text-muted-foreground shrink-0" />
+                <div className="min-w-0">
+                  <h2 className="text-lg font-semibold text-foreground truncate">
                     {label}
                   </h2>
-                  <p className="text-sm text-muted-foreground">{description}</p>
+                  <p className="text-sm text-muted-foreground truncate">
+                    {description}
+                  </p>
                 </div>
               </div>
               {items.length > 0 && (
-                <Badge variant="success" className="gap-1">
+                <Badge variant="success" className="gap-1 shrink-0">
                   <ShieldCheck className="h-3 w-3" />
                   {items.length}
                 </Badge>

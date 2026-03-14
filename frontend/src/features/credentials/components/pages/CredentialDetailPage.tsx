@@ -295,28 +295,31 @@ export function CredentialDetailPage({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-md:space-y-4">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3">
-          <Link href={ROUTES.credentials.client(credential.entrepreneurId)}>
+      <div className="flex items-start justify-between gap-4 max-md:flex-col max-md:gap-3">
+        <div className="flex items-start gap-3 min-w-0">
+          <Link
+            href={ROUTES.credentials.client(credential.entrepreneurId)}
+            className="shrink-0"
+          >
             <button className="mt-1 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
               <ArrowLeft className="h-5 w-5" />
             </button>
           </Link>
-          <div>
-            <div className="flex items-center gap-2">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
               <div
-                className={`flex h-8 w-8 items-center justify-center rounded-lg ${TYPE_COLOR[credential.credentialType]}`}
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${TYPE_COLOR[credential.credentialType]}`}
               >
                 <Icon className="h-4 w-4" />
               </div>
-              <h1 className="text-2xl font-bold text-foreground">
+              <h1 className="text-2xl font-bold text-foreground max-md:text-xl break-words">
                 {credential.title}
               </h1>
             </div>
             {credential.description && (
-              <p className="text-muted-foreground mt-1 ml-10">
+              <p className="text-muted-foreground mt-1 ml-10 max-md:ml-0 text-sm max-md:text-xs">
                 {credential.description}
               </p>
             )}
@@ -332,8 +335,8 @@ export function CredentialDetailPage({
 
       {/* Credential metadata */}
       <Card>
-        <CardContent className="pt-5 pb-5 space-y-4">
-          <div className="flex items-start justify-between gap-4">
+        <CardContent className="pt-5 pb-5 space-y-4 max-md:pt-4 max-md:pb-4 max-md:px-4">
+          <div className="flex items-start justify-between gap-4 max-md:flex-col max-md:gap-2">
             <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <Link2 className="h-5 w-5 text-muted-foreground" />
               {t('detail.credentialInfo')}

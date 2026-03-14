@@ -88,12 +88,14 @@ export function CredentialIssuancePage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-md:space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">
+        <h1 className="text-2xl font-bold text-foreground max-md:text-xl">
           {t('issuance.title')}
         </h1>
-        <p className="text-muted-foreground mt-0.5">{t('issuance.subtitle')}</p>
+        <p className="text-muted-foreground mt-0.5 max-md:text-sm">
+          {t('issuance.subtitle')}
+        </p>
       </div>
 
       <Card className="shadow-sm">
@@ -123,9 +125,9 @@ export function CredentialIssuancePage() {
                 handleSelect(entrepreneur);
               }
             }}
-            className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/30"
+            className="flex w-full min-w-0 cursor-pointer items-center justify-between gap-3 rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/30 max-md:gap-2"
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
                 {entrepreneur.name
                   .split(' ')
@@ -133,27 +135,34 @@ export function CredentialIssuancePage() {
                   .map((n) => n[0])
                   .join('')}
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium text-foreground">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2 gap-y-0.5">
+                  <p className="text-sm font-medium text-foreground truncate min-w-0">
                     {entrepreneur.name}
                   </p>
                   {entrepreneur.mbaEligible &&
                     !mbaIssuedSet.has(entrepreneur.id) && (
-                      <Badge variant="info" className="gap-1 text-[10px]">
+                      <Badge
+                        variant="info"
+                        className="gap-1 text-[10px] shrink-0"
+                      >
                         <GraduationCap className="h-3 w-3" />
                         {t('issuance.mbaPendingBadge')}
                       </Badge>
                     )}
                 </div>
-                <p className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
-                  <Building2 className="h-3 w-3" />
-                  {entrepreneur.businessName}
+                <p className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5 truncate min-w-0">
+                  <Building2 className="h-3 w-3 shrink-0" />
+                  <span className="truncate">{entrepreneur.businessName}</span>
                 </p>
               </div>
             </div>
-            <Button size="sm" variant="outline" className="gap-1.5 shrink-0">
-              <IconCertificate className="h-4 w-4" />
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 shrink-0 max-md:px-2"
+            >
+              <IconCertificate className="h-4 w-4 max-md:hidden" />
               {t('issuance.issue')}
             </Button>
           </div>

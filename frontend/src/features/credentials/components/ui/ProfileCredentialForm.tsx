@@ -101,7 +101,7 @@ export function ProfileCredentialForm({
   const formalizedBusiness = useWatch({ control, name: 'formalizedBusiness' });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 min-w-0">
       <div className="flex items-center gap-2 pb-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
           <IconIdBadge2 className="h-5 w-5" />
@@ -109,7 +109,7 @@ export function ProfileCredentialForm({
         <h3 className="text-base font-semibold">{t('forms.profileTitle')}</h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label>{t('forms.identityValidated')}</Label>
           <Controller
@@ -165,7 +165,7 @@ export function ProfileCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="municipality">{t('forms.municipality')}</Label>
           <Input
@@ -208,7 +208,7 @@ export function ProfileCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label>{t('forms.mainHouseholdProvider')}</Label>
           <Controller
@@ -234,7 +234,7 @@ export function ProfileCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label>{t('forms.formalizedBusiness')}</Label>
           <Controller
@@ -257,7 +257,7 @@ export function ProfileCredentialForm({
         )}
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="yearsInOperation">
             {t('forms.yearsInOperation')}
@@ -316,7 +316,7 @@ export function ProfileCredentialForm({
 
       <div className="space-y-3 rounded-lg border border-border bg-muted/30 p-4">
         <p className="text-sm font-medium">{t('forms.socialSecurity')}</p>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
           <div className="space-y-1.5">
             <Label>{t('forms.hasSocialSecurity')}</Label>
             <Controller
@@ -350,7 +350,7 @@ export function ProfileCredentialForm({
         <p className="text-sm font-medium">
           {t('forms.employmentFormalization')}
         </p>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
           <div className="space-y-1.5">
             <Label>{t('forms.formalJobsCount')}</Label>
             <Input
@@ -372,7 +372,7 @@ export function ProfileCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label>{t('forms.traceabilityLevel')}</Label>
           <Controller
@@ -456,13 +456,18 @@ export function ProfileCredentialForm({
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-border pt-4">
-        <Button type="button" variant="outline" onClick={onBack}>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 max-md:flex-col max-md:items-stretch">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onBack}
+          className="max-md:w-full"
+        >
           &larr; {tc('buttons.back')}
         </Button>
         <Button
           type="submit"
-          className="bg-accent hover:bg-accent/90 text-accent-foreground"
+          className="bg-accent hover:bg-accent/90 text-accent-foreground max-md:w-full"
         >
           {t('issuance.generateCredential')} &rarr;
         </Button>

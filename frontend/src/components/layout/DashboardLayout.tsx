@@ -23,7 +23,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header: menú + logo (móvil) y botones de traducción a la derecha */}
-        <header className="flex shrink-0 items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 py-3">
+        <header className="flex shrink-0 items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 py-3 max-md:px-3 max-md:py-2">
           <div className="flex items-center gap-3 lg:hidden">
             <button
               onClick={() => setIsMobileOpen(true)}
@@ -46,8 +46,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </header>
 
-        <main className="flex flex-1 flex-col overflow-y-auto">
-          <div className="mx-auto w-full max-w-7xl px-6 py-8">{children}</div>
+        <main className="flex flex-1 flex-col overflow-y-auto min-w-0">
+          <div className="mx-auto w-full max-w-7xl min-w-0 px-6 py-8 max-md:px-4 max-md:py-4">
+            {children}
+          </div>
         </main>
       </div>
     </div>

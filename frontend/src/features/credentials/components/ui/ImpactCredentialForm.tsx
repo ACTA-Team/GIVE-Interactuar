@@ -85,7 +85,7 @@ export function ImpactCredentialForm({
   const formatPercent = (n: number) => `${n >= 0 ? '+' : ''}${n.toFixed(1)}%`;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 min-w-0">
       <div className="flex items-center gap-2 pb-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-50 text-orange-500">
           <IconTrendingUp className="h-5 w-5" />
@@ -93,7 +93,7 @@ export function ImpactCredentialForm({
         <h3 className="text-base font-semibold">{t('forms.impactTitle')}</h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="companyName">{t('forms.companyName')}</Label>
           <Input
@@ -136,7 +136,7 @@ export function ImpactCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="yearsInOperation">
             {t('forms.yearsInOperation')}
@@ -186,7 +186,7 @@ export function ImpactCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="currentEmployees">
             {t('forms.currentEmployees')}
@@ -229,7 +229,7 @@ export function ImpactCredentialForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
         <div className="space-y-1.5">
           <Label>{t('forms.businessTrend')}</Label>
           <Controller
@@ -262,7 +262,7 @@ export function ImpactCredentialForm({
         <Label className="text-muted-foreground">
           {t('forms.assessmentPeriod')}
         </Label>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="assessmentPeriod.startDate">
               {t('forms.startDate')}
@@ -278,13 +278,18 @@ export function ImpactCredentialForm({
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-border pt-4">
-        <Button type="button" variant="outline" onClick={onBack}>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 max-md:flex-col max-md:items-stretch">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onBack}
+          className="max-md:w-full"
+        >
           &larr; {tc('buttons.back')}
         </Button>
         <Button
           type="submit"
-          className="bg-accent hover:bg-accent/90 text-accent-foreground"
+          className="bg-accent hover:bg-accent/90 text-accent-foreground max-md:w-full"
         >
           {t('issuance.generateCredential')} &rarr;
         </Button>

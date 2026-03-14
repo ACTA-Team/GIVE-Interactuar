@@ -44,24 +44,24 @@ function Stepper({ currentStep }: { currentStep: number }) {
   ];
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-3 flex-wrap max-md:gap-2">
       {steps.map((step, i) => {
         const isActive = step.number <= currentStep;
         const isCurrent = step.number === currentStep;
         return (
-          <div key={step.number} className="flex items-center gap-2">
+          <div key={step.number} className="flex items-center gap-2 shrink-0">
             {i > 0 && (
               <div
                 className={cn(
-                  'h-0.5 w-6 transition-colors',
+                  'h-0.5 w-6 transition-colors shrink-0 max-md:w-3',
                   step.number <= currentStep ? 'bg-white' : 'bg-white/30',
                 )}
               />
             )}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 shrink-0">
               <span
                 className={cn(
-                  'flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold transition-colors',
+                  'flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold transition-colors shrink-0',
                   isCurrent
                     ? 'bg-accent text-accent-foreground'
                     : isActive
@@ -73,7 +73,7 @@ function Stepper({ currentStep }: { currentStep: number }) {
               </span>
               <span
                 className={cn(
-                  'text-sm font-medium',
+                  'text-sm font-medium whitespace-nowrap max-md:text-xs',
                   isActive ? 'text-white' : 'text-white/50',
                 )}
               >
@@ -342,14 +342,14 @@ export function CredentialIssuanceModal({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-2xl p-0 gap-0 overflow-hidden"
+        className="sm:max-w-2xl p-0 gap-0 overflow-hidden overflow-x-hidden min-w-0 max-md:w-[calc(100vw-1rem)] max-md:max-w-[calc(100vw-1rem)] max-md:box-border"
       >
         {/* Header */}
-        <div className="bg-(--color-brand-blue,#0B1F3F) px-6 py-4 text-white">
-          <div className="flex items-start justify-between">
-            <div>
+        <div className="bg-(--color-brand-blue,#0B1F3F) px-6 py-4 text-white max-md:px-4 min-w-0">
+          <div className="flex items-start justify-between gap-3 min-w-0">
+            <div className="min-w-0 flex-1">
               <h2 className="text-lg font-bold">{t('issuance.modalTitle')}</h2>
-              <p className="text-sm text-white/70">
+              <p className="text-sm text-white/70 mt-0.5 wrap-break-word line-clamp-2">
                 {entrepreneurName} &middot; {businessName}
               </p>
             </div>
@@ -358,20 +358,20 @@ export function CredentialIssuanceModal({
                 <button
                   type="button"
                   disabled={isIssuing}
-                  className="rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-50"
+                  className="rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-50 shrink-0"
                 >
                   <X className="h-5 w-5" />
                 </button>
               }
             />
           </div>
-          <div className="mt-4">
+          <div className="mt-4 min-w-0 overflow-x-hidden">
             <Stepper currentStep={step} />
           </div>
         </div>
 
         {/* Content */}
-        <div className="relative max-h-[60vh] overflow-y-auto px-6 py-5">
+        <div className="relative max-h-[60vh] overflow-y-auto overflow-x-hidden px-6 py-5 pb-8 max-md:px-4 max-md:pb-6 min-w-0 w-full max-w-full box-border">
           {isIssuing && <IssuingOverlay status={status} />}
 
           {step === 1 && (
@@ -417,11 +417,13 @@ export function CredentialIssuanceModal({
           )}
 
           {step === 2 && selectedType === 'mba' && (
-            <MbaCredentialForm
-              onSubmit={handleFormSubmit}
-              onBack={handleBack}
-              defaultValues={mbaDefaults}
-            />
+            <div className="w-full max-w-full min-w-0 overflow-x-hidden">
+              <MbaCredentialForm
+                onSubmit={handleFormSubmit}
+                onBack={handleBack}
+                defaultValues={mbaDefaults}
+              />
+            </div>
           )}
 
           {step === 2 && status === 'error' && error && (

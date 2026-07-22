@@ -26,14 +26,20 @@ export function ClassQrDialog({
     <Dialog>
       <DialogTrigger
         render={
-          <Button variant="outline" size="icon" aria-label={t('actions.showQr')}>
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label={t('actions.showQr')}
+          >
             <QrCode className="h-4 w-4" />
           </Button>
         }
       />
       <DialogContent className="sm:max-w-[320px]">
         <DialogHeader>
-          <DialogTitle>{t('detail.classNumber', { number: classNumber })}</DialogTitle>
+          <DialogTitle>
+            {t('detail.classNumber', { number: classNumber })}
+          </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col items-center gap-4 py-2">
           <div className="rounded-lg bg-white p-4 ring-1 ring-foreground/10">

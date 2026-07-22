@@ -4,7 +4,13 @@ import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Users, CalendarClock, CheckCircle2, CalendarDays } from 'lucide-react';
+import {
+  ArrowLeft,
+  Users,
+  CalendarClock,
+  CheckCircle2,
+  CalendarDays,
+} from 'lucide-react';
 import { ROUTES } from '@/lib/constants/routes';
 import { formatRelativeDate } from '@/lib/format-relative-date';
 import { useCourseDetail } from '../../hooks/useCourseDetail';
@@ -138,9 +144,7 @@ export function CourseDetailPage({ folderName }: { folderName: string }) {
                   : '—'}
               </div>
               <p className="text-xs text-muted-foreground">
-                {nextSession
-                  ? t('detail.nextSession')
-                  : t('detail.noUpcoming')}
+                {nextSession ? t('detail.nextSession') : t('detail.noUpcoming')}
               </p>
             </div>
           </CardContent>

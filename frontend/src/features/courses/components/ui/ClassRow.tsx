@@ -10,7 +10,10 @@ import { ROUTES } from '@/lib/constants/routes';
 import { useToggleClassStatus } from '../../hooks/useToggleClassStatus';
 import { ClassQrDialog } from './ClassQrDialog';
 
-function formatScheduledAt(scheduledAt: string | null, locale: string): string | null {
+function formatScheduledAt(
+  scheduledAt: string | null,
+  locale: string,
+): string | null {
   if (!scheduledAt) return null;
   const date = new Date(scheduledAt);
   if (Number.isNaN(date.getTime())) return null;

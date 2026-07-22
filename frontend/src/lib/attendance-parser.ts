@@ -53,23 +53,18 @@ export function parseAttendanceSheet(rows: unknown[][]): AttendanceRecord[] {
     if (isRowEmpty(row)) break;
 
     records.push({
-      nombre: String(
-        row[fixedColumnIndex.nombre ?? -1] ?? '',
-      ).trim(),
-      correo: String(
-        row[fixedColumnIndex.correo ?? -1] ?? '',
-      ).trim(),
-      empresa: String(
-        row[fixedColumnIndex.empresa ?? -1] ?? '',
-      ).trim(),
-      telefono: String(
-        row[fixedColumnIndex.telefono ?? -1] ?? '',
-      ).trim(),
+      nombre: String(row[fixedColumnIndex.nombre ?? -1] ?? '').trim(),
+      correo: String(row[fixedColumnIndex.correo ?? -1] ?? '').trim(),
+      empresa: String(row[fixedColumnIndex.empresa ?? -1] ?? '').trim(),
+      telefono: String(row[fixedColumnIndex.telefono ?? -1] ?? '').trim(),
       asistencia: classColumns.map(({ clase, index }) => ({
         clase,
         // Empty cells cover both "absent" and "class not held yet" —
         // the sheet has no way to tell those apart.
-        asistio: String(row[index] ?? '').trim().toLowerCase() === 'x',
+        asistio:
+          String(row[index] ?? '')
+            .trim()
+            .toLowerCase() === 'x',
       })),
     });
   }

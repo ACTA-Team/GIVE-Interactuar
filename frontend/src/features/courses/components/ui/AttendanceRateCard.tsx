@@ -24,11 +24,7 @@ function calculateOverallAttendanceRate(courses: CourseSummary[]): number {
   return presentCells / totalCells;
 }
 
-export function AttendanceRateCard({
-  courses,
-}: {
-  courses: CourseSummary[];
-}) {
+export function AttendanceRateCard({ courses }: { courses: CourseSummary[] }) {
   const t = useTranslations('courses');
   const rate = calculateOverallAttendanceRate(courses);
 
@@ -39,7 +35,9 @@ export function AttendanceRateCard({
           <CheckCircle2 className="h-6 w-6 text-primary" />
         </div>
         <div className="text-3xl font-bold">{Math.round(rate * 100)}%</div>
-        <p className="text-sm text-muted-foreground">{t('attendanceRate.label')}</p>
+        <p className="text-sm text-muted-foreground">
+          {t('attendanceRate.label')}
+        </p>
       </CardContent>
     </Card>
   );

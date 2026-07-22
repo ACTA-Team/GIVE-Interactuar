@@ -26,8 +26,7 @@ export async function getCourseSummary(
 
   const totalCells = records.length * classLabels.length;
   const presentCells = records.reduce(
-    (sum, record) =>
-      sum + record.asistencia.filter((a) => a.asistio).length,
+    (sum, record) => sum + record.asistencia.filter((a) => a.asistio).length,
     0,
   );
 

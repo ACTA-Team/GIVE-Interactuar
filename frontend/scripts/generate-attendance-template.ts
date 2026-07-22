@@ -14,7 +14,12 @@ async function main() {
     { header: 'fecha', key: 'fecha', width: 15 },
   ];
 
-  const outPath = path.join(__dirname, '..', 'templates', 'asistencia-template.xlsx');
+  const outPath = path.join(
+    __dirname,
+    '..',
+    'templates',
+    'asistencia-template.xlsx',
+  );
   await workbook.xlsx.writeFile(outPath);
   console.log(`Written: ${outPath}`);
 }

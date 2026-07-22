@@ -69,10 +69,7 @@ export function NewClassDialog({ folderName }: { folderName: string }) {
           <Button variant="outline" onClick={() => setIsOpen(false)}>
             {tc('buttons.cancel')}
           </Button>
-          <Button
-            onClick={handleCreate}
-            disabled={!scheduledAt || isPending}
-          >
+          <Button onClick={handleCreate} disabled={!scheduledAt || isPending}>
             {t('newClassDialog.submit')}
           </Button>
         </DialogFooter>

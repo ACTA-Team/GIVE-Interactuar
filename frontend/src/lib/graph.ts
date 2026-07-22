@@ -41,7 +41,10 @@ function getMsalApp(): ConfidentialClientApplication {
 const EXPIRY_SAFETY_MARGIN_MS = 60_000;
 
 async function getAccessToken(): Promise<string> {
-  if (cachedToken && cachedToken.expiresAt - EXPIRY_SAFETY_MARGIN_MS > Date.now()) {
+  if (
+    cachedToken &&
+    cachedToken.expiresAt - EXPIRY_SAFETY_MARGIN_MS > Date.now()
+  ) {
     return cachedToken.value;
   }
 
@@ -55,7 +58,9 @@ async function getAccessToken(): Promise<string> {
 
   cachedToken = {
     value: result.accessToken,
-    expiresAt: result.expiresOn ? result.expiresOn.getTime() : Date.now() + 60_000,
+    expiresAt: result.expiresOn
+      ? result.expiresOn.getTime()
+      : Date.now() + 60_000,
   };
 
   return cachedToken.value;

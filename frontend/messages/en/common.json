@@ -1,6 +1,7 @@
 {
   "nav": {
     "dashboard": "Dashboard",
+    "cursos": "My Courses",
     "entrepreneurs": "Entrepreneurs",
     "credentials": "Credentials",
     "list": "List",
@@ -68,6 +69,7 @@
   },
   "titles": {
     "dashboard": "Home - Interactuar",
+    "cursos": "My Courses - Interactuar",
     "entrepreneurs": "Entrepreneurs - Interactuar",
     "credentials": "Credentials - Interactuar",
     "credentialsNew": "Issue credential - Interactuar",

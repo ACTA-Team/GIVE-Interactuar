@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import {
@@ -14,9 +15,12 @@ import { Loader2, AlertTriangle } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 
+const AUTH_DISABLED = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true';
+
 export default function LoginPage() {
   const t = useTranslations('login');
   const tc = useTranslations('common');
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -113,6 +117,18 @@ export default function LoginPage() {
                     </>
                   )}
                 </Button>
+
+                {/* TODO: remove — temporary dev-only bypass, see NEXT_PUBLIC_DISABLE_AUTH */}
+                {AUTH_DISABLED && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="w-full h-11"
+                    onClick={() => router.push('/dashboard')}
+                  >
+                    Continuar sin iniciar sesión (dev)
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>

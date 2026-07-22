@@ -1,0 +1,44 @@
+{
+  "title": "My Courses",
+  "subtitle": "Track attendance for your courses, read live from SharePoint.",
+  "createCourse": "Create course",
+  "empty": "No courses available yet.",
+  "error": "Couldn't load course data.",
+  "card": {
+    "students": "{count, plural, one {# student enrolled} other {# students enrolled}}",
+    "lastActivity": "Last activity: {relativeDate}",
+    "attendanceRate": "Attendance: {percent}%"
+  },
+  "impact": {
+    "title": "Impact Summary",
+    "description": "Average attendance per course.",
+    "tooltip": "Attendance"
+  },
+  "attendanceRate": {
+    "label": "Average Attendance Rate"
+  },
+  "detail": {
+    "sessions": "Sessions (Classes)",
+    "newSession": "New Session",
+    "classNumber": "Class {number}",
+    "noDate": "No date scheduled",
+    "noSessions": "No sessions created for this course yet.",
+    "nextSession": "Next Session",
+    "noUpcoming": "No session scheduled"
+  },
+  "status": {
+    "open": "Open",
+    "closed": "Closed"
+  },
+  "actions": {
+    "showQr": "Show QR code",
+    "openClass": "Open class",
+    "closeClass": "Close class"
+  },
+  "newClassDialog": {
+    "title": "New session",
+    "description": "Schedule the date and time for the new class.",
+    "dateLabel": "Date and time",
+    "submit": "Create session"
+  }
+}

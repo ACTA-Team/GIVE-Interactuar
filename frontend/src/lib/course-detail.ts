@@ -1,0 +1,37 @@
+// Server-only module: no "use client" directive, and must not be imported
+// from any file that has one. Type-only imports of `CourseDetail`/`ClassInfo`
+// from client code are fine — they're erased at compile time.
+import { getCourseWorkbook } from '@/lib/course-workbook';
+import { parseAttendanceSheet } from '@/lib/attendance-parser';
+import { parseClassColumns, type ClassInfo } from '@/lib/class-schedule';
+
+export interface CourseDetail {
+  folderName: string;
+  studentCount: number;
+  attendanceRate: number;
+  lastModifiedDateTime: string;
+  classes: ClassInfo[];
+}
+
+export async function getCourseDetail(
+  folderName: string,
+): Promise<CourseDetail> {
+  const { file, rows } = await getCourseWorkbook(folderName);
+
+  const records = parseAttendanceSheet(rows);
+  const classes = parseClassColumns(rows);
+
+  const totalCells = records.length * classes.length;
+  const presentCells = records.reduce(
+    (sum, record) => sum + record.asistencia.filter((a) => a.asistio).length,
+    0,
+  );
+
+  return {
+    folderName,
+    studentCount: records.length,
+    attendanceRate: totalCells > 0 ? presentCells / totalCells : 0,
+    lastModifiedDateTime: file.lastModifiedDateTime,
+    classes,
+  };
+}

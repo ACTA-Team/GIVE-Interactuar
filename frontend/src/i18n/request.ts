@@ -14,6 +14,7 @@ export default getRequestConfig(async () => {
     login: (await import(`../../messages/${locale}/login.json`)).default,
     dashboard: (await import(`../../messages/${locale}/dashboard.json`))
       .default,
+    courses: (await import(`../../messages/${locale}/courses.json`)).default,
     entrepreneurs: (await import(`../../messages/${locale}/entrepreneurs.json`))
       .default,
     credentials: (await import(`../../messages/${locale}/credentials.json`))

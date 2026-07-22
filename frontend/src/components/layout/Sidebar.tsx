@@ -13,6 +13,7 @@ import {
   IconPlus,
   IconX,
   IconLogout,
+  IconSchool,
 } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
@@ -99,6 +100,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   };
 
   const isDashboardActive = pathname === ROUTES.dashboard;
+  const isCursosActive = pathname.startsWith(ROUTES.cursos.list);
   const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);
   const isCredentialsActive =
     pathname.startsWith(ROUTES.entrepreneurs.storage) ||
@@ -137,6 +139,14 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
         />
 
         <hr className="my-3 border-gray-100" />
+
+        <NavItem
+          icon={<IconSchool className="h-4 w-4" />}
+          label={t('nav.cursos')}
+          href={ROUTES.cursos.list}
+          isActive={isCursosActive}
+          onClick={onMobileClose}
+        />
 
         <NavItem
           icon={<IconUsers className="h-4 w-4" />}

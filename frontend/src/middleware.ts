@@ -4,6 +4,10 @@ import { createMiddlewareClient } from '@/lib/supabase/middleware';
 
 const PROTECTED_ROUTES = ['/dashboard', '/setup-wallet'];
 
+// TODO: remove — temporary bypass to unblock local development.
+// Set NEXT_PUBLIC_DISABLE_AUTH=true in .env to skip the auth gate.
+const AUTH_DISABLED = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true';
+
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next({ request });
   const supabase = createMiddlewareClient(request, response);
@@ -18,7 +22,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith(route),
   );
 
-  if (!user && isProtected) {
+  if (!AUTH_DISABLED && !user && isProtected) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 

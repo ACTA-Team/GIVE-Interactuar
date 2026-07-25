@@ -2,7 +2,10 @@
 // from any file that has one. Type-only imports of `CourseDetail`/`ClassInfo`
 // from client code are fine — they're erased at compile time.
 import { getCourseWorkbook } from '@/lib/course-workbook';
-import { parseAttendanceSheet } from '@/lib/attendance-parser';
+import {
+  parseAttendanceSheet,
+  type AttendanceRecord,
+} from '@/lib/attendance-parser';
 import { parseClassColumns, type ClassInfo } from '@/lib/class-schedule';
 
 export interface CourseDetail {
@@ -11,6 +14,7 @@ export interface CourseDetail {
   attendanceRate: number;
   lastModifiedDateTime: string;
   classes: ClassInfo[];
+  students: AttendanceRecord[];
 }
 
 export async function getCourseDetail(
@@ -33,5 +37,6 @@ export async function getCourseDetail(
     attendanceRate: totalCells > 0 ? presentCells / totalCells : 0,
     lastModifiedDateTime: file.lastModifiedDateTime,
     classes,
+    students: records,
   };
 }

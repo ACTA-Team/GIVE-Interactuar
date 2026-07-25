@@ -40,5 +40,11 @@
     "description": "Schedule the date and time for the new class.",
     "dateLabel": "Date and time",
     "submit": "Create session"
+  },
+  "students": {
+    "title": "Students",
+    "empty": "No students registered for this course yet.",
+    "attendanceSummary": "{attended}/{total} classes held",
+    "download": "Download certificate"
   }
 }

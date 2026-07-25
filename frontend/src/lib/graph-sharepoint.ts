@@ -119,6 +119,32 @@ export async function listFolderContents(
   return result.value.map(toFolderItem);
 }
 
+export async function downloadFileContent(itemId: string): Promise<Buffer> {
+  const client = getGraphClient();
+  const siteId = getSiteId();
+
+  const response = await client
+    .api(`/sites/${siteId}/drive/items/${itemId}/content`)
+    .get();
+
+  if (response instanceof Blob) {
+    return Buffer.from(await response.arrayBuffer());
+  }
+
+  if (response instanceof ReadableStream) {
+    const chunks: Uint8Array[] = [];
+    const reader = response.getReader();
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+    }
+    return Buffer.concat(chunks);
+  }
+
+  return Buffer.from(response as ArrayBuffer);
+}
+
 export async function listRootFolders(): Promise<FolderItem[]> {
   const client = getGraphClient();
   const siteId = getSiteId();
@@ -130,7 +156,7 @@ export async function listRootFolders(): Promise<FolderItem[]> {
   return result.value.map(toFolderItem).filter((item) => item.isFolder);
 }
 
-export async function getFirstWorksheetName(itemId: string): Promise<string> {
+export async function listWorksheetNames(itemId: string): Promise<string[]> {
   const client = getGraphClient();
   const siteId = getSiteId();
 
@@ -138,7 +164,12 @@ export async function getFirstWorksheetName(itemId: string): Promise<string> {
     .api(`/sites/${siteId}/drive/items/${itemId}/workbook/worksheets`)
     .get()) as { value: { name: string }[] };
 
-  const name = worksheets.value[0]?.name;
+  return worksheets.value.map((sheet) => sheet.name);
+}
+
+export async function getFirstWorksheetName(itemId: string): Promise<string> {
+  const names = await listWorksheetNames(itemId);
+  const name = names[0];
   if (!name) {
     throw new Error(`No worksheets found for item ${itemId}`);
   }

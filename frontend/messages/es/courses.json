@@ -40,5 +40,11 @@
     "description": "Programa la fecha y hora de la nueva clase.",
     "dateLabel": "Fecha y hora",
     "submit": "Crear sesión"
+  },
+  "students": {
+    "title": "Estudiantes",
+    "empty": "Aún no hay estudiantes registrados en este curso.",
+    "attendanceSummary": "{attended}/{total} clases dictadas",
+    "download": "Descargar constancia"
   }
 }

@@ -17,6 +17,7 @@ import { useCourseDetail } from '../../hooks/useCourseDetail';
 import { CourseDetailSkeleton } from '../CourseDetailSkeleton';
 import { ClassRow } from '../ui/ClassRow';
 import { NewClassDialog } from '../ui/NewClassDialog';
+import { StudentRow } from '../ui/StudentRow';
 
 export function CourseDetailPage({ folderName }: { folderName: string }) {
   const t = useTranslations('courses');
@@ -106,6 +107,28 @@ export function CourseDetailPage({ folderName }: { folderName: string }) {
                 key={classInfo.number}
                 folderName={folderName}
                 classInfo={classInfo}
+              />
+            ))
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('students.title')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {course.students.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {t('students.empty')}
+            </p>
+          ) : (
+            course.students.map((student) => (
+              <StudentRow
+                key={student.correo || student.cedula || student.nombre}
+                folderName={folderName}
+                student={student}
+                classes={course.classes}
               />
             ))
           )}

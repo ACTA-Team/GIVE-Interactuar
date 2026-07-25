@@ -33,7 +33,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
   const colLetter = columnIndexToLetter(target.columnIndex);
   await writeExcelRange(file.id, sheetName, `${colLetter}1`, [
-    [encodeClassCell(status, target.scheduledAt)],
+    [encodeClassCell(target.number, status, target.scheduledAt)],
   ]);
 
   const course = await getCourseDetail(folderName);

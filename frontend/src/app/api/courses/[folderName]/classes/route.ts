@@ -30,7 +30,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     [`Clase ${newNumber}`],
   ]);
   await writeExcelRange(file.id, sheetName, `${colLetter}1`, [
-    [encodeClassCell('abierta', scheduledAt)],
+    [encodeClassCell(newNumber, 'abierta', scheduledAt)],
   ]);
 
   const course = await getCourseDetail(folderName);

@@ -1,9 +1,6 @@
 // Server-only module: no "use client" directive, and must not be imported
 // from any file that has one.
-import {
-  listWorksheetNames,
-  getWorksheetData,
-} from '@/lib/graph-sharepoint';
+import { listWorksheetNames, getWorksheetData } from '@/lib/graph-sharepoint';
 
 export const DEFAULT_ATTENDANCE_THRESHOLD = 80;
 
@@ -29,9 +26,7 @@ function toNumber(value: unknown): number | null {
 // one-row-below), so the scan tolerates both rather than assuming an exact
 // cell address — this is internal config, not something worth being brittle
 // about.
-export async function getAttendanceThreshold(
-  fileId: string,
-): Promise<number> {
+export async function getAttendanceThreshold(fileId: string): Promise<number> {
   const sheetNames = await listWorksheetNames(fileId);
   const rulesSheet = sheetNames.find(
     (name) => normalize(name) === RULES_SHEET_NAME,

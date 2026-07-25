@@ -45,9 +45,7 @@ export function AttendanceForm({
           id="nombre"
           placeholder="Ej. María Elena Rodríguez"
           value={values.nombre}
-          onChange={(e) =>
-            setValues((v) => ({ ...v, nombre: e.target.value }))
-          }
+          onChange={(e) => setValues((v) => ({ ...v, nombre: e.target.value }))}
         />
       </div>
       <div className="space-y-2">
@@ -57,9 +55,7 @@ export function AttendanceForm({
           type="email"
           placeholder="ejemplo@correo.com"
           value={values.correo}
-          onChange={(e) =>
-            setValues((v) => ({ ...v, correo: e.target.value }))
-          }
+          onChange={(e) => setValues((v) => ({ ...v, correo: e.target.value }))}
         />
       </div>
       <div className="space-y-2">
@@ -68,9 +64,7 @@ export function AttendanceForm({
           id="cedula"
           placeholder="1.023.456.789"
           value={values.cedula}
-          onChange={(e) =>
-            setValues((v) => ({ ...v, cedula: e.target.value }))
-          }
+          onChange={(e) => setValues((v) => ({ ...v, cedula: e.target.value }))}
         />
       </div>
 

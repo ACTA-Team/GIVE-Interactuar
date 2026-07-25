@@ -95,9 +95,12 @@ export async function registerAttendance(
     const spreadsheetRow = DATA_ROW_OFFSET + matchedRowArrayIndex + 1;
     const row = dataRows[matchedRowArrayIndex];
 
-    await writeExcelRange(file.id, sheetName, `${classColLetter}${spreadsheetRow}`, [
-      ['x'],
-    ]);
+    await writeExcelRange(
+      file.id,
+      sheetName,
+      `${classColLetter}${spreadsheetRow}`,
+      [['x']],
+    );
 
     const existingCedula = String(row[fixed.cedula ?? -1] ?? '').trim();
     if (!existingCedula && cedulaKey) {
@@ -148,9 +151,12 @@ export async function registerAttendance(
         `${columnIndexToLetter(fixed.cedula as number)}${spreadsheetRow}`,
         [[cedulaKey]],
       );
-      await writeExcelRange(file.id, sheetName, `${classColLetter}${spreadsheetRow}`, [
-        ['x'],
-      ]);
+      await writeExcelRange(
+        file.id,
+        sheetName,
+        `${classColLetter}${spreadsheetRow}`,
+        [['x']],
+      );
       return { status: 'ok' };
     }
 

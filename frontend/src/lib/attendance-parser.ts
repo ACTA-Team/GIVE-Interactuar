@@ -7,7 +7,12 @@ export interface AttendanceRecord {
   asistencia: { clase: string; asistio: boolean }[];
 }
 
-export type FixedField = 'nombre' | 'correo' | 'empresa' | 'telefono' | 'cedula';
+export type FixedField =
+  | 'nombre'
+  | 'correo'
+  | 'empresa'
+  | 'telefono'
+  | 'cedula';
 
 // A field can be labeled differently across course sheets (e.g. someone
 // renamed "Cédula" to "NumDocumento") — match on any known alias.

@@ -25,9 +25,7 @@ export function AttendanceSuccess({
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
           <BadgeCheck className="h-9 w-9 text-primary" />
         </div>
-        <h1 className="text-2xl font-bold text-foreground">
-          Registro exitoso
-        </h1>
+        <h1 className="text-2xl font-bold text-foreground">Registro exitoso</h1>
         <p className="text-sm text-muted-foreground">
           Tu asistencia ha sido verificada y registrada correctamente.
         </p>

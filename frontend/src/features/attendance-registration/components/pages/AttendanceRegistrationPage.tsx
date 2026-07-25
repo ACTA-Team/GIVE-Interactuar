@@ -127,8 +127,8 @@ export function AttendanceRegistrationPage({
       </main>
 
       <footer className="border-t bg-background px-6 py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Corporación Interactuar. Todos los
-        derechos reservados.
+        © {new Date().getFullYear()} Corporación Interactuar. Todos los derechos
+        reservados.
       </footer>
     </div>
   );

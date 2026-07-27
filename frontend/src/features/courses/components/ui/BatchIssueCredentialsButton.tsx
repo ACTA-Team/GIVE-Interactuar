@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
@@ -16,6 +16,10 @@ import type { AttendanceRecord } from '@/lib/attendance-parser';
 import type { ClassInfo } from '@/lib/class-schedule';
 import { useBatchIssueCourseCredentials } from '../../hooks/useBatchIssueCourseCredentials';
 import { computeStudentAttendance } from '../../lib/computeAttendance';
+import {
+  computeStudentSubjectId,
+  studentHasDocument,
+} from '../../lib/studentSubjectId';
 import { ACTA_ISSUANCE_SIMULATED } from '@/lib/acta/simulateIssuance';
 
 export function BatchIssueCredentialsButton({
@@ -23,11 +27,15 @@ export function BatchIssueCredentialsButton({
   students,
   classes,
   attendanceThreshold,
+  existingCredentials,
+  onIssued,
 }: {
   folderName: string;
   students: AttendanceRecord[];
   classes: ClassInfo[];
   attendanceThreshold: number;
+  existingCredentials?: Map<string, string>;
+  onIssued?: () => void;
 }) {
   const t = useTranslations('courses');
   const {
@@ -42,23 +50,32 @@ export function BatchIssueCredentialsButton({
 
   const batchInputs = useMemo(
     () =>
-      students.map((student) => {
-        const { attended, total, percent } = computeStudentAttendance(
-          classes,
-          student,
-        );
-        return {
-          student,
-          classesAttended: attended,
-          classesTotal: total,
-          attendancePercent: percent,
-        };
-      }),
-    [students, classes],
+      students
+        .filter(
+          (student) =>
+            studentHasDocument(student) &&
+            !existingCredentials?.has(computeStudentSubjectId(student)),
+        )
+        .map((student) => {
+          const { attended, total, percent } = computeStudentAttendance(
+            classes,
+            student,
+          );
+          return {
+            student,
+            classesAttended: attended,
+            classesTotal: total,
+            attendancePercent: percent,
+          };
+        }),
+    [students, classes, existingCredentials],
   );
 
   const eligibleCount = batchInputs.filter(
     (s) => s.attendancePercent >= attendanceThreshold,
+  ).length;
+  const missingDocumentCount = students.filter(
+    (student) => !studentHasDocument(student),
   ).length;
 
   const isRunning = status === 'running';
@@ -70,6 +87,22 @@ export function BatchIssueCredentialsButton({
   const emailsSent = items.filter((i) => i.emailStatus === 'sent').length;
   const emailsFailed = items.filter((i) => i.emailStatus === 'error').length;
   const isSendingEmails = emailBatchStatus === 'running';
+
+  const autoSentRef = useRef(false);
+
+  // Auto-send once the batch finishes, mirroring the single-issue flow.
+  // The button below stays as a manual retry for anything that failed.
+  useEffect(() => {
+    if (status === 'done' && !autoSentRef.current) {
+      autoSentRef.current = true;
+      onIssued?.();
+      sendEmails();
+    }
+    if (status === 'running') {
+      autoSentRef.current = false;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   const handleRun = () => {
     run(folderName, attendanceThreshold, batchInputs);
@@ -101,6 +134,14 @@ export function BatchIssueCredentialsButton({
           </span>
         )}
       </div>
+
+      {missingDocumentCount > 0 && (
+        <p className="text-[11px] text-muted-foreground">
+          {t('students.batchMissingDocument', {
+            count: missingDocumentCount,
+          })}
+        </p>
+      )}
 
       {status === 'done' && succeeded > 0 && (
         <div className="flex flex-wrap items-center gap-2">
@@ -171,10 +212,12 @@ export function BatchIssueCredentialsButton({
                       />
                     )}
                     {item.emailStatus === 'error' && (
-                      <XCircle
-                        className="h-3.5 w-3.5 text-destructive"
-                        aria-label={item.emailError}
-                      />
+                      <span title={item.emailError}>
+                        <Mail
+                          className="h-3.5 w-3.5 text-muted-foreground"
+                          aria-label={t('students.emailFailedNote')}
+                        />
+                      </span>
                     )}
                   </>
                 )}

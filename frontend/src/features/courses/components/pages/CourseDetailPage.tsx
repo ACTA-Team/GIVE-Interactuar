@@ -14,6 +14,8 @@ import {
 import { ROUTES } from '@/lib/constants/routes';
 import { formatRelativeDate } from '@/lib/format-relative-date';
 import { useCourseDetail } from '../../hooks/useCourseDetail';
+import { useCourseCredentials } from '../../hooks/useCourseCredentials';
+import { computeStudentSubjectId } from '../../lib/studentSubjectId';
 import { CourseDetailSkeleton } from '../CourseDetailSkeleton';
 import { BatchIssueCredentialsButton } from '../ui/BatchIssueCredentialsButton';
 import { ClassRow } from '../ui/ClassRow';
@@ -25,6 +27,10 @@ export function CourseDetailPage({ folderName }: { folderName: string }) {
   const locale = useLocale();
   const router = useRouter();
   const { data, isLoading, error } = useCourseDetail(folderName);
+  const {
+    bySubjectId: existingCredentials,
+    refetch: refetchCourseCredentials,
+  } = useCourseCredentials(folderName);
 
   if (isLoading) {
     return <CourseDetailSkeleton />;
@@ -130,6 +136,8 @@ export function CourseDetailPage({ folderName }: { folderName: string }) {
                 students={course.students}
                 classes={course.classes}
                 attendanceThreshold={course.attendanceThreshold}
+                existingCredentials={existingCredentials}
+                onIssued={refetchCourseCredentials}
               />
               {course.students.map((student) => (
                 <StudentRow
@@ -138,6 +146,10 @@ export function CourseDetailPage({ folderName }: { folderName: string }) {
                   student={student}
                   classes={course.classes}
                   attendanceThreshold={course.attendanceThreshold}
+                  existingPublicId={existingCredentials.get(
+                    computeStudentSubjectId(student),
+                  )}
+                  onIssued={refetchCourseCredentials}
                 />
               ))}
             </>

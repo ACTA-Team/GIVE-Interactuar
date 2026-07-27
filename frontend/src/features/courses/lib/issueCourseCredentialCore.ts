@@ -7,15 +7,8 @@ import {
   simulateIssueTx,
 } from '@/lib/acta/simulateIssuance';
 import { CREDENTIAL_TYPE_LABELS } from '@/features/credentials/types';
+import { computeStudentSubjectId, studentHasDocument } from './studentSubjectId';
 import type { AttendanceRecord } from '@/lib/attendance-parser';
-
-function normalize(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-}
 
 export interface IssueCourseCredentialInput {
   student: AttendanceRecord;
@@ -51,8 +44,13 @@ export async function issueCourseCredentialCore(
 ): Promise<IssueCourseCredentialOutcome> {
   const { contractId, actaClient, issue } = ctx;
 
-  const subjectId =
-    params.student.cedula.trim() || normalize(params.student.correo);
+  if (!studentHasDocument(params.student)) {
+    throw new Error(
+      'El estudiante no tiene número de documento cargado — no se puede emitir la credencial.',
+    );
+  }
+
+  const subjectId = computeStudentSubjectId(params.student);
   const vcId = generateVcId('course_completion', subjectId);
   const signTransaction = buildSignTransaction();
 
@@ -99,6 +97,7 @@ export async function issueCourseCredentialCore(
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
+      entrepreneurId: subjectId,
       credentialType: 'course_completion',
       title,
       description: `Emitido para ${params.student.nombre} — Curso: ${params.courseName}`,

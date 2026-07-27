@@ -17,6 +17,12 @@ export function createCredentialService(repo: CredentialRepository) {
       return repo.findByPublicId(publicId);
     },
 
+    async listCourseCompletionByCourseName(
+      courseName: string,
+    ): Promise<Credential[]> {
+      return repo.findCourseCompletionByCourseName(courseName);
+    },
+
     async createDraft(
       input: IssuanceDraftInput,
       createdBy: string,

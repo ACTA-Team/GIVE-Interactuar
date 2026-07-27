@@ -7,7 +7,10 @@ import {
   simulateIssueTx,
 } from '@/lib/acta/simulateIssuance';
 import { CREDENTIAL_TYPE_LABELS } from '@/features/credentials/types';
-import { computeStudentSubjectId, studentHasDocument } from './studentSubjectId';
+import {
+  computeStudentSubjectId,
+  studentHasDocument,
+} from './studentSubjectId';
 import type { AttendanceRecord } from '@/lib/attendance-parser';
 
 export interface IssueCourseCredentialInput {

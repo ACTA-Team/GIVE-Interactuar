@@ -41,8 +41,7 @@ export function useBatchIssueCourseCredentials() {
   const [status, setStatus] = useState<BatchStatus>('idle');
   const [items, setItems] = useState<BatchItemResult[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [emailBatchStatus, setEmailBatchStatus] =
-    useState<BatchStatus>('idle');
+  const [emailBatchStatus, setEmailBatchStatus] = useState<BatchStatus>('idle');
   const [courseName, setCourseName] = useState<string>('');
 
   const run = useCallback(
@@ -83,7 +82,9 @@ export function useBatchIssueCourseCredentials() {
       for (const entry of eligible) {
         const key = studentKey(entry.student);
         setItems((prev) =>
-          prev.map((it) => (it.key === key ? { ...it, status: 'issuing' } : it)),
+          prev.map((it) =>
+            it.key === key ? { ...it, status: 'issuing' } : it,
+          ),
         );
 
         try {

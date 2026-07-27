@@ -30,8 +30,15 @@ export function BatchIssueCredentialsButton({
   attendanceThreshold: number;
 }) {
   const t = useTranslations('courses');
-  const { run, sendEmails, status, items, error, emailBatchStatus, walletConnected } =
-    useBatchIssueCourseCredentials();
+  const {
+    run,
+    sendEmails,
+    status,
+    items,
+    error,
+    emailBatchStatus,
+    walletConnected,
+  } = useBatchIssueCourseCredentials();
 
   const batchInputs = useMemo(
     () =>
@@ -121,11 +128,12 @@ export function BatchIssueCredentialsButton({
         </div>
       )}
 
-      {ACTA_ISSUANCE_SIMULATED && (status === 'running' || status === 'done') && (
-        <p className="text-[11px] text-amber-600">
-          {t('students.credentialSimulated')}
-        </p>
-      )}
+      {ACTA_ISSUANCE_SIMULATED &&
+        (status === 'running' || status === 'done') && (
+          <p className="text-[11px] text-amber-600">
+            {t('students.credentialSimulated')}
+          </p>
+        )}
 
       {error && <p className="text-xs text-destructive">{error}</p>}
 

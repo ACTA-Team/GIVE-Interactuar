@@ -8,7 +8,9 @@ interface Props {
   params: Promise<{ credentialId: string }>;
 }
 
-function extractHolderName(claims: Record<string, unknown>): string | undefined {
+function extractHolderName(
+  claims: Record<string, unknown>,
+): string | undefined {
   return (
     (claims['holderName'] as string | undefined) ??
     (claims['name'] as string | undefined) ??

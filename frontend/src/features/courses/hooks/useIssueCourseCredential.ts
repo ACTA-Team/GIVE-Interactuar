@@ -50,10 +50,11 @@ export function useIssueCourseCredential() {
       try {
         setStatus('issuing');
 
-        const courseCredentialResult = await issueCourseCredentialCore(
-          params,
-          { contractId, actaClient, issue },
-        );
+        const courseCredentialResult = await issueCourseCredentialCore(params, {
+          contractId,
+          actaClient,
+          issue,
+        });
 
         setResult(courseCredentialResult);
         setStatus('success');

@@ -55,8 +55,8 @@ export function CourseCompletionCertificatePage({
               Compartir credencial
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Descarga la constancia en PDF para compartirla por correo,
-              redes sociales o mensajería.
+              Descarga la constancia en PDF para compartirla por correo, redes
+              sociales o mensajería.
             </p>
             {isSimulated && (
               <p className="mt-2 inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">

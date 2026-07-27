@@ -27,83 +27,81 @@ export default async function Image({
       : (credential?.title ?? 'Credencial verificable');
 
   return new ImageResponse(
-    (
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          padding: '64px',
-          backgroundColor: '#021442',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div
-            style={{
-              width: 14,
-              height: 14,
-              borderRadius: 999,
-              backgroundColor: '#ea4e2f',
-              display: 'flex',
-            }}
-          />
-          <span
-            style={{
-              fontSize: 28,
-              fontWeight: 700,
-              letterSpacing: 4,
-              color: '#ffffff',
-              textTransform: 'uppercase',
-            }}
-          >
-            Interactuar
-          </span>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <span
-            style={{
-              fontSize: 22,
-              color: '#20a7d1',
-              textTransform: 'uppercase',
-              letterSpacing: 3,
-            }}
-          >
-            Credencial verificable
-          </span>
-          <span
-            style={{
-              fontSize: 64,
-              fontWeight: 700,
-              color: '#ffffff',
-              lineHeight: 1.1,
-            }}
-          >
-            {holderName}
-          </span>
-          <span style={{ fontSize: 30, color: '#c7d2e8' }}>{subtitle}</span>
-        </div>
-
+    <div
+      style={{
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: '64px',
+        backgroundColor: '#021442',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div
           style={{
+            width: 14,
+            height: 14,
+            borderRadius: 999,
+            backgroundColor: '#ea4e2f',
             display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            borderTop: '1px solid rgba(255,255,255,0.2)',
-            paddingTop: 24,
+          }}
+        />
+        <span
+          style={{
+            fontSize: 28,
+            fontWeight: 700,
+            letterSpacing: 4,
+            color: '#ffffff',
+            textTransform: 'uppercase',
           }}
         >
-          <span style={{ fontSize: 20, color: '#8fa3c9' }}>
-            interactuar.org.co
-          </span>
-          <span style={{ fontSize: 20, color: '#8fa3c9' }}>
-            Emitida en blockchain (Stellar)
-          </span>
-        </div>
+          Interactuar
+        </span>
       </div>
-    ),
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <span
+          style={{
+            fontSize: 22,
+            color: '#20a7d1',
+            textTransform: 'uppercase',
+            letterSpacing: 3,
+          }}
+        >
+          Credencial verificable
+        </span>
+        <span
+          style={{
+            fontSize: 64,
+            fontWeight: 700,
+            color: '#ffffff',
+            lineHeight: 1.1,
+          }}
+        >
+          {holderName}
+        </span>
+        <span style={{ fontSize: 30, color: '#c7d2e8' }}>{subtitle}</span>
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          borderTop: '1px solid rgba(255,255,255,0.2)',
+          paddingTop: 24,
+        }}
+      >
+        <span style={{ fontSize: 20, color: '#8fa3c9' }}>
+          interactuar.org.co
+        </span>
+        <span style={{ fontSize: 20, color: '#8fa3c9' }}>
+          Emitida en blockchain (Stellar)
+        </span>
+      </div>
+    </div>,
     { ...size },
   );
 }

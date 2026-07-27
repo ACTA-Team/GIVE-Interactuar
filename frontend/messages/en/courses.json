@@ -48,7 +48,15 @@
     "download": "Download certificate",
     "issueCredential": "Issue verifiable credential",
     "credentialIssued": "Credential issued",
+    "credentialSimulated": "Simulated — pending real blockchain issuance",
     "viewCredential": "View credential",
-    "belowThreshold": "Needs {threshold}% attendance"
+    "belowThreshold": "Needs {threshold}% attendance",
+    "batchIssue": "Issue credentials to eligible students ({count})",
+    "batchSummary": "{succeeded} issued, {failed} failed",
+    "batchItemError": "Error",
+    "sendEmail": "Send by email",
+    "emailSent": "Email sent",
+    "batchSendEmails": "Send emails to all ({count})",
+    "batchEmailSummary": "{sent} sent, {failed} failed"
   }
 }

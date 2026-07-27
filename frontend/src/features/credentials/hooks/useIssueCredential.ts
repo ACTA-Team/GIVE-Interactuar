@@ -4,6 +4,11 @@ import { useState, useCallback } from 'react';
 import { useCredential, useActaClient } from '@acta-team/credentials';
 import { buildSignTransaction } from '@/lib/acta/signTransaction';
 import { buildVCPayload, generateVcId } from '@/lib/acta/vcPayloadBuilder';
+import {
+  ACTA_ISSUANCE_SIMULATED,
+  simulateIssuerIdentity,
+  simulateIssueTx,
+} from '@/lib/acta/simulateIssuance';
 import { useSmartWallet } from '@/hooks/useSmartWallet';
 import type { CredentialType } from '../types';
 import { CREDENTIAL_TYPE_LABELS } from '../types';
@@ -67,10 +72,12 @@ export function useIssueCredential() {
         // Resolves the wallet's registered did:stellar, registering one
         // on-chain (a separate signature prompt) the first time this
         // wallet issues a credential. Cached by the SDK on every call after.
-        const identity = await actaClient.getOrCreateIssuerIdentity({
-          controller: contractId,
-          signTransaction,
-        });
+        const identity = ACTA_ISSUANCE_SIMULATED
+          ? simulateIssuerIdentity(contractId)
+          : await actaClient.getOrCreateIssuerIdentity({
+              controller: contractId,
+              signTransaction,
+            });
         const issuerDid = identity.did;
 
         const vcPayload = buildVCPayload({
@@ -84,14 +91,16 @@ export function useIssueCredential() {
 
         setStatus('issuing');
 
-        const { txId } = await issue({
-          owner: contractId,
-          vcId,
-          vcData: JSON.stringify(vcPayload),
-          issuer: contractId,
-          issuerDid,
-          signTransaction,
-        });
+        const { txId } = ACTA_ISSUANCE_SIMULATED
+          ? simulateIssueTx()
+          : await issue({
+              owner: contractId,
+              vcId,
+              vcData: JSON.stringify(vcPayload),
+              issuer: contractId,
+              issuerDid,
+              signTransaction,
+            });
 
         const issuanceResult: IssuanceResult = {
           vcId,
@@ -115,6 +124,9 @@ export function useIssueCredential() {
             actaVcId: vcId,
             issuerDid,
             publicClaims: vcPayload.credentialSubject,
+            metadata: ACTA_ISSUANCE_SIMULATED
+              ? { simulated: true, simTxId: txId }
+              : undefined,
           }),
         }).catch(() => {
           // Non-blocking: credential was issued on-chain even if local persistence fails

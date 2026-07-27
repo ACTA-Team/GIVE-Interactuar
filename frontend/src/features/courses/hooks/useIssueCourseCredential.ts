@@ -2,11 +2,12 @@
 
 import { useState, useCallback } from 'react';
 import { useCredential, useActaClient } from '@acta-team/credentials';
-import { buildSignTransaction } from '@/lib/acta/signTransaction';
-import { buildVCPayload, generateVcId } from '@/lib/acta/vcPayloadBuilder';
 import { useSmartWallet } from '@/hooks/useSmartWallet';
-import { CREDENTIAL_TYPE_LABELS } from '@/features/credentials/types';
 import type { AttendanceRecord } from '@/lib/attendance-parser';
+import {
+  issueCourseCredentialCore,
+  type IssueCourseCredentialOutcome,
+} from '../lib/issueCourseCredentialCore';
 
 export type CourseCredentialStatus =
   | 'idle'
@@ -15,21 +16,7 @@ export type CourseCredentialStatus =
   | 'success'
   | 'error';
 
-export interface CourseCredentialResult {
-  vcId: string;
-  txId: string;
-  issuerAddress: string;
-  issuerDid: string;
-  publicId: string | null;
-}
-
-function normalize(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-}
+export type CourseCredentialResult = IssueCourseCredentialOutcome;
 
 export interface IssueCourseCredentialParams {
   student: AttendanceRecord;
@@ -61,75 +48,12 @@ export function useIssueCourseCredential() {
       }
 
       try {
-        const subjectId =
-          params.student.cedula.trim() || normalize(params.student.correo);
-        const vcId = generateVcId('course_completion', subjectId);
-        const signTransaction = buildSignTransaction();
-
-        setStatus('building_payload');
-
-        // Resolves the wallet's registered did:stellar, registering one
-        // on-chain (a separate signature prompt) the first time this
-        // wallet issues a credential. Cached by the SDK on every call after.
-        const identity = await actaClient.getOrCreateIssuerIdentity({
-          controller: contractId,
-          signTransaction,
-        });
-        const issuerDid = identity.did;
-
-        const vcPayload = buildVCPayload({
-          credentialType: 'course_completion',
-          formData: {
-            studentName: params.student.nombre,
-            studentDocument: params.student.cedula,
-            courseName: params.courseName,
-            classesAttended: params.classesAttended,
-            classesTotal: params.classesTotal,
-            attendancePercent: params.attendancePercent,
-            attendanceThreshold: params.attendanceThreshold,
-            completedAt: new Date().toISOString(),
-          },
-          entrepreneurId: subjectId,
-          entrepreneurName: params.student.nombre,
-          businessName: params.courseName,
-          issuerDid,
-        });
-
         setStatus('issuing');
 
-        const { txId } = await issue({
-          owner: contractId,
-          vcId,
-          vcData: JSON.stringify(vcPayload),
-          issuer: contractId,
-          issuerDid,
-          signTransaction,
-        });
-
-        const title = `${CREDENTIAL_TYPE_LABELS.course_completion} — ${params.student.nombre}`;
-
-        const storeResponse = await fetch('/api/credentials/store', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            credentialType: 'course_completion',
-            title,
-            description: `Emitido para ${params.student.nombre} — Curso: ${params.courseName}`,
-            actaVcId: vcId,
-            issuerDid,
-            publicClaims: vcPayload.credentialSubject,
-          }),
-        })
-          .then((res) => (res.ok ? res.json() : null))
-          .catch(() => null);
-
-        const courseCredentialResult: CourseCredentialResult = {
-          vcId,
-          txId,
-          issuerAddress: contractId,
-          issuerDid,
-          publicId: storeResponse?.data?.public_id ?? null,
-        };
+        const courseCredentialResult = await issueCourseCredentialCore(
+          params,
+          { contractId, actaClient, issue },
+        );
 
         setResult(courseCredentialResult);
         setStatus('success');

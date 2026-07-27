@@ -1,5 +1,24 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
+const MESES = [
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre',
+];
+
+export function formatFechaLine(date: Date = new Date()): string {
+  return `Dado en Medellín, Antioquia en el mes de ${MESES[date.getMonth()]} de ${date.getFullYear()}`;
+}
+
 export interface ConstanciaFields {
   nombre: string;
   cedula: string;

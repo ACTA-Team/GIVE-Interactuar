@@ -1,29 +1,58 @@
 import type { Metadata } from 'next';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { createCredentialRepository } from '@/features/credentials/repositories/credentialRepository';
-import { createCredentialService } from '@/features/credentials/services/credentialService';
 import { formatDateTime } from '@/lib/helpers/date';
 import { CredentialSharePage } from '@/features/credentials/components/pages/CredentialSharePage';
 import { CourseCompletionCertificatePage } from '@/features/credentials/components/pages/CourseCompletionCertificatePage';
+import { getCachedCredential } from './getCredential';
 
 interface Props {
   params: Promise<{ credentialId: string }>;
 }
 
+function extractHolderName(claims: Record<string, unknown>): string | undefined {
+  return (
+    (claims['holderName'] as string | undefined) ??
+    (claims['name'] as string | undefined) ??
+    (claims['fullName'] as string | undefined) ??
+    (claims['entrepreneurName'] as string | undefined)
+  );
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { credentialId } = await params;
+  const credential = await getCachedCredential(credentialId);
+
+  if (!credential) {
+    return { title: `Credencial · ${credentialId}` };
+  }
+
+  const claims = credential.publicClaims ?? {};
+  const holderName = extractHolderName(claims) ?? 'Interactuar';
+  const description =
+    credential.credentialType === 'course_completion'
+      ? `Constancia de finalización del curso "${(claims['courseName'] as string | undefined) ?? ''}" — ${holderName}`
+      : `${credential.title} — credencial verificable emitida por Interactuar`;
+
+  const title = `${credential.title} — ${holderName}`;
+
   return {
-    title: `Credencial · ${credentialId}`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
   };
 }
 
 export default async function Page({ params }: Props) {
   const { credentialId } = await params;
-  const supabase = await createServerSupabaseClient();
-  const repo = createCredentialRepository(supabase);
-  const service = createCredentialService(repo);
-
-  const credential = await service.getByPublicId(credentialId);
+  const credential = await getCachedCredential(credentialId);
   if (!credential) {
     // Simple 404 for public page
     return (
@@ -36,17 +65,15 @@ export default async function Page({ params }: Props) {
   if (credential.credentialType === 'course_completion') {
     return (
       <main className="min-h-screen w-full bg-white flex items-center justify-center p-6 md:p-8">
-        <CourseCompletionCertificatePage credential={credential} />
+        <div className="w-full max-w-5xl">
+          <CourseCompletionCertificatePage credential={credential} />
+        </div>
       </main>
     );
   }
 
   const claims = credential.publicClaims ?? {};
-  const holderName =
-    (claims['holderName'] as string | undefined) ??
-    (claims['name'] as string | undefined) ??
-    (claims['fullName'] as string | undefined) ??
-    (claims['entrepreneurName'] as string | undefined);
+  const holderName = extractHolderName(claims);
 
   const holderDocument =
     (claims['document'] as string | undefined) ??

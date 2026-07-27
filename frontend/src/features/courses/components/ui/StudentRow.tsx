@@ -6,6 +6,7 @@ import { Download, Loader2 } from 'lucide-react';
 import type { AttendanceRecord } from '@/lib/attendance-parser';
 import type { ClassInfo } from '@/lib/class-schedule';
 import { useDownloadConstancia } from '../../hooks/useDownloadConstancia';
+import { computeStudentAttendance } from '../../lib/computeAttendance';
 import { IssueCredentialButton } from './IssueCredentialButton';
 
 export function StudentRow({
@@ -22,13 +23,8 @@ export function StudentRow({
   const t = useTranslations('courses');
   const { mutate, isPending, error } = useDownloadConstancia(folderName);
 
-  const closedIndices = classes
-    .map((c, index) => ({ status: c.status, index }))
-    .filter((c) => c.status === 'cerrada')
-    .map((c) => c.index);
-  const attendedClosed = closedIndices.filter(
-    (i) => student.asistencia[i]?.asistio,
-  ).length;
+  const { attended: attendedClosed, total: closedTotal } =
+    computeStudentAttendance(classes, student);
 
   const handleDownload = () => {
     mutate({
@@ -48,7 +44,7 @@ export function StudentRow({
         <p className="mt-1 text-xs text-muted-foreground">
           {t('students.attendanceSummary', {
             attended: attendedClosed,
-            total: closedIndices.length,
+            total: closedTotal,
           })}
         </p>
         {error && (
@@ -74,7 +70,7 @@ export function StudentRow({
           student={student}
           courseName={folderName}
           classesAttended={attendedClosed}
-          classesTotal={closedIndices.length}
+          classesTotal={closedTotal}
           attendanceThreshold={attendanceThreshold}
         />
       </div>

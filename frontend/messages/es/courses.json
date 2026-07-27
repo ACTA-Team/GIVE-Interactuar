@@ -48,7 +48,15 @@
     "download": "Descargar constancia",
     "issueCredential": "Emitir credencial verificable",
     "credentialIssued": "Credencial emitida",
+    "credentialSimulated": "Simulada — pendiente de emisión real en blockchain",
     "viewCredential": "Ver credencial",
-    "belowThreshold": "Necesita {threshold}% de asistencia"
+    "belowThreshold": "Necesita {threshold}% de asistencia",
+    "batchIssue": "Emitir credenciales a elegibles ({count})",
+    "batchSummary": "{succeeded} emitidas, {failed} fallidas",
+    "batchItemError": "Error",
+    "sendEmail": "Enviar por correo",
+    "emailSent": "Correo enviado",
+    "batchSendEmails": "Enviar correos a todos ({count})",
+    "batchEmailSummary": "{sent} enviados, {failed} fallidos"
   }
 }

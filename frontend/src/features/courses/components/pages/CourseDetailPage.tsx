@@ -15,6 +15,7 @@ import { ROUTES } from '@/lib/constants/routes';
 import { formatRelativeDate } from '@/lib/format-relative-date';
 import { useCourseDetail } from '../../hooks/useCourseDetail';
 import { CourseDetailSkeleton } from '../CourseDetailSkeleton';
+import { BatchIssueCredentialsButton } from '../ui/BatchIssueCredentialsButton';
 import { ClassRow } from '../ui/ClassRow';
 import { NewClassDialog } from '../ui/NewClassDialog';
 import { StudentRow } from '../ui/StudentRow';
@@ -123,15 +124,23 @@ export function CourseDetailPage({ folderName }: { folderName: string }) {
               {t('students.empty')}
             </p>
           ) : (
-            course.students.map((student) => (
-              <StudentRow
-                key={student.correo || student.cedula || student.nombre}
+            <>
+              <BatchIssueCredentialsButton
                 folderName={folderName}
-                student={student}
+                students={course.students}
                 classes={course.classes}
                 attendanceThreshold={course.attendanceThreshold}
               />
-            ))
+              {course.students.map((student) => (
+                <StudentRow
+                  key={student.correo || student.cedula || student.nombre}
+                  folderName={folderName}
+                  student={student}
+                  classes={course.classes}
+                  attendanceThreshold={course.attendanceThreshold}
+                />
+              ))}
+            </>
           )}
         </CardContent>
       </Card>

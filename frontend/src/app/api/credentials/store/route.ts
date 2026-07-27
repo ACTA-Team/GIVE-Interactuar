@@ -16,6 +16,7 @@ const StoreCredentialSchema = z.object({
   actaVcId: z.string().min(1),
   issuerDid: z.string().min(1),
   publicClaims: z.record(z.unknown()).optional(),
+  metadata: z.record(z.unknown()).optional(),
   createdBy: z.string().optional(),
 });
 
@@ -44,6 +45,7 @@ export async function POST(request: Request) {
       actaVcId,
       issuerDid,
       publicClaims,
+      metadata,
       createdBy,
     } = parsed.data;
 
@@ -62,7 +64,7 @@ export async function POST(request: Request) {
         issuer_did: issuerDid,
         issued_at: new Date().toISOString(),
         public_claims: publicClaims ?? {},
-        metadata: {},
+        metadata: metadata ?? {},
         created_by: createdBy,
       })
       .select('id, public_id')

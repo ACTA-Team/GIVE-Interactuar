@@ -3,7 +3,10 @@ import { getCourseDetail } from '@/lib/course-detail';
 import { getCourseWorkbook } from '@/lib/course-workbook';
 import { getAttendanceThreshold } from '@/lib/attendance-rules';
 import { getCourseTemplatePdf } from '@/lib/course-template';
-import { generateConstanciaPdf } from '@/lib/generate-constancia';
+import {
+  generateConstanciaPdf,
+  formatFechaLine,
+} from '@/lib/generate-constancia';
 import type { AttendanceRecord } from '@/lib/attendance-parser';
 
 interface RouteParams {
@@ -33,26 +36,6 @@ function findStudent(
     if (match) return match;
   }
   return null;
-}
-
-const MESES = [
-  'enero',
-  'febrero',
-  'marzo',
-  'abril',
-  'mayo',
-  'junio',
-  'julio',
-  'agosto',
-  'septiembre',
-  'octubre',
-  'noviembre',
-  'diciembre',
-];
-
-function formatFechaLine(): string {
-  const now = new Date();
-  return `Dado en Medellín, Antioquia en el mes de ${MESES[now.getMonth()]} de ${now.getFullYear()}`;
 }
 
 // Real endpoint the course detail page depends on. Not wrapped in elaborate

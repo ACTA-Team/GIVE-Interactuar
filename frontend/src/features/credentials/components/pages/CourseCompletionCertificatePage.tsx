@@ -1,19 +1,10 @@
 'use client';
 
-import { QRCodeCanvas } from 'qrcode.react';
-import { Award } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/Button';
+import { formatDate } from '@/lib/helpers/date';
 import type { Credential } from '../../types';
-
-function formatDate(iso: string | undefined): string {
-  if (!iso) return '—';
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return '—';
-  return new Intl.DateTimeFormat('es-CO', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(date);
-}
+import { LinkedInShareButton } from '../ui/LinkedInShareButton';
 
 const STATUS_LABELS: Record<Credential['status'], string> = {
   draft: 'Borrador',
@@ -30,115 +21,114 @@ export function CourseCompletionCertificatePage({
 }) {
   const claims = credential.publicClaims as {
     holderName?: string;
-    studentDocument?: string;
     courseName?: string;
-    classesAttended?: number;
-    classesTotal?: number;
-    attendancePercent?: number;
   };
 
+  const isSimulated = credential.metadata?.simulated === true;
+
+  const pdfUrl = `/api/credentials/${credential.publicId}/constancia`;
   const shareUrl =
     typeof window !== 'undefined'
       ? `${window.location.origin}/credential/${credential.publicId}`
       : `/credential/${credential.publicId}`;
 
+  const issuedDateLabel = credential.issuedAt
+    ? formatDate(credential.issuedAt)
+    : '—';
+
   return (
-    <div className="w-full max-w-md space-y-6 text-center">
-      <div className="flex flex-col items-center gap-3">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-          <Award className="h-9 w-9 text-primary" />
-        </div>
-        <h1 className="text-2xl font-bold text-foreground">
-          Constancia de Finalización
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Credencial verificable emitida en blockchain (Stellar).
-        </p>
-      </div>
-
-      <div className="overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10">
-        <div className="h-1 w-full bg-primary" />
-        <dl className="divide-y divide-border text-left">
-          <div className="flex items-center justify-between px-5 py-4">
-            <dt className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              Estudiante
-            </dt>
-            <dd className="font-semibold text-primary">
-              {claims.holderName ?? '—'}
-            </dd>
-          </div>
-          {claims.studentDocument && (
-            <div className="flex items-center justify-between px-5 py-4">
-              <dt className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                Documento
-              </dt>
-              <dd className="font-semibold text-foreground">
-                {claims.studentDocument}
-              </dd>
-            </div>
-          )}
-          <div className="flex items-center justify-between px-5 py-4">
-            <dt className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              Curso
-            </dt>
-            <dd className="font-semibold text-foreground">
-              {claims.courseName ?? '—'}
-            </dd>
-          </div>
-          <div className="flex items-center justify-between px-5 py-4">
-            <dt className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              Asistencia
-            </dt>
-            <dd className="font-semibold text-foreground">
-              {claims.classesAttended ?? '—'}/{claims.classesTotal ?? '—'} (
-              {Math.round(claims.attendancePercent ?? 0)}%)
-            </dd>
-          </div>
-          <div className="flex items-center justify-between px-5 py-4">
-            <dt className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              Emitida
-            </dt>
-            <dd className="font-semibold text-foreground">
-              {formatDate(credential.issuedAt ?? undefined)}
-            </dd>
-          </div>
-          <div className="flex items-center justify-between px-5 py-4">
-            <dt className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              Estado
-            </dt>
-            <dd className="font-semibold text-foreground">
-              {STATUS_LABELS[credential.status]}
-            </dd>
-          </div>
-        </dl>
-      </div>
-
-      <div className="flex flex-col items-center gap-3 rounded-xl bg-card p-5 ring-1 ring-foreground/10">
-        <div className="rounded-lg bg-white p-3 ring-1 ring-foreground/10">
-          <QRCodeCanvas
-            value={shareUrl}
-            size={140}
-            bgColor="#ffffff"
-            fgColor="#000000"
-            includeMargin={false}
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-start max-lg:grid-cols-1 max-md:gap-4">
+      <Card className="overflow-hidden">
+        <CardContent className="p-0">
+          <iframe
+            src={pdfUrl}
+            title={`Constancia — ${claims.holderName ?? ''}`}
+            className="h-[70vh] w-full border-0 md:h-[600px]"
           />
-        </div>
-        {credential.issuerDid && (
-          <p className="max-w-full truncate text-[10px] font-mono text-muted-foreground">
-            {credential.issuerDid}
-          </p>
-        )}
-        {credential.actaVcId && (
-          <p className="max-w-full truncate text-[10px] font-mono text-muted-foreground">
-            {credential.actaVcId}
-          </p>
-        )}
-      </div>
+        </CardContent>
+      </Card>
 
-      <p className="text-sm text-muted-foreground italic">
-        Este documento certifica la finalización del curso y puede
-        verificarse públicamente con este enlace.
-      </p>
+      <Card>
+        <CardContent className="pt-5 pb-6 space-y-4 max-md:pt-4 max-md:pb-4 max-md:px-4">
+          <div>
+            <h2 className="text-lg font-semibold text-foreground max-md:text-base">
+              Compartir credencial
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Descarga la constancia en PDF para compartirla por correo,
+              redes sociales o mensajería.
+            </p>
+            {isSimulated && (
+              <p className="mt-2 inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+                Simulada — pendiente de emisión real en blockchain
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Información de la credencial
+            </p>
+            <p className="text-sm font-semibold text-foreground">
+              {credential.title}
+            </p>
+            {claims.holderName && (
+              <p className="text-sm text-muted-foreground">
+                {claims.holderName}
+              </p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2 pt-2">
+            <Button
+              className="w-full"
+              variant="default"
+              render={<a href={`${pdfUrl}?download=1`} />}
+            >
+              Descargar PDF
+            </Button>
+            <LinkedInShareButton url={shareUrl} />
+          </div>
+
+          <div className="mt-4 border-t pt-4 space-y-2">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Información de la credencial
+            </p>
+            <dl className="space-y-1 text-xs">
+              <div className="flex items-start justify-between gap-2">
+                <dt className="text-muted-foreground">Emisor</dt>
+                <dd className="text-right font-medium">Interactuar</dd>
+              </div>
+              {credential.issuerDid && (
+                <div className="flex items-start justify-between gap-2">
+                  <dt className="text-muted-foreground">DID del emisor</dt>
+                  <dd className="font-mono text-right break-all">
+                    {credential.issuerDid}
+                  </dd>
+                </div>
+              )}
+              <div className="flex items-start justify-between gap-2">
+                <dt className="text-muted-foreground">Tipo de credencial</dt>
+                <dd className="text-right">
+                  {credential.credentialType.toUpperCase()}
+                </dd>
+              </div>
+              <div className="flex items-start justify-between gap-2">
+                <dt className="text-muted-foreground">Estado</dt>
+                <dd className="text-right">
+                  {STATUS_LABELS[credential.status]}
+                </dd>
+              </div>
+              {credential.issuedAt && (
+                <div className="flex items-start justify-between gap-2">
+                  <dt className="text-muted-foreground">Fecha de emisión</dt>
+                  <dd className="text-right">{issuedDateLabel}</dd>
+                </div>
+              )}
+            </dl>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

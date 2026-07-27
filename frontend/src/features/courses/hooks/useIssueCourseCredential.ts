@@ -5,50 +5,52 @@ import { useCredential, useActaClient } from '@acta-team/credentials';
 import { buildSignTransaction } from '@/lib/acta/signTransaction';
 import { buildVCPayload, generateVcId } from '@/lib/acta/vcPayloadBuilder';
 import { useSmartWallet } from '@/hooks/useSmartWallet';
-import type { CredentialType } from '../types';
-import { CREDENTIAL_TYPE_LABELS } from '../types';
-import type { ImpactCredentialFormInput } from '../schemas/impactCredentialSchema';
-import type { BehaviorCredentialFormInput } from '../schemas/behaviorCredentialSchema';
-import type { ProfileCredentialFormInput } from '../schemas/profileCredentialSchema';
-import type { MbaCredentialFormInput } from '../schemas/mbaCredentialSchema';
+import { CREDENTIAL_TYPE_LABELS } from '@/features/credentials/types';
+import type { AttendanceRecord } from '@/lib/attendance-parser';
 
-type FormData =
-  | ImpactCredentialFormInput
-  | BehaviorCredentialFormInput
-  | ProfileCredentialFormInput
-  | MbaCredentialFormInput;
-
-export type IssuanceStatus =
+export type CourseCredentialStatus =
   | 'idle'
   | 'building_payload'
   | 'issuing'
   | 'success'
   | 'error';
 
-export interface IssuanceResult {
+export interface CourseCredentialResult {
   vcId: string;
   txId: string;
   issuerAddress: string;
   issuerDid: string;
+  publicId: string | null;
 }
 
-export function useIssueCredential() {
+function normalize(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+export interface IssueCourseCredentialParams {
+  student: AttendanceRecord;
+  courseName: string;
+  classesAttended: number;
+  classesTotal: number;
+  attendancePercent: number;
+  attendanceThreshold: number;
+}
+
+export function useIssueCourseCredential() {
   const { issue } = useCredential();
   const actaClient = useActaClient();
   const { wallet, contractId } = useSmartWallet();
 
-  const [status, setStatus] = useState<IssuanceStatus>('idle');
+  const [status, setStatus] = useState<CourseCredentialStatus>('idle');
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<IssuanceResult | null>(null);
+  const [result, setResult] = useState<CourseCredentialResult | null>(null);
 
-  const issueCredential = useCallback(
-    async (params: {
-      credentialType: CredentialType;
-      formData: FormData;
-      entrepreneurId: string;
-      entrepreneurName: string;
-      businessName: string;
-    }) => {
+  const issueCourseCredential = useCallback(
+    async (params: IssueCourseCredentialParams) => {
       setError(null);
       setResult(null);
 
@@ -59,7 +61,9 @@ export function useIssueCredential() {
       }
 
       try {
-        const vcId = generateVcId(params.credentialType, params.entrepreneurId);
+        const subjectId =
+          params.student.cedula.trim() || normalize(params.student.correo);
+        const vcId = generateVcId('course_completion', subjectId);
         const signTransaction = buildSignTransaction();
 
         setStatus('building_payload');
@@ -74,11 +78,20 @@ export function useIssueCredential() {
         const issuerDid = identity.did;
 
         const vcPayload = buildVCPayload({
-          credentialType: params.credentialType,
-          formData: params.formData,
-          entrepreneurId: params.entrepreneurId,
-          entrepreneurName: params.entrepreneurName,
-          businessName: params.businessName,
+          credentialType: 'course_completion',
+          formData: {
+            studentName: params.student.nombre,
+            studentDocument: params.student.cedula,
+            courseName: params.courseName,
+            classesAttended: params.classesAttended,
+            classesTotal: params.classesTotal,
+            attendancePercent: params.attendancePercent,
+            attendanceThreshold: params.attendanceThreshold,
+            completedAt: new Date().toISOString(),
+          },
+          entrepreneurId: subjectId,
+          entrepreneurName: params.student.nombre,
+          businessName: params.courseName,
           issuerDid,
         });
 
@@ -93,34 +106,35 @@ export function useIssueCredential() {
           signTransaction,
         });
 
-        const issuanceResult: IssuanceResult = {
-          vcId,
-          txId,
-          issuerAddress: contractId,
-          issuerDid,
-        };
+        const title = `${CREDENTIAL_TYPE_LABELS.course_completion} — ${params.student.nombre}`;
 
-        setResult(issuanceResult);
-        setStatus('success');
-
-        // Persist to Supabase (non-blocking)
-        fetch('/api/credentials/store', {
+        const storeResponse = await fetch('/api/credentials/store', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            entrepreneurId: params.entrepreneurId,
-            credentialType: params.credentialType,
-            title: `${CREDENTIAL_TYPE_LABELS[params.credentialType]} — ${params.entrepreneurName}`,
-            description: `Credencial emitida para ${params.businessName}`,
+            credentialType: 'course_completion',
+            title,
+            description: `Emitido para ${params.student.nombre} — Curso: ${params.courseName}`,
             actaVcId: vcId,
             issuerDid,
             publicClaims: vcPayload.credentialSubject,
           }),
-        }).catch(() => {
-          // Non-blocking: credential was issued on-chain even if local persistence fails
-        });
+        })
+          .then((res) => (res.ok ? res.json() : null))
+          .catch(() => null);
 
-        return issuanceResult;
+        const courseCredentialResult: CourseCredentialResult = {
+          vcId,
+          txId,
+          issuerAddress: contractId,
+          issuerDid,
+          publicId: storeResponse?.data?.public_id ?? null,
+        };
+
+        setResult(courseCredentialResult);
+        setStatus('success');
+
+        return courseCredentialResult;
       } catch (err) {
         const message =
           err instanceof Error
@@ -155,12 +169,11 @@ export function useIssueCredential() {
   }, []);
 
   return {
-    issueCredential,
+    issueCourseCredential,
     status,
     error,
     result,
     reset,
-    walletAddress: contractId,
     walletConnected: !!wallet,
   };
 }

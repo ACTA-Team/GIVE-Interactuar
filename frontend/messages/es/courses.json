@@ -45,6 +45,10 @@
     "title": "Estudiantes",
     "empty": "Aún no hay estudiantes registrados en este curso.",
     "attendanceSummary": "{attended}/{total} clases dictadas",
-    "download": "Descargar constancia"
+    "download": "Descargar constancia",
+    "issueCredential": "Emitir credencial verificable",
+    "credentialIssued": "Credencial emitida",
+    "viewCredential": "Ver credencial",
+    "belowThreshold": "Necesita {threshold}% de asistencia"
   }
 }

@@ -7,11 +7,13 @@ import {
   type AttendanceRecord,
 } from '@/lib/attendance-parser';
 import { parseClassColumns, type ClassInfo } from '@/lib/class-schedule';
+import { getAttendanceThreshold } from '@/lib/attendance-rules';
 
 export interface CourseDetail {
   folderName: string;
   studentCount: number;
   attendanceRate: number;
+  attendanceThreshold: number;
   lastModifiedDateTime: string;
   classes: ClassInfo[];
   students: AttendanceRecord[];
@@ -24,6 +26,7 @@ export async function getCourseDetail(
 
   const records = parseAttendanceSheet(rows);
   const classes = parseClassColumns(rows);
+  const attendanceThreshold = await getAttendanceThreshold(file.id);
 
   const totalCells = records.length * classes.length;
   const presentCells = records.reduce(
@@ -35,6 +38,7 @@ export async function getCourseDetail(
     folderName,
     studentCount: records.length,
     attendanceRate: totalCells > 0 ? presentCells / totalCells : 0,
+    attendanceThreshold,
     lastModifiedDateTime: file.lastModifiedDateTime,
     classes,
     students: records,

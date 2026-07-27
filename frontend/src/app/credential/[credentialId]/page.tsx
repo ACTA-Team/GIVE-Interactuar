@@ -4,6 +4,7 @@ import { createCredentialRepository } from '@/features/credentials/repositories/
 import { createCredentialService } from '@/features/credentials/services/credentialService';
 import { formatDateTime } from '@/lib/helpers/date';
 import { CredentialSharePage } from '@/features/credentials/components/pages/CredentialSharePage';
+import { CourseCompletionCertificatePage } from '@/features/credentials/components/pages/CourseCompletionCertificatePage';
 
 interface Props {
   params: Promise<{ credentialId: string }>;
@@ -28,6 +29,14 @@ export default async function Page({ params }: Props) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-slate-950 text-slate-50">
         <p>Credencial no encontrada.</p>
+      </main>
+    );
+  }
+
+  if (credential.credentialType === 'course_completion') {
+    return (
+      <main className="min-h-screen w-full bg-white flex items-center justify-center p-6 md:p-8">
+        <CourseCompletionCertificatePage credential={credential} />
       </main>
     );
   }

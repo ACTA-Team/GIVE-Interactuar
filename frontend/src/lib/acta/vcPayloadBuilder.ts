@@ -10,11 +10,23 @@ import { computeBehaviorDerivedFields } from '@/features/credentials/schemas/beh
 import type { ProfileCredentialFormInput } from '@/features/credentials/schemas/profileCredentialSchema';
 import type { MbaCredentialFormInput } from '@/features/credentials/schemas/mbaCredentialSchema';
 
+export interface CourseCompletionData {
+  studentName: string;
+  studentDocument: string;
+  courseName: string;
+  classesAttended: number;
+  classesTotal: number;
+  attendancePercent: number;
+  attendanceThreshold: number;
+  completedAt: string;
+}
+
 type FormData =
   | ImpactCredentialFormInput
   | BehaviorCredentialFormInput
   | ProfileCredentialFormInput
-  | MbaCredentialFormInput;
+  | MbaCredentialFormInput
+  | CourseCompletionData;
 
 interface VCPayload {
   '@context': string[];
@@ -139,6 +151,23 @@ function buildMbaSubject(
   };
 }
 
+function buildCourseCompletionSubject(
+  data: CourseCompletionData,
+  subjectId: string,
+): Record<string, unknown> {
+  return {
+    id: `urn:give:student:${subjectId}`,
+    holderName: data.studentName,
+    studentDocument: data.studentDocument,
+    courseName: data.courseName,
+    classesAttended: data.classesAttended,
+    classesTotal: data.classesTotal,
+    attendancePercent: data.attendancePercent,
+    attendanceThreshold: data.attendanceThreshold,
+    completedAt: data.completedAt,
+  };
+}
+
 export function buildVCPayload(options: BuildVCOptions): VCPayload {
   const { credentialType, formData, entrepreneurId, issuerDid } = options;
 
@@ -152,6 +181,7 @@ export function buildVCPayload(options: BuildVCOptions): VCPayload {
     behavior: buildBehaviorSubject as never,
     profile: buildProfileSubject as never,
     mba: buildMbaSubject as never,
+    course_completion: buildCourseCompletionSubject as never,
   };
 
   const credentialSubject = subjectBuilders[credentialType](

@@ -1,7 +1,7 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ActaConfig } from '@acta-team/acta-sdk';
+import { ActaConfig, mainNet, testNet } from '@acta-team/credentials';
 import { useState, type ReactNode } from 'react';
 
 interface ProvidersProps {
@@ -10,9 +10,7 @@ interface ProvidersProps {
 
 const actaApiKey = process.env.NEXT_PUBLIC_ACTA_API_KEY;
 const actaBaseURL =
-  process.env.NEXT_PUBLIC_STELLAR_NETWORK === 'mainnet'
-    ? 'https://acta.build/api/mainnet'
-    : 'https://acta.build/api/testnet';
+  process.env.NEXT_PUBLIC_STELLAR_NETWORK === 'mainnet' ? mainNet : testNet;
 
 export function Providers({ children }: ProvidersProps) {
   const [queryClient] = useState(

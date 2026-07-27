@@ -45,6 +45,10 @@
     "title": "Students",
     "empty": "No students registered for this course yet.",
     "attendanceSummary": "{attended}/{total} classes held",
-    "download": "Download certificate"
+    "download": "Download certificate",
+    "issueCredential": "Issue verifiable credential",
+    "credentialIssued": "Credential issued",
+    "viewCredential": "View credential",
+    "belowThreshold": "Needs {threshold}% attendance"
   }
 }

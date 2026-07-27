@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useVault } from '@acta-team/acta-sdk';
+import { useVault } from '@acta-team/credentials';
 import { buildSignTransaction } from '@/lib/acta/signTransaction';
 
 export type VaultSetupStatus =

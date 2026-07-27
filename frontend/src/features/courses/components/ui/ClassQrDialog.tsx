@@ -35,13 +35,13 @@ export function ClassQrDialog({
           </Button>
         }
       />
-      <DialogContent className="sm:max-w-[320px]">
-        <DialogHeader>
+      <DialogContent className="min-w-0 sm:max-w-[320px]">
+        <DialogHeader className="min-w-0">
           <DialogTitle>
             {t('detail.classNumber', { number: classNumber })}
           </DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col items-center gap-4 py-2">
+        <div className="flex min-w-0 flex-col items-center gap-4 py-2">
           <div className="rounded-lg bg-white p-4 ring-1 ring-foreground/10">
             <QRCodeCanvas
               value={link}
@@ -51,8 +51,8 @@ export function ClassQrDialog({
               includeMargin={false}
             />
           </div>
-          <div className="flex w-full items-center justify-between gap-2 rounded-md bg-muted px-2 py-1">
-            <span className="truncate text-xs text-muted-foreground">
+          <div className="flex w-full min-w-0 items-center justify-between gap-2 rounded-md bg-muted px-2 py-1">
+            <span className="min-w-0 truncate text-xs text-muted-foreground">
               {link}
             </span>
             <CopyButton text={link} className="shrink-0" />

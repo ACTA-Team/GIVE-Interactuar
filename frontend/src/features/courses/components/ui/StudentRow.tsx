@@ -6,15 +6,18 @@ import { Download, Loader2 } from 'lucide-react';
 import type { AttendanceRecord } from '@/lib/attendance-parser';
 import type { ClassInfo } from '@/lib/class-schedule';
 import { useDownloadConstancia } from '../../hooks/useDownloadConstancia';
+import { IssueCredentialButton } from './IssueCredentialButton';
 
 export function StudentRow({
   folderName,
   student,
   classes,
+  attendanceThreshold,
 }: {
   folderName: string;
   student: AttendanceRecord;
   classes: ClassInfo[];
+  attendanceThreshold: number;
 }) {
   const t = useTranslations('courses');
   const { mutate, isPending, error } = useDownloadConstancia(folderName);
@@ -53,19 +56,28 @@ export function StudentRow({
         )}
       </div>
 
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handleDownload}
-        disabled={isPending}
-      >
-        {isPending ? (
-          <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-        ) : (
-          <Download className="mr-1.5 h-3.5 w-3.5" />
-        )}
-        {t('students.download')}
-      </Button>
+      <div className="flex flex-col items-start gap-2 sm:items-end">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleDownload}
+          disabled={isPending}
+        >
+          {isPending ? (
+            <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <Download className="mr-1.5 h-3.5 w-3.5" />
+          )}
+          {t('students.download')}
+        </Button>
+        <IssueCredentialButton
+          student={student}
+          courseName={folderName}
+          classesAttended={attendedClosed}
+          classesTotal={closedIndices.length}
+          attendanceThreshold={attendanceThreshold}
+        />
+      </div>
     </div>
   );
 }

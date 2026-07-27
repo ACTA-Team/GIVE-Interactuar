@@ -129,6 +129,7 @@ export function CourseDetailPage({ folderName }: { folderName: string }) {
                 folderName={folderName}
                 student={student}
                 classes={course.classes}
+                attendanceThreshold={course.attendanceThreshold}
               />
             ))
           )}

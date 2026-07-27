@@ -5,7 +5,7 @@ type RawRow = Record<string, unknown>;
 export function mapCredential(row: RawRow): Credential {
   return {
     id: row.id as string,
-    entrepreneurId: row.entrepreneur_id as string,
+    entrepreneurId: (row.entrepreneur_id as string) ?? '',
     templateId: (row.template_id as string) ?? null,
     sourceDraftId: (row.source_draft_id as string) ?? null,
     sourceSnapshotId: (row.source_snapshot_id as string) ?? null,

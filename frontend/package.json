@@ -11,7 +11,7 @@
     "prepare": "cd .. && husky frontend/.husky"
   },
   "dependencies": {
-    "@acta-team/acta-sdk": "^1.1.9",
+    "@acta-team/credentials": "^1.1.6",
     "@base-ui/react": "^1.2.0",
     "@hookform/resolvers": "^3.9.0",
     "@stellar/stellar-sdk": "^14.6.0",

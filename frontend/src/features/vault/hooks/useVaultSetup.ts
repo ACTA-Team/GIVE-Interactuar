@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useVault } from '@acta-team/acta-sdk';
+import { useVault, useActaClient } from '@acta-team/credentials';
 import { buildSignTransaction } from '@/lib/acta/signTransaction';
 
 export type VaultSetupStatus =
@@ -20,6 +20,7 @@ export type VaultSetupStatus =
  */
 export function useVaultSetup() {
   const { createVault, authorizeIssuer } = useVault();
+  const actaClient = useActaClient();
 
   const [status, setStatus] = useState<VaultSetupStatus>('idle');
   const [error, setError] = useState<string | null>(null);
@@ -31,9 +32,14 @@ export function useVaultSetup() {
       setStatus('creating_vault');
 
       try {
-        const network = process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? 'testnet';
-        const ownerDid = `did:pkh:stellar:${network}:${ownerContractId}`;
         const signTransaction = buildSignTransaction();
+
+        // did:stellar is registered on-chain by the SDK; it cannot be derived
+        // client-side from the wallet address.
+        const { did: ownerDid } = await actaClient.getOrCreateIssuerIdentity({
+          controller: ownerContractId,
+          signTransaction,
+        });
 
         const { txId } = await createVault({
           owner: ownerContractId,
@@ -52,7 +58,7 @@ export function useVaultSetup() {
         return null;
       }
     },
-    [createVault],
+    [createVault, actaClient],
   );
 
   const handleAuthorizeIssuer = useCallback(

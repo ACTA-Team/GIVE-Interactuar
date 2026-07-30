@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useCredential } from '@acta-team/acta-sdk';
+import { useCredential, useActaClient } from '@acta-team/credentials';
 import { buildSignTransaction } from '@/lib/acta/signTransaction';
 import { buildVCPayload, generateVcId } from '@/lib/acta/vcPayloadBuilder';
 import { useSmartWallet } from '@/hooks/useSmartWallet';
@@ -34,6 +34,7 @@ export interface IssuanceResult {
 
 export function useIssueCredential() {
   const { issue } = useCredential();
+  const actaClient = useActaClient();
   const { wallet, contractId } = useSmartWallet();
 
   const [status, setStatus] = useState<IssuanceStatus>('idle');
@@ -58,12 +59,17 @@ export function useIssueCredential() {
       }
 
       try {
-        const network = process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? 'testnet';
-        const issuerDid = `did:pkh:stellar:${network}:${contractId}`;
-        const holderDid = issuerDid;
         const vcId = generateVcId(params.credentialType, params.entrepreneurId);
+        const signTransaction = buildSignTransaction();
 
         setStatus('building_payload');
+
+        // did:stellar is registered on-chain by the SDK; it cannot be derived
+        // client-side from the wallet address.
+        const { did: issuerDid } = await actaClient.getOrCreateIssuerIdentity({
+          controller: contractId,
+          signTransaction,
+        });
 
         const vcPayload = buildVCPayload({
           credentialType: params.credentialType,
@@ -76,14 +82,11 @@ export function useIssueCredential() {
 
         setStatus('issuing');
 
-        const signTransaction = buildSignTransaction();
-
         const { txId } = await issue({
           owner: contractId,
           vcId,
           vcData: JSON.stringify(vcPayload),
           issuer: contractId,
-          holder: holderDid,
           issuerDid,
           signTransaction,
         });
@@ -140,7 +143,7 @@ export function useIssueCredential() {
         return null;
       }
     },
-    [issue, wallet, contractId],
+    [issue, wallet, contractId, actaClient],
   );
 
   const reset = useCallback(() => {

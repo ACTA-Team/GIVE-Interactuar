@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 3600 2700" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="UPPER" transform="matrix(0.978839,0,0,0.988605,38.090534,-34.04753)">
+        <g transform="matrix(5.555556,0,0,5.555556,-88.888889,11.111111)">
+            <clipPath id="_clip1">
+                <path d="M664,20L664,480C664,482.208 662.208,484 660,484L20,484C17.792,484 16,482.208 16,480L16,20C16,17.792 17.792,16 20,16L660,16C662.208,16 664,17.792 664,20Z"/>
+            </clipPath>
+            <g clip-path="url(#_clip1)">
+                <rect x="16" y="22" width="648" height="3" style="fill:rgb(32,167,209);"/>
+            </g>
+        </g>
+        <g transform="matrix(5.555556,0,0,5.555556,-88.888889,11.111111)">
+            <clipPath id="_clip2">
+                <path d="M664,20L664,480C664,482.208 662.208,484 660,484L20,484C17.792,484 16,482.208 16,480L16,20C16,17.792 17.792,16 20,16L660,16C662.208,16 664,17.792 664,20Z"/>
+            </clipPath>
+            <g clip-path="url(#_clip2)">
+                <path d="M664,19C664,20.656 662.642,22 660.97,22L19.03,22C17.358,22 16,20.656 16,19C16,17.344 17.358,16 19.03,16L660.97,16C662.642,16 664,17.344 664,19Z" style="fill:rgb(234,78,47);"/>
+            </g>
+        </g>
+    </g>
+</svg>

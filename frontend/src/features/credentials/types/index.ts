@@ -4,7 +4,34 @@ export type CredentialStatus =
   | 'revoked'
   | 'expired'
   | 'pending_endorsement';
-export type CredentialType = 'impact' | 'verification' | 'endorsement';
+export type CredentialType = 'impact' | 'behavior' | 'profile' | 'mba';
+
+export type VCCredentialType =
+  | 'ImpactCredential'
+  | 'BehaviorCredential'
+  | 'ProfileFormalizationCredential'
+  | 'MBAProgramCredential';
+
+export const CREDENTIAL_TYPE_TO_VC: Record<CredentialType, VCCredentialType> = {
+  impact: 'ImpactCredential',
+  behavior: 'BehaviorCredential',
+  profile: 'ProfileFormalizationCredential',
+  mba: 'MBAProgramCredential',
+};
+
+export const CREDENTIAL_TYPE_LABELS: Record<CredentialType, string> = {
+  impact: 'Credencial de Impacto',
+  behavior: 'Credencial de Comportamiento',
+  profile: 'Credencial de Perfil y Formalización',
+  mba: 'Credencial MBA Empresarial',
+};
+
+export const CREDENTIAL_TYPE_DESCRIPTIONS: Record<CredentialType, string> = {
+  impact: 'Mide el impacto económico y social del empresario',
+  behavior: 'Refleja el comportamiento financiero y crediticio',
+  profile: 'Documenta el perfil y nivel de formalización',
+  mba: 'Acredita participación y cohorte en el MBA Empresarial',
+};
 export type RelationshipType =
   | 'endorses'
   | 'verifies'
@@ -13,7 +40,6 @@ export type RelationshipType =
 
 export interface Credential {
   id: string;
-  organizationId: string;
   entrepreneurId: string;
   templateId: string | null;
   sourceDraftId: string | null;
@@ -43,12 +69,15 @@ export interface Credential {
 
 export interface IssuanceDraft {
   id: string;
-  organizationId: string;
   entrepreneurId: string;
   templateId: string | null;
   latestSnapshotId: string | null;
   preparedPayload: Record<string, unknown>;
   status: 'draft' | 'ready' | 'archived';
+  credentialType: CredentialType;
+  title: string;
+  description: string | null;
+  operatorNote: string | null;
   createdBy: string | null;
   createdAt: string;
   updatedAt: string;
@@ -56,7 +85,6 @@ export interface IssuanceDraft {
 
 export interface CredentialTemplate {
   id: string;
-  organizationId: string;
   name: string;
   credentialType: CredentialType;
   schemaVersion: string;

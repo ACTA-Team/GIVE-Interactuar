@@ -1,14 +1,14 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { createEntrepreneurRepository } from '@/features/entrepreneurs/repositories/entrepreneurRepository';
-import { createEntrepreneurService } from '@/features/entrepreneurs/services/entrepreneurService';
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { EntrepreneursListPage } from '@/features/entrepreneurs/components/pages/EntrepreneursListPage';
 
-// TODO: add searchParams prop to support URL-driven filters (query, municipality, department)
-export default async function Page() {
-  const supabase = await createServerSupabaseClient();
-  const repo = createEntrepreneurRepository(supabase);
-  const service = createEntrepreneurService(repo);
-  const entrepreneurs = await service.list({ active: true });
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('common');
+  return {
+    title: t('titles.entrepreneurs'),
+  };
+}
 
-  return <EntrepreneursListPage entrepreneurs={entrepreneurs} />;
+export default function Page() {
+  return <EntrepreneursListPage />;
 }

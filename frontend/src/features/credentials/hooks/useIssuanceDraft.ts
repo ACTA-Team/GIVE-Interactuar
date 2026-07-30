@@ -7,14 +7,10 @@ import { createCredentialService } from '../services/credentialService';
 import type { IssuanceDraftInput } from '../schemas';
 
 interface UseIssuanceDraftOptions {
-  organizationId: string;
   createdBy: string;
 }
 
-export function useIssuanceDraft({
-  organizationId,
-  createdBy,
-}: UseIssuanceDraftOptions) {
+export function useIssuanceDraft({ createdBy }: UseIssuanceDraftOptions) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -22,7 +18,7 @@ export function useIssuanceDraft({
       const supabase = createClient();
       const repo = createCredentialRepository(supabase);
       const service = createCredentialService(repo);
-      return service.createDraft(input, organizationId, createdBy);
+      return service.createDraft(input, createdBy);
     },
     onSuccess: () => {
       // TODO: invalidate and redirect to draft detail

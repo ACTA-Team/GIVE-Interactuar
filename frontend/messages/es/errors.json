@@ -1,0 +1,7 @@
+{
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La ruta que estás buscando no existe o fue movida. Volvé al inicio para continuar.",
+    "backToDashboard": "Volver al dashboard"
+  }
+}

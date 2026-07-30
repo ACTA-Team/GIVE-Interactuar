@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 4961 3508" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(-6.75537,-0.000732,0.000732,-6.75537,4776.956597,3443.026974)">
+        <path d="M72,16.592L72,483.408C72,483.735 71.735,484 71.408,484L16.592,484C16.265,484 16,483.735 16,483.408L16,16.592C16,16.265 16.265,16 16.592,16L71.408,16C71.735,16 72,16.265 72,16.592Z" style="fill:rgb(2,20,66);"/>
+        <circle cx="44" cy="120" r="5" style="fill:rgb(234,78,47);"/>
+        <circle cx="44" cy="148" r="3" style="fill:rgb(32,167,209);"/>
+        <circle cx="44" cy="168" r="3" style="fill:rgb(32,167,209);"/>
+        <circle cx="44" cy="188" r="3" style="fill:rgb(32,167,209);"/>
+        <circle cx="44" cy="340" r="5" style="fill:rgb(32,167,209);"/>
+        <circle cx="44" cy="368" r="3" style="fill:rgb(234,78,47);"/>
+        <circle cx="44" cy="388" r="3" style="fill:rgb(234,78,47);"/>
+        <clipPath id="_clip1">
+            <path d="M664,20L664,480C664,482.208 662.208,484 660,484L20,484C17.792,484 16,482.208 16,480L16,20C16,17.792 17.792,16 20,16L660,16C662.208,16 664,17.792 664,20Z"/>
+        </clipPath>
+        <g clip-path="url(#_clip1)">
+            <rect x="68" y="16" width="5" height="468" style="fill:rgb(234,78,47);"/>
+        </g>
+    </g>
+</svg>

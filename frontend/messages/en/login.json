@@ -1,0 +1,9 @@
+{
+  "brand": "Interactuar",
+  "subtitle": "Advisors Panel",
+  "title": "Sign In",
+  "description": "Use your Google account to access the panel",
+  "continueWithGoogle": "Continue with Google",
+  "signingIn": "Signing in...",
+  "authError": "Could not sign in. Please try again."
+}

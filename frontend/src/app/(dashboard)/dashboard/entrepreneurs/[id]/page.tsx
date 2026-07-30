@@ -1,8 +1,13 @@
-import { notFound } from 'next/navigation';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { createEntrepreneurRepository } from '@/features/entrepreneurs/repositories/entrepreneurRepository';
-import { createEntrepreneurService } from '@/features/entrepreneurs/services/entrepreneurService';
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { EntrepreneurDetailPage } from '@/features/entrepreneurs/components/pages/EntrepreneurDetailPage';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('common');
+  return {
+    title: t('titles.entrepreneurDetail'),
+  };
+}
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -10,12 +15,5 @@ interface Props {
 
 export default async function Page({ params }: Props) {
   const { id } = await params;
-  const supabase = await createServerSupabaseClient();
-  const repo = createEntrepreneurRepository(supabase);
-  const service = createEntrepreneurService(repo);
-  const entrepreneur = await service.getById(id);
-
-  if (!entrepreneur) notFound();
-
-  return <EntrepreneurDetailPage entrepreneur={entrepreneur} />;
+  return <EntrepreneurDetailPage entrepreneurId={id} />;
 }

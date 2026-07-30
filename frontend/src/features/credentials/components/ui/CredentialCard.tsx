@@ -35,10 +35,9 @@ export function CredentialCard({ credential, onClick }: CredentialCardProps) {
     >
       <div className="flex items-start justify-between gap-2">
         <p className="font-medium text-gray-900">{credential.title}</p>
-        <Badge
-          label={statusLabel[credential.status]}
-          variant={statusVariant[credential.status]}
-        />
+        <Badge variant={statusVariant[credential.status]}>
+          {statusLabel[credential.status]}
+        </Badge>
       </div>
       <p className="mt-1 text-xs text-gray-500 capitalize">
         {credential.credentialType}

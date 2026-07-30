@@ -1,7 +1,7 @@
 import { mapCredential, mapIssuanceDraft } from '../mappers/credentialMapper';
 import type { Credential, IssuanceDraft } from '../types';
 import type { CredentialFilters } from '../schemas';
-import type { SupabaseLikeClient } from '@/@types/supabase';
+import type { SupabaseLikeClient } from '@/lib/supabase/types';
 
 export function createCredentialRepository(client: SupabaseLikeClient) {
   return {
@@ -16,7 +16,10 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
         q = q.eq('credential_type', filters.credentialType);
 
       const { data, error } = await q.order('created_at', { ascending: false });
-      if (error) throw error;
+      if (error) {
+        if (error.code === 'PGRST205' || error.code === '42P01') return [];
+        throw error;
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return (data ?? []).map((row: any) => mapCredential(row));
     },
@@ -57,12 +60,15 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
       const { data, error } = await (client as any)
         .from('issuance_drafts')
         .insert({
-          organization_id: draft.organizationId,
           entrepreneur_id: draft.entrepreneurId,
           template_id: draft.templateId,
           latest_snapshot_id: draft.latestSnapshotId,
           prepared_payload: draft.preparedPayload,
           status: draft.status,
+          credential_type: draft.credentialType,
+          title: draft.title,
+          description: draft.description,
+          operator_note: draft.operatorNote,
           created_by: draft.createdBy,
         })
         .select()

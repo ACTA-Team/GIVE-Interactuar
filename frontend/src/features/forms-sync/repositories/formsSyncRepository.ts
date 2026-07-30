@@ -1,5 +1,5 @@
 import type { FormSubmissionRaw, FormSyncRun, SyncStatus } from '../types';
-import type { SupabaseLikeClient } from '@/@types/supabase';
+import type { SupabaseLikeClient } from '@/lib/supabase/types';
 
 export function createFormsSyncRepository(client: SupabaseLikeClient) {
   return {

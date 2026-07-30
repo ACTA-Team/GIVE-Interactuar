@@ -1,0 +1,39 @@
+{
+  "titleSetup": "Configura tu wallet",
+  "titleReconnect": "Verifica tu identidad",
+  "titleConfiguring": "Configurando tu cuenta",
+  "descNew": "Crea una wallet de Stellar protegida con tu huella o Face ID. No necesitas recordar ninguna clave.",
+  "descReconnect": "Autentica con tu huella o Face ID para continuar.",
+  "descConfiguring": "Creando tu vault y permisos. Firma cada paso con tu huella o Face ID.",
+  "steps": {
+    "wallet": "Wallet",
+    "vault": "Vault",
+    "permissions": "Permisos"
+  },
+  "account": "Cuenta",
+  "descCardConfiguring": "Firma con tu passkey para completar la configuración.",
+  "descCardReconnect": "Confirma tu wallet con passkey para acceder al dashboard.",
+  "descCardNew": "Tu wallet estará vinculada a este correo y protegida con passkey.",
+  "creatingVault": "Creando vault...",
+  "configuringPermissions": "Configurando permisos...",
+  "saving": "Guardando...",
+  "signPrompt": "Firma con tu huella o Face ID cuando aparezca el diálogo.",
+  "retrySetup": "Reintentar configuración",
+  "creatingWallet": "Creando wallet...",
+  "createNewWallet": "Crear nueva wallet",
+  "continueWithPasskey": "Continuar con passkey",
+  "connectExisting": "Conectar wallet existente",
+  "connecting": "Conectando...",
+  "or": "o",
+  "errors": {
+    "noSession": "Sin sesión",
+    "saveFailed": "Error guardando wallet",
+    "vaultFailed": "Error creando vault",
+    "authFailed": "Error autorizando emisor",
+    "createCancelled": "Creación cancelada. Intenta de nuevo.",
+    "createFailed": "Error creando la wallet",
+    "connectCancelled": "Selección cancelada. Intenta de nuevo.",
+    "connectFailed": "Error conectando la wallet"
+  },
+  "copyright": "© {year} Interactuar. Todos los derechos reservados."
+}

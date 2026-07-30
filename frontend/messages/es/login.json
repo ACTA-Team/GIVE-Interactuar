@@ -1,0 +1,9 @@
+{
+  "brand": "Interactuar",
+  "subtitle": "Panel de Asesores",
+  "title": "Iniciar Sesión",
+  "description": "Usa tu cuenta Google para ingresar al panel",
+  "continueWithGoogle": "Continuar con Google",
+  "signingIn": "Ingresando...",
+  "authError": "No se pudo iniciar sesión. Intenta nuevamente."
+}

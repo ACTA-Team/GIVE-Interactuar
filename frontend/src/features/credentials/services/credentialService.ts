@@ -19,19 +19,20 @@ export function createCredentialService(repo: CredentialRepository) {
 
     async createDraft(
       input: IssuanceDraftInput,
-      organizationId: string,
       createdBy: string,
     ): Promise<IssuanceDraft> {
-      // TODO: validate that entrepreneur belongs to organization
       // TODO: fetch latest snapshot and attach to draft
       // TODO: fetch template if templateId is provided and validate compatibility
       return repo.createDraft({
-        organizationId,
         entrepreneurId: input.entrepreneurId,
         templateId: null,
         latestSnapshotId: null, // TODO: resolve latest snapshot
         preparedPayload: {}, // TODO: build from template + snapshot
         status: 'draft',
+        credentialType: input.credentialType,
+        title: input.title,
+        description: input.description ?? null,
+        operatorNote: input.operatorNote ?? null,
         createdBy,
       });
     },

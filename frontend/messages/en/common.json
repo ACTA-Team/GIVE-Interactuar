@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "entrepreneurs": "Entrepreneurs",
+    "credentials": "Credentials",
+    "list": "List",
+    "newCredential": "New Credential",
+    "vault": "Vault"
+  },
+  "wallet": {
+    "connected": "Wallet connected",
+    "disconnect": "Disconnect wallet",
+    "connectStellar": "Connect Stellar Wallet",
+    "connecting": "Connecting...",
+    "approveTransaction": "Approve the transaction in your Freighter wallet",
+    "needFreighter": "You need {link} to connect your Stellar wallet.",
+    "freighter": "Freighter"
+  },
+  "footer": {
+    "team": "Interactuar Team",
+    "organization": "Organization",
+    "copyright": "© 2024 Interactuar. All rights reserved."
+  },
+  "buttons": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "continue": "Continue",
+    "back": "Back",
+    "save": "Save",
+    "retry": "Retry",
+    "viewAll": "View all",
+    "viewOnBlockchain": "View on blockchain",
+    "download": "Download",
+    "copy": "Copy",
+    "copied": "Copied",
+    "logout": "Log out"
+  },
+  "status": {
+    "draft": "Draft",
+    "issued": "Issued",
+    "revoked": "Revoked",
+    "expired": "Expired",
+    "pending": "Pending",
+    "verified": "Verified",
+    "onChain": "On-chain"
+  },
+  "credentialTypes": {
+    "impact": "Impact Credential",
+    "behavior": "Behavior Credential",
+    "profile": "Profile & Formalization Credential",
+    "mba": "MBA Credential"
+  },
+  "credentialTypeDescriptions": {
+    "impact": "Measures the entrepreneur's economic and social impact",
+    "behavior": "Reflects financial and credit behavior",
+    "profile": "Documents the profile and formalization level",
+    "mba": "Certifies participation and cohort in the MBA program"
+  },
+  "toggle": {
+    "yes": "Yes",
+    "no": "No"
+  },
+  "showing": "Showing {count} of {total}",
+  "selected": "{count} selected",
+  "language": "Language",
+  "auth": {
+    "signOut": "Sign out"
+  },
+  "titles": {
+    "dashboard": "Home - Interactuar",
+    "entrepreneurs": "Entrepreneurs - Interactuar",
+    "credentials": "Credentials - Interactuar",
+    "credentialsNew": "Issue credential - Interactuar",
+    "credentialsClient": "Client - Interactuar",
+    "credentialsDetail": "Credential detail - Interactuar",
+    "entrepreneurDetail": "Entrepreneur detail - Interactuar",
+    "credentialsStorage": "Credentials storage - Interactuar",
+    "entrepreneurCredentialsList": "Credentials by entrepreneur - Interactuar",
+    "entrepreneurClientDetail": "Client detail - Interactuar"
+  }
+}

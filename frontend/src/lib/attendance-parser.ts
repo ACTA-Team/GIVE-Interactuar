@@ -1,3 +1,5 @@
+import { parseClassColumns } from './class-schedule';
+
 export interface AttendanceRecord {
   nombre: string;
   correo: string;
@@ -50,20 +52,22 @@ export function parseHeaderColumns(rows: unknown[][]): HeaderColumns {
   const headers = headerRow.map(normalizeHeader);
 
   const fixed: Partial<Record<FixedField, number>> = {};
-  const classColumns: { clase: string; index: number }[] = [];
 
   headers.forEach((header, index) => {
     const key = stripDiacritics(header.toLowerCase());
     const fixedMatch = (Object.keys(FIXED_COLUMNS) as FixedField[]).find(
       (field) => FIXED_COLUMNS[field].includes(key),
     );
-
-    if (fixedMatch) {
-      fixed[fixedMatch] = index;
-    } else if (key.startsWith('clase')) {
-      classColumns.push({ clase: header, index });
-    }
+    if (fixedMatch) fixed[fixedMatch] = index;
   });
+
+  // Same column set/order as class-schedule.ts's parseClassColumns (which
+  // reads the row-1 markers, not this header text) — kept in sync by
+  // construction instead of by two independent filters agreeing by luck.
+  const classColumns = parseClassColumns(rows).map(({ number, columnIndex }) => ({
+    clase: headers[columnIndex] || `Clase ${number}`,
+    index: columnIndex,
+  }));
 
   return { fixed, classColumns };
 }

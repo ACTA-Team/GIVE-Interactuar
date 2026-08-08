@@ -72,15 +72,29 @@ export async function writeExcelRange(
   sheetName: string,
   range: string,
   values: unknown[][],
+  options?: {
+    // Excel's Graph API applies the same "smart" input parsing as typing
+    // into a cell — a string like "10/08/2026" silently becomes a date
+    // serial number, so reading it back returns e.g. 46303 instead of the
+    // text. Setting the cell's numberFormat to Text ("@") *before* writing
+    // the value prevents that reinterpretation.
+    asText?: boolean;
+  },
 ): Promise<void> {
   const client = getGraphClient();
   const siteId = getSiteId();
-
-  await client
-    .api(
+  const api = () =>
+    client.api(
       `/sites/${siteId}/drive/items/${itemId}/workbook/worksheets/${sheetName}/range(address='${range}')`,
-    )
-    .patch({ values });
+    );
+
+  if (options?.asText) {
+    await api().patch({
+      numberFormat: values.map((row) => row.map(() => '@')),
+    });
+  }
+
+  await api().patch({ values });
 }
 
 export interface FolderItem {
@@ -145,6 +159,14 @@ export async function downloadFileContent(itemId: string): Promise<Buffer> {
   return Buffer.from(response as ArrayBuffer);
 }
 
+// A folder named with a leading underscore (e.g. "_Plantilla") is a
+// template/scratch folder meant to be copy-pasted to start a new course,
+// not a real course — excluded from the course listing so professors can
+// keep one at the SharePoint root without it showing up as a course.
+function isTemplateFolder(name: string): boolean {
+  return name.trim().startsWith('_');
+}
+
 export async function listRootFolders(): Promise<FolderItem[]> {
   const client = getGraphClient();
   const siteId = getSiteId();
@@ -153,7 +175,9 @@ export async function listRootFolders(): Promise<FolderItem[]> {
     .api(`/sites/${siteId}/drive/root/children`)
     .get()) as { value: GraphDriveItem[] };
 
-  return result.value.map(toFolderItem).filter((item) => item.isFolder);
+  return result.value
+    .map(toFolderItem)
+    .filter((item) => item.isFolder && !isTemplateFolder(item.name));
 }
 
 export async function listWorksheetNames(itemId: string): Promise<string[]> {

@@ -1,12 +1,15 @@
 /**
- * ACTA's did:stellar registry only accepts classic G... accounts as
- * `controller` (v0.1) — it rejects our smart-contract wallets (C...), both
- * via the SDK and the raw API (confirmed directly). Real on-chain issuance
- * is on hold until the issuer architecture is decided, so this generates
- * plausible-looking but fake identifiers instead, letting the rest of the
- * product (batch issue, emails, public credential page) be built and
- * tested without blockchain in the loop. Flip `ACTA_ISSUANCE_SIMULATED` to
- * `false` once real issuance is unblocked.
+ * @acta-team/did-stellar@0.1.2 (2026-07-28) added C... smart-account
+ * support to the `controller` validation — confirmed working. But DID
+ * registration (ActaClient.getOrCreateIssuerIdentity /
+ * IssuerIdentityProvider.getOrCreate) still requires an explicit
+ * `sourcePublicKey` (a funded classic G... account or ACTA's relayer key)
+ * to pay/source the registration transaction when controller is a
+ * contract — unlike every other sourcePublicKey field in the SDK, this one
+ * has no "omit it and the backend uses the relayer" fallback yet. We don't
+ * have a funded G... keypair or ACTA's relayer public key, so real
+ * issuance is still blocked. See conversation history for the exact SDK
+ * error and source references. Flip to `false` once that's resolved.
  */
 export const ACTA_ISSUANCE_SIMULATED: boolean = true;
 

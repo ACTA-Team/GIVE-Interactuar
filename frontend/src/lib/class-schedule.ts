@@ -1,3 +1,5 @@
+import { formatDate } from '@/lib/helpers/date';
+
 export type ClassStatus = 'abierta' | 'cerrada';
 
 export interface ClassInfo {
@@ -8,7 +10,6 @@ export interface ClassInfo {
 }
 
 const TITLE_ROW_INDEX = 0;
-const HEADER_ROW_INDEX = 1;
 
 // The title row (row 0) doubles as class metadata storage. Each marker cell
 // embeds its own class number ("Clase 5|Abierta|2026-07-22T08:00") instead
@@ -41,38 +42,40 @@ function decodeClassCell(
   return { number: Number(match[1]), status, scheduledAt };
 }
 
+// Detection lives entirely in the title row's self-describing markers now
+// — the header row (row 2) is purely a human-readable label (a date, once
+// the class has one) and is never parsed. This also keeps this function as
+// the single source of truth for "which columns are class columns, in what
+// order", which attendance-parser.ts reuses instead of re-deriving its own
+// (previously separate, positionally-coupled) list from header text.
 export function parseClassColumns(rows: unknown[][]): ClassInfo[] {
   const titleRow = rows[TITLE_ROW_INDEX] ?? [];
-  const headerRow = rows[HEADER_ROW_INDEX] ?? [];
-
-  const statusByNumber = new Map<
-    number,
-    { status: ClassStatus; scheduledAt: string | null }
-  >();
-  titleRow.forEach((cell) => {
-    const decoded = decodeClassCell(cell);
-    if (decoded) statusByNumber.set(decoded.number, decoded);
-  });
 
   const classes: ClassInfo[] = [];
-  let sequentialNumber = 0;
-
-  headerRow.forEach((header, columnIndex) => {
-    const headerText = String(header ?? '').trim();
-    if (!headerText.toLowerCase().startsWith('clase')) return;
-
-    sequentialNumber += 1;
-    const match = headerText.match(/clase\s*(\d+)/i);
-    const number = match ? Number(match[1]) : sequentialNumber;
-
-    const found = statusByNumber.get(number);
+  titleRow.forEach((cell, columnIndex) => {
+    const decoded = decodeClassCell(cell);
+    if (!decoded) return;
     classes.push({
-      number,
+      number: decoded.number,
       columnIndex,
-      status: found?.status ?? 'cerrada',
-      scheduledAt: found?.scheduledAt ?? null,
+      status: decoded.status,
+      scheduledAt: decoded.scheduledAt,
     });
   });
 
-  return classes;
+  return classes.sort((a, b) => a.number - b.number);
+}
+
+// Human-readable text written to the header row (row 2) for a class column
+// — a date once the class has one (matches Interactuar's institutional
+// attendance system convention), falling back to "Clase N" only if
+// somehow created without a date.
+export function formatClassColumnHeader(
+  number: number,
+  scheduledAt: string | null,
+): string {
+  if (!scheduledAt) return `Clase ${number}`;
+  const date = new Date(scheduledAt);
+  if (Number.isNaN(date.getTime())) return `Clase ${number}`;
+  return formatDate(date);
 }

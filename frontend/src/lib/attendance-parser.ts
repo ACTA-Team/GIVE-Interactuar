@@ -64,10 +64,12 @@ export function parseHeaderColumns(rows: unknown[][]): HeaderColumns {
   // Same column set/order as class-schedule.ts's parseClassColumns (which
   // reads the row-1 markers, not this header text) — kept in sync by
   // construction instead of by two independent filters agreeing by luck.
-  const classColumns = parseClassColumns(rows).map(({ number, columnIndex }) => ({
-    clase: headers[columnIndex] || `Clase ${number}`,
-    index: columnIndex,
-  }));
+  const classColumns = parseClassColumns(rows).map(
+    ({ number, columnIndex }) => ({
+      clase: headers[columnIndex] || `Clase ${number}`,
+      index: columnIndex,
+    }),
+  );
 
   return { fixed, classColumns };
 }

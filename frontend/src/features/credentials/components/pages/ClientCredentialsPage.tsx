@@ -21,6 +21,7 @@ import {
   Activity,
   UserCheck,
   GraduationCap,
+  Award,
   Link2,
   ExternalLink,
   FileWarning,
@@ -89,6 +90,7 @@ const TYPE_ICON: Record<CredentialType, typeof BarChart3> = {
   behavior: Activity,
   profile: UserCheck,
   mba: GraduationCap,
+  course_completion: Award,
 };
 
 const TYPE_COLOR: Record<CredentialType, string> = {
@@ -96,6 +98,7 @@ const TYPE_COLOR: Record<CredentialType, string> = {
   behavior: 'bg-amber-500/10 text-amber-600',
   profile: 'bg-violet-500/10 text-violet-600',
   mba: 'bg-emerald-500/10 text-emerald-600',
+  course_completion: 'bg-cyan-500/10 text-cyan-600',
 };
 
 function CredentialRow({ credential }: { credential: Credential }) {

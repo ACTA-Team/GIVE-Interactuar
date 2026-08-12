@@ -5,12 +5,12 @@ import { createSessionServerClient } from '@/lib/supabase/server';
 /**
  * GET /auth/callback
  *
- * Exchanges the OAuth code for a session, then redirects to /setup-wallet
- * with query params that tell the client what still needs to be done:
- *
- *   - No wallet row          → /setup-wallet            (full setup)
- *   - Wallet + vault done    → /setup-wallet?reconnect=1 (passkey only)
- *   - Wallet + vault pending → /setup-wallet?reconnect=1&setup_vault=1
+ * Exchanges the signup-confirmation code for a session (email+password
+ * signup — Supabase emails a link that lands here), then redirects to the
+ * main flow. No wallet-setup check needed here: course_completion
+ * issuance runs server-side (COURSE_ISSUER_SECRET_KEY), not via the
+ * staff's own passkey wallet — see /setup-wallet, only relevant to the
+ * legacy impact/behavior/profile/mba flow.
  */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -27,29 +27,5 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/?error=auth_callback_failed`);
   }
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (user) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: walletRow } = await (supabase as any)
-      .from('user_wallets')
-      .select('id, vault_initialized')
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    const setupUrl = new URL(`${origin}/setup-wallet`);
-
-    if (walletRow) {
-      setupUrl.searchParams.set('reconnect', '1');
-      if (!walletRow.vault_initialized) {
-        setupUrl.searchParams.set('setup_vault', '1');
-      }
-    }
-
-    return NextResponse.redirect(setupUrl.toString());
-  }
-
-  return NextResponse.redirect(`${origin}/setup-wallet`);
+  return NextResponse.redirect(`${origin}/dashboard/certificados`);
 }

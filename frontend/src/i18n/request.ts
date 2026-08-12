@@ -14,6 +14,7 @@ export default getRequestConfig(async () => {
     login: (await import(`../../messages/${locale}/login.json`)).default,
     dashboard: (await import(`../../messages/${locale}/dashboard.json`))
       .default,
+    courses: (await import(`../../messages/${locale}/courses.json`)).default,
     entrepreneurs: (await import(`../../messages/${locale}/entrepreneurs.json`))
       .default,
     credentials: (await import(`../../messages/${locale}/credentials.json`))
@@ -22,6 +23,8 @@ export default getRequestConfig(async () => {
       .default,
     errors: (await import(`../../messages/${locale}/errors.json`)).default,
     setupWallet: (await import(`../../messages/${locale}/setupWallet.json`))
+      .default,
+    certificados: (await import(`../../messages/${locale}/certificados.json`))
       .default,
   };
 

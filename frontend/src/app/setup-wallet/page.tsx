@@ -35,8 +35,8 @@ export default function SetupWalletPage() {
   const t = useTranslations('setupWallet');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isReconnect = searchParams.get('reconnect') === '1';
-  const needsVaultSetup = searchParams.get('setup_vault') === '1';
+  const isReconnect = searchParams?.get('reconnect') === '1';
+  const needsVaultSetup = searchParams?.get('setup_vault') === '1';
 
   const supabase = createClient();
   const {

@@ -1,0 +1,64 @@
+{
+  "title": "Mis Cursos",
+  "subtitle": "Consulta la asistencia de tus cursos, leída en tiempo real desde SharePoint.",
+  "createCourse": "Crear curso",
+  "empty": "Aún no hay cursos disponibles.",
+  "error": "No se pudo cargar la información de los cursos.",
+  "card": {
+    "students": "{count, plural, one {# estudiante matriculado} other {# estudiantes matriculados}}",
+    "lastActivity": "Última actividad: {relativeDate}",
+    "attendanceRate": "Asistencia: {percent}%"
+  },
+  "impact": {
+    "title": "Resumen de Impacto",
+    "description": "Asistencia promedio por curso.",
+    "tooltip": "Asistencia"
+  },
+  "attendanceRate": {
+    "label": "Tasa de Asistencia Promedio"
+  },
+  "detail": {
+    "sessions": "Sesiones (Clases)",
+    "newSession": "Nueva Sesión",
+    "classNumber": "Clase {number}",
+    "noDate": "Sin fecha programada",
+    "noSessions": "Aún no hay sesiones creadas para este curso.",
+    "nextSession": "Próxima Sesión",
+    "noUpcoming": "Sin sesión programada"
+  },
+  "status": {
+    "open": "Abierta",
+    "closed": "Cerrada"
+  },
+  "actions": {
+    "showQr": "Ver código QR",
+    "openClass": "Abrir clase",
+    "closeClass": "Cerrar clase"
+  },
+  "newClassDialog": {
+    "title": "Nueva sesión",
+    "description": "Programa la fecha y hora de la nueva clase.",
+    "dateLabel": "Fecha y hora",
+    "submit": "Crear sesión"
+  },
+  "students": {
+    "title": "Estudiantes",
+    "empty": "Aún no hay estudiantes registrados en este curso.",
+    "attendanceSummary": "{attended}/{total} clases dictadas",
+    "issueCredential": "Emitir credencial verificable",
+    "credentialIssued": "Credencial emitida",
+    "credentialSimulated": "Simulada — pendiente de emisión real en blockchain",
+    "viewCredential": "Ver credencial",
+    "belowThreshold": "Necesita {threshold}% de asistencia",
+    "missingDocument": "Falta número de documento",
+    "batchMissingDocument": "{count} estudiante(s) sin número de documento — excluidos de la emisión",
+    "batchIssue": "Emitir credenciales a elegibles ({count})",
+    "batchSummary": "{succeeded} emitidas, {failed} fallidas",
+    "batchItemError": "Error",
+    "sendEmail": "Enviar por correo",
+    "emailSent": "Correo enviado",
+    "emailFailedNote": "La constancia se generó, pero el correo no se pudo enviar",
+    "batchSendEmails": "Enviar correos a todos ({count})",
+    "batchEmailSummary": "{sent} enviados, {failed} fallidos"
+  }
+}

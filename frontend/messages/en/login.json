@@ -1,9 +1,23 @@
 {
   "brand": "Interactuar",
   "subtitle": "Advisors Panel",
-  "title": "Sign In",
-  "description": "Use your Google account to access the panel",
-  "continueWithGoogle": "Continue with Google",
+  "title": "Sign in",
+  "description": "Sign in with your Interactuar email",
+  "signupTitle": "Create account",
+  "signupDescription": "Sign up with your @interactuar.com email",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "confirmPasswordLabel": "Confirm password",
+  "submitLogin": "Sign in",
+  "submitSignup": "Create account",
   "signingIn": "Signing in...",
-  "authError": "Could not sign in. Please try again."
+  "goToSignup": "Don't have an account? Sign up",
+  "goToLogin": "Already have an account? Sign in",
+  "backToLogin": "Back to sign in",
+  "loginError": "Incorrect email or password.",
+  "signupError": "Couldn't create the account. Make sure you're using an @interactuar.com email.",
+  "signupSuccess": "Account created. Check your email to confirm before signing in.",
+  "domainError": "Only {domain} emails are allowed.",
+  "passwordTooShort": "Password must be at least 8 characters.",
+  "passwordMismatch": "Passwords don't match."
 }

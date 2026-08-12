@@ -38,6 +38,23 @@ export function createCredentialRepository(client: SupabaseLikeClient) {
       return mapCredential(data);
     },
 
+    async findCourseCompletionByCourseName(
+      courseName: string,
+    ): Promise<Credential[]> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (client as any)
+        .from('credentials')
+        .select('*')
+        .eq('credential_type', 'course_completion')
+        .contains('public_claims', { courseName });
+      if (error) {
+        if (error.code === 'PGRST205' || error.code === '42P01') return [];
+        throw error;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (data ?? []).map((row: any) => mapCredential(row));
+    },
+
     async findByPublicId(publicId: string): Promise<Credential | null> {
       // Used by the public verification portal — no auth required
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

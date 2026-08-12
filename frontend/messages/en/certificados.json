@@ -1,0 +1,47 @@
+{
+  "title": "Certificates",
+  "subtitle": "Upload a course's attendance Excel to issue verifiable certificates — nothing is saved, it only lives on this page until you clear it.",
+  "upload": {
+    "excelLabel": "Attendance Excel",
+    "excelHint": "Same template used in SharePoint (name, email, document ID, class columns). Accepts .xlsx or .csv — not legacy .xls.",
+    "templateLabel": "Certificate PDF template",
+    "templateHint": "The blank PDF where each student's data gets stamped.",
+    "submit": "Upload and continue",
+    "loading": "Reading file…",
+    "missingExcel": "Select the Excel file.",
+    "missingTemplate": "Select the PDF template.",
+    "error": "Couldn't read the file. Check it has the usual structure."
+  },
+  "review": {
+    "courseNameLabel": "Course name",
+    "studentCount": "{count} student(s) in the file",
+    "eligible": "{count} eligible to issue",
+    "missingDocument": "{count} with no document number — excluded",
+    "back": "Upload a different file",
+    "issue": "Issue credentials to eligible ({count})",
+    "issuing": "Issuing…",
+    "sendingEmails": "Sending emails…",
+    "columnName": "Name",
+    "columnDocument": "Document",
+    "columnAttendance": "Attendance",
+    "columnEligible": "Eligible"
+  },
+  "success": {
+    "title": "Credentials issued",
+    "summary": "{succeeded} issued, {failed} failed",
+    "emailSummary": "{sent} emails sent, {failed} failed",
+    "viewStudents": "View students",
+    "simulatedNote": "Simulated — pending real blockchain issuance."
+  },
+  "students": {
+    "title": "Students",
+    "columnName": "Name",
+    "columnCredential": "Credential",
+    "columnEmail": "Email",
+    "columnOurLink": "Credential link",
+    "columnActaLink": "ACTA link",
+    "download": "Download list",
+    "clear": "Clear information",
+    "notAvailable": "—"
+  }
+}

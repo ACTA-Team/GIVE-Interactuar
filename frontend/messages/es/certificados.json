@@ -1,0 +1,47 @@
+{
+  "title": "Certificados",
+  "subtitle": "Sube el Excel de asistencia de un curso para emitir constancias verificables — la información no se guarda, solo vive en esta página hasta que la limpies.",
+  "upload": {
+    "excelLabel": "Excel de asistencia",
+    "excelHint": "Misma plantilla que se usaba en SharePoint (nombre, correo, cédula, columnas de clase). Acepta .xlsx o .csv — no .xls antiguo.",
+    "templateLabel": "Plantilla PDF de la constancia",
+    "templateHint": "El PDF en blanco donde se estampan los datos de cada estudiante.",
+    "submit": "Cargar y continuar",
+    "loading": "Leyendo archivo…",
+    "missingExcel": "Selecciona el archivo de Excel.",
+    "missingTemplate": "Selecciona la plantilla PDF.",
+    "error": "No se pudo leer el archivo. Verificá que tenga la misma estructura de siempre."
+  },
+  "review": {
+    "courseNameLabel": "Nombre del curso",
+    "studentCount": "{count} estudiante(s) en el archivo",
+    "eligible": "{count} elegibles para emitir",
+    "missingDocument": "{count} sin número de documento — excluidos",
+    "back": "Volver a subir otro archivo",
+    "issue": "Emitir credenciales a elegibles ({count})",
+    "issuing": "Emitiendo…",
+    "sendingEmails": "Enviando correos…",
+    "columnName": "Nombre",
+    "columnDocument": "Documento",
+    "columnAttendance": "Asistencia",
+    "columnEligible": "Elegible"
+  },
+  "success": {
+    "title": "Credenciales emitidas",
+    "summary": "{succeeded} emitidas, {failed} fallidas",
+    "emailSummary": "{sent} correos enviados, {failed} fallidos",
+    "viewStudents": "Ver estudiantes",
+    "simulatedNote": "Simulado — pendiente de emisión real en blockchain."
+  },
+  "students": {
+    "title": "Estudiantes",
+    "columnName": "Nombre",
+    "columnCredential": "Credencial",
+    "columnEmail": "Correo",
+    "columnOurLink": "Link de credencial",
+    "columnActaLink": "Link en ACTA",
+    "download": "Descargar lista",
+    "clear": "Limpiar información",
+    "notAvailable": "—"
+  }
+}

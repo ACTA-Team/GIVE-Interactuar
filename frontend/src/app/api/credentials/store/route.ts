@@ -3,13 +3,20 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { z } from 'zod';
 
 const StoreCredentialSchema = z.object({
-  entrepreneurId: z.string().min(1),
-  credentialType: z.enum(['impact', 'behavior', 'profile', 'mba']),
+  entrepreneurId: z.string().min(1).optional(),
+  credentialType: z.enum([
+    'impact',
+    'behavior',
+    'profile',
+    'mba',
+    'course_completion',
+  ]),
   title: z.string().min(1),
   description: z.string().optional(),
   actaVcId: z.string().min(1),
   issuerDid: z.string().min(1),
   publicClaims: z.record(z.unknown()).optional(),
+  metadata: z.record(z.unknown()).optional(),
   createdBy: z.string().optional(),
 });
 
@@ -38,6 +45,7 @@ export async function POST(request: Request) {
       actaVcId,
       issuerDid,
       publicClaims,
+      metadata,
       createdBy,
     } = parsed.data;
 
@@ -47,7 +55,7 @@ export async function POST(request: Request) {
     const { data, error } = await (supabase as any)
       .from('credentials')
       .insert({
-        entrepreneur_id: entrepreneurId,
+        entrepreneur_id: entrepreneurId ?? null,
         credential_type: credentialType,
         status: 'issued',
         title,
@@ -56,7 +64,7 @@ export async function POST(request: Request) {
         issuer_did: issuerDid,
         issued_at: new Date().toISOString(),
         public_claims: publicClaims ?? {},
-        metadata: {},
+        metadata: metadata ?? {},
         created_by: createdBy,
       })
       .select('id, public_id')

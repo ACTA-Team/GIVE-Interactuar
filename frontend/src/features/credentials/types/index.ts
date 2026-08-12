@@ -4,19 +4,26 @@ export type CredentialStatus =
   | 'revoked'
   | 'expired'
   | 'pending_endorsement';
-export type CredentialType = 'impact' | 'behavior' | 'profile' | 'mba';
+export type CredentialType =
+  | 'impact'
+  | 'behavior'
+  | 'profile'
+  | 'mba'
+  | 'course_completion';
 
 export type VCCredentialType =
   | 'ImpactCredential'
   | 'BehaviorCredential'
   | 'ProfileFormalizationCredential'
-  | 'MBAProgramCredential';
+  | 'MBAProgramCredential'
+  | 'CourseCompletionCredential';
 
 export const CREDENTIAL_TYPE_TO_VC: Record<CredentialType, VCCredentialType> = {
   impact: 'ImpactCredential',
   behavior: 'BehaviorCredential',
   profile: 'ProfileFormalizationCredential',
   mba: 'MBAProgramCredential',
+  course_completion: 'CourseCompletionCredential',
 };
 
 export const CREDENTIAL_TYPE_LABELS: Record<CredentialType, string> = {
@@ -24,6 +31,7 @@ export const CREDENTIAL_TYPE_LABELS: Record<CredentialType, string> = {
   behavior: 'Credencial de Comportamiento',
   profile: 'Credencial de Perfil y Formalización',
   mba: 'Credencial MBA Empresarial',
+  course_completion: 'Constancia de Finalización de Curso',
 };
 
 export const CREDENTIAL_TYPE_DESCRIPTIONS: Record<CredentialType, string> = {
@@ -31,6 +39,8 @@ export const CREDENTIAL_TYPE_DESCRIPTIONS: Record<CredentialType, string> = {
   behavior: 'Refleja el comportamiento financiero y crediticio',
   profile: 'Documenta el perfil y nivel de formalización',
   mba: 'Acredita participación y cohorte en el MBA Empresarial',
+  course_completion:
+    'Certifica que el estudiante completó el curso con la asistencia requerida',
 };
 export type RelationshipType =
   | 'endorses'

@@ -1,5 +1,11 @@
 export const ROUTES = {
   dashboard: '/dashboard',
+  certificados: '/dashboard/certificados',
+  cursos: {
+    list: '/dashboard/cursos',
+    detail: (folderName: string) =>
+      `/dashboard/cursos/${encodeURIComponent(folderName)}`,
+  },
   entrepreneurs: {
     list: '/dashboard/entrepreneurs',
     detail: (id: string) => `/dashboard/entrepreneurs/${id}`,
@@ -13,4 +19,6 @@ export const ROUTES = {
     detail: (id: string) => `/dashboard/credentials/${id}`,
   },
   verify: (credentialId: string) => `/verify/${credentialId}`,
+  asistencia: (folderName: string, classNumber: number) =>
+    `/asistencia/${encodeURIComponent(folderName)}/${classNumber}`,
 } as const;

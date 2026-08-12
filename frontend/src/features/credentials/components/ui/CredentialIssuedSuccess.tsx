@@ -7,6 +7,7 @@ import {
   IconTrendingUp,
   IconShieldCheck,
   IconIdBadge2,
+  IconCertificate,
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -17,6 +18,7 @@ const TYPE_ICONS: Record<CredentialType, React.ReactNode> = {
   behavior: <IconShieldCheck className="h-6 w-6 text-teal-600" />,
   profile: <IconIdBadge2 className="h-6 w-6 text-blue-600" />,
   mba: <IconIdBadge2 className="h-6 w-6 text-emerald-600" />,
+  course_completion: <IconCertificate className="h-6 w-6 text-cyan-600" />,
 };
 
 interface CredentialIssuedSuccessProps {

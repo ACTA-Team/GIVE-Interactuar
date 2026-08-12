@@ -5,18 +5,10 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  IconLayoutDashboard,
-  IconUsers,
-  IconList,
-  IconCertificate,
-  IconPlus,
-  IconX,
-  IconLogout,
-} from '@tabler/icons-react';
+import { IconCertificate, IconX, IconLogout } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants/routes';
-import { SidebarNavGroup } from './SidebarNavGroup';
+// import { SidebarNavGroup } from './SidebarNavGroup'; // only used by the hidden nav below
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState, type ReactNode } from 'react';
 import type { User } from '@supabase/supabase-js';
@@ -98,11 +90,12 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
     }
   };
 
-  const isDashboardActive = pathname === ROUTES.dashboard;
-  const isEntrepreneursActive = pathname.startsWith(ROUTES.entrepreneurs.list);
-  const isCredentialsActive =
-    pathname.startsWith(ROUTES.entrepreneurs.storage) ||
-    pathname.startsWith('/dashboard/credentials/client/');
+  // isDashboardActive/isCursosActive/isEntrepreneursActive/isCredentialsActive
+  // dropped along with the hidden nav below — recompute from ROUTES.dashboard /
+  // ROUTES.cursos.list / ROUTES.entrepreneurs.list / ROUTES.entrepreneurs.storage
+  // when reactivating.
+  const isCertificadosActive =
+    pathname?.startsWith(ROUTES.certificados) ?? false;
 
   const content = (
     <div className="flex h-full flex-col overflow-y-auto min-h-0">
@@ -128,6 +121,18 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
 
       {/* Nav */}
       <nav className="flex flex-1 flex-col gap-0.5 px-3 py-4">
+        {/*
+          Hidden — the SharePoint-backed course/entrepreneur flow was
+          retired for security reasons (Interactuar flagged reading course
+          data from SharePoint as a risk). The pages themselves are still
+          live at their routes, just unlinked from nav:
+            /dashboard
+            /dashboard/cursos
+            /dashboard/entrepreneurs
+            /dashboard/entrepreneurs/credentials
+            /dashboard/credentials/new
+          Re-add the NavItem/SidebarNavGroup blocks below to reactivate.
+
         <NavItem
           icon={<IconLayoutDashboard className="h-4 w-4" />}
           label={t('nav.dashboard')}
@@ -137,6 +142,14 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
         />
 
         <hr className="my-3 border-gray-100" />
+
+        <NavItem
+          icon={<IconSchool className="h-4 w-4" />}
+          label={t('nav.cursos')}
+          href={ROUTES.cursos.list}
+          isActive={isCursosActive}
+          onClick={onMobileClose}
+        />
 
         <NavItem
           icon={<IconUsers className="h-4 w-4" />}
@@ -169,6 +182,15 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
             onClick={onMobileClose}
           />
         </SidebarNavGroup>
+        */}
+
+        <NavItem
+          icon={<IconCertificate className="h-4 w-4" />}
+          label={t('nav.certificados')}
+          href={ROUTES.certificados}
+          isActive={isCertificadosActive}
+          onClick={onMobileClose}
+        />
       </nav>
 
       {/* Footer */}

@@ -7,9 +7,13 @@ import {
   IconShieldCheck,
   IconIdBadge2,
   IconSchool,
+  IconCertificate,
 } from '@tabler/icons-react';
 import type { CredentialType } from '../../types';
 
+// course_completion is intentionally excluded from `TYPES` below — it's
+// issued from the course detail page's own flow, not selectable here. This
+// entry only exists to satisfy the Record<CredentialType, ...> type.
 const TYPE_CONFIG: Record<
   CredentialType,
   { icon: React.ReactNode; iconBg: string; iconColor: string }
@@ -33,6 +37,11 @@ const TYPE_CONFIG: Record<
     icon: <IconSchool className="h-6 w-6" />,
     iconBg: 'bg-purple-50',
     iconColor: 'text-purple-600',
+  },
+  course_completion: {
+    icon: <IconCertificate className="h-6 w-6" />,
+    iconBg: 'bg-cyan-50',
+    iconColor: 'text-cyan-600',
   },
 };
 

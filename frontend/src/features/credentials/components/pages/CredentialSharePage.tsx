@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/Button';
 import type { Credential } from '@/features/credentials/types';
 import Certificate from '../ui/Certificate';
+import { LinkedInShareButton } from '../ui/LinkedInShareButton';
 
 interface CredentialSharePageProps {
   credential: Credential;
@@ -102,7 +103,7 @@ export function CredentialSharePage({
             )}
           </div>
 
-          <div className="pt-2">
+          <div className="flex flex-col gap-2 pt-2">
             <Button
               className="w-full"
               variant="default"
@@ -113,6 +114,7 @@ export function CredentialSharePage({
                 ? t('share.downloadingImage')
                 : t('share.downloadImage')}
             </Button>
+            <LinkedInShareButton url={qrUrl} />
           </div>
 
           {/* Credential technical details (from DB) */}

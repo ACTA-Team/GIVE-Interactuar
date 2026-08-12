@@ -34,7 +34,7 @@ The product purpose is not fully documented in this repository yet, but the code
 
 ### Integrations
 
-- `@acta-team/acta-sdk`
+- `@acta-team/credentials`
 - Stellar SDK
 - Stellar Wallets Kit
 - Google Forms sync via service-account credentials

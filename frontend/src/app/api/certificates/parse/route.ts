@@ -33,9 +33,7 @@ export async function POST(request: Request) {
     // real .xlsx (zip) file — most likely a legacy binary .xls saved with
     // an .xlsx extension. Surface something actionable instead of the raw
     // library message.
-    const message = /central directory|end of data|not a zip/i.test(
-      rawMessage,
-    )
+    const message = /central directory|end of data|not a zip/i.test(rawMessage)
       ? 'El archivo no es un .xlsx válido (¿es un .xls antiguo con la extensión cambiada?). Volvé a guardarlo en formato Excel (.xlsx) o subilo como .csv.'
       : rawMessage;
     return NextResponse.json({ error: message }, { status: 400 });

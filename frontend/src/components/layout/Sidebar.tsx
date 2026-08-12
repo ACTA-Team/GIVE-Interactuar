@@ -94,7 +94,8 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   // dropped along with the hidden nav below — recompute from ROUTES.dashboard /
   // ROUTES.cursos.list / ROUTES.entrepreneurs.list / ROUTES.entrepreneurs.storage
   // when reactivating.
-  const isCertificadosActive = pathname?.startsWith(ROUTES.certificados) ?? false;
+  const isCertificadosActive =
+    pathname?.startsWith(ROUTES.certificados) ?? false;
 
   const content = (
     <div className="flex h-full flex-col overflow-y-auto min-h-0">

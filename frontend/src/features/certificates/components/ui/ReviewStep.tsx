@@ -198,7 +198,9 @@ export function ReviewStep({
         {templateError && (
           <p className="text-sm text-destructive">{templateError}</p>
         )}
-        {batch.error && <p className="text-sm text-destructive">{batch.error}</p>}
+        {batch.error && (
+          <p className="text-sm text-destructive">{batch.error}</p>
+        )}
 
         <div className="flex flex-wrap gap-3">
           <Button variant="outline" onClick={onBack} disabled={isBusy}>

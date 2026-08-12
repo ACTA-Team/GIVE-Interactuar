@@ -29,7 +29,9 @@ export async function middleware(request: NextRequest) {
   // Authenticated users on the login page → certificate upload flow
   // But not if they're coming from setup-wallet (handled by callback)
   if (user && pathname === '/') {
-    return NextResponse.redirect(new URL('/dashboard/certificados', request.url));
+    return NextResponse.redirect(
+      new URL('/dashboard/certificados', request.url),
+    );
   }
 
   return response;

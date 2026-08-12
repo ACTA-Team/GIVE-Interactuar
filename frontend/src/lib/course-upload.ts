@@ -127,8 +127,7 @@ export async function parseUploadedCourse(
 
   const totalCells = students.length * classes.length;
   const presentCells = students.reduce(
-    (sum, student) =>
-      sum + student.asistencia.filter((a) => a.asistio).length,
+    (sum, student) => sum + student.asistencia.filter((a) => a.asistio).length,
     0,
   );
 

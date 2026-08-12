@@ -20,10 +20,7 @@ export function CertificatesPage() {
 
   const batch = useBatchIssueCourseCredentials();
 
-  const handleUploaded = (
-    parsed: ParsedCourseUpload,
-    template: File,
-  ) => {
+  const handleUploaded = (parsed: ParsedCourseUpload, template: File) => {
     setCourse(parsed);
     setTemplateFile(template);
     setStep('review');
@@ -64,10 +61,7 @@ export function CertificatesPage() {
       )}
 
       {step === 'success' && (
-        <SuccessStep
-          batch={batch}
-          onViewStudents={() => setStep('students')}
-        />
+        <SuccessStep batch={batch} onViewStudents={() => setStep('students')} />
       )}
 
       {step === 'students' && course && (

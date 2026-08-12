@@ -38,15 +38,8 @@ export function BatchIssueCredentialsButton({
   onIssued?: () => void;
 }) {
   const t = useTranslations('courses');
-  const {
-    run,
-    sendEmails,
-    status,
-    items,
-    error,
-    emailBatchStatus,
-    walletConnected,
-  } = useBatchIssueCourseCredentials();
+  const { run, sendEmails, status, items, error, emailBatchStatus } =
+    useBatchIssueCourseCredentials();
 
   const batchInputs = useMemo(
     () =>
@@ -119,7 +112,7 @@ export function BatchIssueCredentialsButton({
           variant="outline"
           size="sm"
           onClick={handleRun}
-          disabled={isRunning || eligibleCount === 0 || !walletConnected}
+          disabled={isRunning || eligibleCount === 0}
         >
           {isRunning ? (
             <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />

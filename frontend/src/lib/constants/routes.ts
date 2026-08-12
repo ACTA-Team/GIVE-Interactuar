@@ -1,5 +1,6 @@
 export const ROUTES = {
   dashboard: '/dashboard',
+  certificados: '/dashboard/certificados',
   cursos: {
     list: '/dashboard/cursos',
     detail: (folderName: string) =>

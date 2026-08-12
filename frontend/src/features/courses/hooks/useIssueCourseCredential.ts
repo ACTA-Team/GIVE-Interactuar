@@ -1,13 +1,9 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useCredential, useActaClient } from '@acta-team/credentials';
-import { useSmartWallet } from '@/hooks/useSmartWallet';
 import type { AttendanceRecord } from '@/lib/attendance-parser';
-import {
-  issueCourseCredentialCore,
-  type IssueCourseCredentialOutcome,
-} from '../lib/issueCourseCredentialCore';
+import type { IssueCourseCredentialOutcome } from '../lib/issueCourseCredentialCore';
+import { requestIssueCourseCredential } from '../lib/requestIssueCourseCredential';
 
 export type CourseCredentialStatus =
   | 'idle'
@@ -25,13 +21,10 @@ export interface IssueCourseCredentialParams {
   classesTotal: number;
   attendancePercent: number;
   attendanceThreshold: number;
+  templatePath?: string;
 }
 
 export function useIssueCourseCredential() {
-  const { issue } = useCredential();
-  const actaClient = useActaClient();
-  const { wallet, contractId } = useSmartWallet();
-
   const [status, setStatus] = useState<CourseCredentialStatus>('idle');
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<CourseCredentialResult | null>(null);
@@ -41,20 +34,11 @@ export function useIssueCourseCredential() {
       setError(null);
       setResult(null);
 
-      if (!wallet || !contractId) {
-        setError('No hay wallet conectada. Reconectá tu passkey.');
-        setStatus('error');
-        return null;
-      }
-
       try {
         setStatus('issuing');
 
-        const courseCredentialResult = await issueCourseCredentialCore(params, {
-          contractId,
-          actaClient,
-          issue,
-        });
+        const courseCredentialResult =
+          await requestIssueCourseCredential(params);
 
         setResult(courseCredentialResult);
         setStatus('success');
@@ -66,25 +50,12 @@ export function useIssueCourseCredential() {
             ? err.message
             : 'Error desconocido al emitir la credencial';
 
-        if (
-          message.includes('denied') ||
-          message.includes('cancel') ||
-          message.includes('NotAllowed')
-        ) {
-          setError('Firma cancelada por el usuario.');
-        } else if (message.includes('authorized')) {
-          setError(
-            'El emisor no está autorizado. Autorizá tu wallet en el vault primero.',
-          );
-        } else {
-          setError(message);
-        }
-
+        setError(message);
         setStatus('error');
         return null;
       }
     },
-    [issue, actaClient, wallet, contractId],
+    [],
   );
 
   const reset = useCallback(() => {
@@ -99,6 +70,5 @@ export function useIssueCourseCredential() {
     error,
     result,
     reset,
-    walletConnected: !!wallet,
   };
 }

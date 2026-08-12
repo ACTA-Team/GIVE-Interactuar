@@ -26,15 +26,12 @@ function toNumber(value: unknown): number | null {
 // one-row-below), so the scan tolerates both rather than assuming an exact
 // cell address — this is internal config, not something worth being brittle
 // about.
-export async function getAttendanceThreshold(fileId: string): Promise<number> {
-  const sheetNames = await listWorksheetNames(fileId);
-  const rulesSheet = sheetNames.find(
-    (name) => normalize(name) === RULES_SHEET_NAME,
-  );
-  if (!rulesSheet) return DEFAULT_ATTENDANCE_THRESHOLD;
-
-  const rows = await getWorksheetData(fileId, rulesSheet);
-
+//
+// Pure — no Graph dependency — so it's shared between the SharePoint-backed
+// path (below) and the upload-based path (course-upload.ts), which each
+// resolve `rows` for the "Reglas" sheet differently but scan them the same
+// way.
+export function findAttendanceThreshold(rows: unknown[][]): number {
   for (let r = 0; r < rows.length; r++) {
     for (let c = 0; c < rows[r].length; c++) {
       if (normalize(rows[r][c]) !== MIN_ATTENDANCE_LABEL) continue;
@@ -48,4 +45,17 @@ export async function getAttendanceThreshold(fileId: string): Promise<number> {
   }
 
   return DEFAULT_ATTENDANCE_THRESHOLD;
+}
+
+export function isRulesSheetName(name: string): boolean {
+  return normalize(name) === RULES_SHEET_NAME;
+}
+
+export async function getAttendanceThreshold(fileId: string): Promise<number> {
+  const sheetNames = await listWorksheetNames(fileId);
+  const rulesSheet = sheetNames.find(isRulesSheetName);
+  if (!rulesSheet) return DEFAULT_ATTENDANCE_THRESHOLD;
+
+  const rows = await getWorksheetData(fileId, rulesSheet);
+  return findAttendanceThreshold(rows);
 }

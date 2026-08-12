@@ -38,9 +38,9 @@ interface FieldPosition {
 // is confirmed in place — these are a reasonable starting point, not
 // pixel-measured.
 const FIELD_POSITIONS: Record<keyof ConstanciaFields, FieldPosition> = {
-  nombre: { xPercent: 50, yPercent: 39.2, fontSize: 18, bold: true },
-  cedula: { xPercent: 50, yPercent: 42.4, fontSize: 11 },
-  curso: { xPercent: 50, yPercent: 53.8, fontSize: 14, bold: true },
+  nombre: { xPercent: 50, yPercent: 37.5, fontSize: 18, bold: true },
+  cedula: { xPercent: 50, yPercent: 46.0, fontSize: 11 },
+  curso: { xPercent: 50, yPercent: 54.6, fontSize: 14, bold: true },
   fecha: { xPercent: 50, yPercent: 61.1, fontSize: 10 },
 };
 

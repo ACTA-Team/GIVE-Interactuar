@@ -3,6 +3,7 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createCredentialRepository } from '@/features/credentials/repositories/credentialRepository';
 import { createCredentialService } from '@/features/credentials/services/credentialService';
 import { getCourseTemplatePdf } from '@/lib/course-template';
+import { getCourseTemplate } from '@/lib/supabase/storage';
 import {
   generateConstanciaPdf,
   formatFechaLine,
@@ -50,9 +51,17 @@ export async function GET(request: Request, { params }: RouteParams) {
     );
   }
 
-  let template;
+  const templatePath = (credential.metadata as { templatePath?: string })
+    ?.templatePath;
+
+  let templateBytes: Buffer;
   try {
-    template = await getCourseTemplatePdf(claims.courseName);
+    // Upload-based flow: template stored in Supabase Storage at issuance.
+    // Older SharePoint-based flow: no templatePath on the credential —
+    // fall back to the live course-folder lookup, unchanged.
+    templateBytes = templatePath
+      ? await getCourseTemplate(templatePath)
+      : (await getCourseTemplatePdf(claims.courseName)).bytes;
   } catch {
     return NextResponse.json(
       { error: 'No se encontró la plantilla de constancia para este curso' },
@@ -64,7 +73,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     new Date(claims.completedAt ?? credential.issuedAt ?? Date.now()),
   );
 
-  const pdfBytes = await generateConstanciaPdf(template.bytes, {
+  const pdfBytes = await generateConstanciaPdf(templateBytes, {
     nombre: claims.holderName,
     cedula: claims.studentDocument ?? '',
     curso: claims.courseName,

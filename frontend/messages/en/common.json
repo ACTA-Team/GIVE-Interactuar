@@ -6,7 +6,8 @@
     "credentials": "Credentials",
     "list": "List",
     "newCredential": "New Credential",
-    "vault": "Vault"
+    "vault": "Vault",
+    "certificados": "Certificates"
   },
   "wallet": {
     "connected": "Wallet connected",

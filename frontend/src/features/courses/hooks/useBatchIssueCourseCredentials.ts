@@ -1,10 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useCredential, useActaClient } from '@acta-team/credentials';
-import { useSmartWallet } from '@/hooks/useSmartWallet';
 import type { AttendanceRecord } from '@/lib/attendance-parser';
-import { issueCourseCredentialCore } from '../lib/issueCourseCredentialCore';
+import { requestIssueCourseCredential } from '../lib/requestIssueCourseCredential';
 import { requestCredentialEmail } from '../lib/requestCredentialEmail';
 
 export type BatchStatus = 'idle' | 'running' | 'done';
@@ -24,6 +22,8 @@ export interface BatchItemResult {
   correo: string;
   status: BatchItemStatus;
   publicId?: string | null;
+  vcId?: string;
+  issuerDid?: string;
   error?: string;
   emailStatus: BatchEmailStatus;
   emailError?: string;
@@ -34,10 +34,6 @@ function studentKey(student: AttendanceRecord): string {
 }
 
 export function useBatchIssueCourseCredentials() {
-  const { issue } = useCredential();
-  const actaClient = useActaClient();
-  const { wallet, contractId } = useSmartWallet();
-
   const [status, setStatus] = useState<BatchStatus>('idle');
   const [items, setItems] = useState<BatchItemResult[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -49,14 +45,10 @@ export function useBatchIssueCourseCredentials() {
       course: string,
       attendanceThreshold: number,
       students: BatchStudentInput[],
+      templatePath?: string,
     ) => {
       setError(null);
       setCourseName(course);
-
-      if (!wallet || !contractId) {
-        setError('No hay wallet conectada. Reconectá tu passkey.');
-        return;
-      }
 
       const eligible = students.filter(
         (s) => s.attendancePercent >= attendanceThreshold,
@@ -88,22 +80,26 @@ export function useBatchIssueCourseCredentials() {
         );
 
         try {
-          const outcome = await issueCourseCredentialCore(
-            {
-              student: entry.student,
-              courseName: course,
-              classesAttended: entry.classesAttended,
-              classesTotal: entry.classesTotal,
-              attendancePercent: entry.attendancePercent,
-              attendanceThreshold,
-            },
-            { contractId, actaClient, issue },
-          );
+          const outcome = await requestIssueCourseCredential({
+            student: entry.student,
+            courseName: course,
+            classesAttended: entry.classesAttended,
+            classesTotal: entry.classesTotal,
+            attendancePercent: entry.attendancePercent,
+            attendanceThreshold,
+            templatePath,
+          });
 
           setItems((prev) =>
             prev.map((it) =>
               it.key === key
-                ? { ...it, status: 'success', publicId: outcome.publicId }
+                ? {
+                    ...it,
+                    status: 'success',
+                    publicId: outcome.publicId,
+                    vcId: outcome.vcId,
+                    issuerDid: outcome.issuerDid,
+                  }
                 : it,
             ),
           );
@@ -120,7 +116,7 @@ export function useBatchIssueCourseCredentials() {
 
       setStatus('done');
     },
-    [wallet, contractId, actaClient, issue],
+    [],
   );
 
   const sendEmails = useCallback(async () => {
@@ -176,6 +172,5 @@ export function useBatchIssueCourseCredentials() {
     items,
     error,
     emailBatchStatus,
-    walletConnected: !!wallet,
   };
 }

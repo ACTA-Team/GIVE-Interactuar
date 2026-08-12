@@ -38,6 +38,14 @@ export function isRowEmpty(row: unknown[]): boolean {
   return row.every((cell) => String(cell ?? '').trim() === '');
 }
 
+// A hyperlinked "correo" cell round-tripped through some export paths
+// (e.g. .xlsx → .csv) can surface as the raw mailto: href instead of the
+// display text — strip it so the stored address is just the email.
+function normalizeEmail(value: unknown): string {
+  const raw = String(value ?? '').trim();
+  return raw.toLowerCase().startsWith('mailto:') ? raw.slice(7).trim() : raw;
+}
+
 // The real workbook has a title row above the header row
 // (e.g. ["Curso", "Levantamiento de Capital", ...]), so headers live in row 1.
 export const HEADER_ROW_INDEX = 1;
@@ -84,7 +92,7 @@ export function parseAttendanceSheet(rows: unknown[][]): AttendanceRecord[] {
 
     records.push({
       nombre: String(row[fixed.nombre ?? -1] ?? '').trim(),
-      correo: String(row[fixed.correo ?? -1] ?? '').trim(),
+      correo: normalizeEmail(row[fixed.correo ?? -1]),
       empresa: String(row[fixed.empresa ?? -1] ?? '').trim(),
       telefono: String(row[fixed.telefono ?? -1] ?? '').trim(),
       cedula: String(row[fixed.cedula ?? -1] ?? '').trim(),

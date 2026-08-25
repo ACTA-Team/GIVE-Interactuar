@@ -5,7 +5,10 @@
 // orphaning every credential already issued under the old one. Same
 // service-role access pattern as src/lib/supabase/storage.ts.
 import { createClient } from '@supabase/supabase-js';
-import type { IssuerIdentity, IssuerIdentityStorage } from '@acta-team/credentials';
+import type {
+  IssuerIdentity,
+  IssuerIdentityStorage,
+} from '@acta-team/credentials';
 import { supabaseUrl, supabaseRoleKey } from '@/lib/constants/env';
 
 interface IssuerIdentityRow {

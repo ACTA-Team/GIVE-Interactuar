@@ -1,4 +1,5 @@
 import { ActaClient, mainNet, testNet } from '@acta-team/credentials';
+import { createSupabaseIssuerIdentityStorage } from './supabaseIssuerIdentityStorage';
 
 let instance: Promise<ActaClient> | null = null;
 
@@ -16,6 +17,13 @@ let instance: Promise<ActaClient> | null = null;
  * on-chain but ACTA's vcIssue endpoint then can't resolve that issuerDid
  * (`issuerDid_unresolvable`), since it validates against the current
  * contract instead.
+ *
+ * Also passes a persistent (Supabase-backed) issuer-identity storage —
+ * required as of @acta-team/credentials@1.1.10, which now refuses to
+ * register a DID on the SDK's default in-memory storage in a server
+ * context (EphemeralIssuerStorageError). Without persistence, a Vercel
+ * cold start loses the issuer's DID and signing keys and mints a new one
+ * on the next invocation, orphaning every credential issued before it.
  */
 export function getServerActaClient(): Promise<ActaClient> {
   if (instance) return instance;
@@ -44,6 +52,7 @@ export function getServerActaClient(): Promise<ActaClient> {
       // "timeout of 30000ms exceeded" on some students, not all). Doesn't
       // fix their latency, just gives it more room before giving up.
       timeoutMs: 60000,
+      storage: createSupabaseIssuerIdentityStorage(),
     });
   })();
 

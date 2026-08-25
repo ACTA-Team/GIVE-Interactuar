@@ -18,7 +18,7 @@ import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 
 const AUTH_DISABLED = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true';
-const ALLOWED_DOMAIN = '@interactuar.com';
+const ALLOWED_DOMAIN = '@interactuar.org.co';
 
 type Mode = 'login' | 'signup';
 

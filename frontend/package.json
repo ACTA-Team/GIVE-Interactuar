@@ -11,7 +11,7 @@
     "prepare": "cd .. && husky frontend/.husky"
   },
   "dependencies": {
-    "@acta-team/credentials": "^1.1.7",
+    "@acta-team/credentials": "^1.1.10",
     "@acta-team/did-stellar": "^0.1.2",
     "@azure/msal-node": "^5.4.1",
     "@base-ui/react": "^1.2.0",

@@ -20,7 +20,7 @@ import Image from 'next/image';
 const AUTH_DISABLED = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true';
 const ALLOWED_DOMAIN = '@interactuar.org.co';
 
-type Mode = 'login' | 'signup';
+type Mode = 'login' | 'signup' | 'forgot';
 
 export default function LoginPage() {
   const t = useTranslations('login');
@@ -33,12 +33,14 @@ export default function LoginPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [signupDone, setSignupDone] = useState(false);
+  const [forgotSent, setForgotSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const switchMode = (next: Mode) => {
     setMode(next);
     setError(null);
     setSignupDone(false);
+    setForgotSent(false);
     setPassword('');
     setConfirmPassword('');
   };
@@ -104,6 +106,24 @@ export default function LoginPage() {
     setSignupDone(true);
   };
 
+  const handleForgotPassword = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
+    const supabase = createClient();
+    // Errors here (unknown email, rate limit) are intentionally not
+    // surfaced — Supabase's own resetPasswordForEmail already avoids
+    // leaking whether an email is registered, and this mirrors that: show
+    // the same "check your email" state regardless of outcome.
+    await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset-password`,
+    });
+
+    setIsLoading(false);
+    setForgotSent(true);
+  };
+
   return (
     <div className="flex min-h-svh w-full items-center justify-center bg-background p-6 md:p-10">
       <div className="w-full max-w-md">
@@ -123,10 +143,14 @@ export default function LoginPage() {
           <Card className="border-border/50 shadow-lg">
             <CardHeader className="space-y-1 pb-4">
               <CardTitle className="text-xl">
-                {mode === 'login' ? t('title') : t('signupTitle')}
+                {mode === 'login' && t('title')}
+                {mode === 'signup' && t('signupTitle')}
+                {mode === 'forgot' && t('forgotPasswordTitle')}
               </CardTitle>
               <CardDescription>
-                {mode === 'login' ? t('description') : t('signupDescription')}
+                {mode === 'login' && t('description')}
+                {mode === 'signup' && t('signupDescription')}
+                {mode === 'forgot' && t('forgotPasswordDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -145,10 +169,31 @@ export default function LoginPage() {
                     {t('backToLogin')}
                   </Button>
                 </div>
+              ) : forgotSent ? (
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-start gap-2 rounded-md bg-emerald-500/10 p-3 text-sm text-emerald-700 dark:text-emerald-400">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>{t('forgotPasswordSuccess')}</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full h-11"
+                    onClick={() => switchMode('login')}
+                  >
+                    {t('backToLogin')}
+                  </Button>
+                </div>
               ) : (
                 <form
                   className="flex flex-col gap-4"
-                  onSubmit={mode === 'login' ? handleLogin : handleSignup}
+                  onSubmit={
+                    mode === 'login'
+                      ? handleLogin
+                      : mode === 'signup'
+                        ? handleSignup
+                        : handleForgotPassword
+                  }
                 >
                   {error && (
                     <div className="flex items-start gap-2 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
@@ -170,19 +215,32 @@ export default function LoginPage() {
                     />
                   </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="password">{t('passwordLabel')}</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      autoComplete={
-                        mode === 'login' ? 'current-password' : 'new-password'
-                      }
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </div>
+                  {mode !== 'forgot' && (
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="password">{t('passwordLabel')}</Label>
+                        {mode === 'login' && (
+                          <button
+                            type="button"
+                            className="text-xs text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                            onClick={() => switchMode('forgot')}
+                          >
+                            {t('forgotPasswordLink')}
+                          </button>
+                        )}
+                      </div>
+                      <Input
+                        id="password"
+                        type="password"
+                        autoComplete={
+                          mode === 'login' ? 'current-password' : 'new-password'
+                        }
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </div>
+                  )}
 
                   {mode === 'signup' && (
                     <div className="flex flex-col gap-1.5">
@@ -212,20 +270,32 @@ export default function LoginPage() {
                       </>
                     ) : mode === 'login' ? (
                       t('submitLogin')
-                    ) : (
+                    ) : mode === 'signup' ? (
                       t('submitSignup')
+                    ) : (
+                      t('submitForgotPassword')
                     )}
                   </Button>
 
-                  <button
-                    type="button"
-                    className="text-center text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-                    onClick={() =>
-                      switchMode(mode === 'login' ? 'signup' : 'login')
-                    }
-                  >
-                    {mode === 'login' ? t('goToSignup') : t('goToLogin')}
-                  </button>
+                  {mode === 'forgot' ? (
+                    <button
+                      type="button"
+                      className="text-center text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                      onClick={() => switchMode('login')}
+                    >
+                      {t('backToLogin')}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="text-center text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                      onClick={() =>
+                        switchMode(mode === 'login' ? 'signup' : 'login')
+                      }
+                    >
+                      {mode === 'login' ? t('goToSignup') : t('goToLogin')}
+                    </button>
+                  )}
 
                   {AUTH_DISABLED && (
                     <Button

@@ -14,6 +14,7 @@
   },
   "review": {
     "courseNameLabel": "Course name",
+    "attendanceThresholdLabel": "Min. attendance",
     "studentCount": "{count} student(s) in the file",
     "eligible": "{count} eligible to issue",
     "missingDocument": "{count} with no document number — excluded",

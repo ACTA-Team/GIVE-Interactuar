@@ -14,6 +14,7 @@
   },
   "review": {
     "courseNameLabel": "Nombre del curso",
+    "attendanceThresholdLabel": "Asistencia mínima",
     "studentCount": "{count} estudiante(s) en el archivo",
     "eligible": "{count} elegibles para emitir",
     "missingDocument": "{count} sin número de documento — excluidos",

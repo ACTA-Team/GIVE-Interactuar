@@ -38,49 +38,47 @@ export default async function OpengraphImage({ params }: RouteParams) {
       : (credential?.title ?? 'Credencial verificable');
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#021442',
+        color: '#ffffff',
+        padding: 80,
+        textAlign: 'center',
+      }}
+    >
       <div
         style={{
-          width: '100%',
-          height: '100%',
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#021442',
-          color: '#ffffff',
-          padding: 80,
-          textAlign: 'center',
+          fontSize: 28,
+          letterSpacing: 4,
+          textTransform: 'uppercase',
+          opacity: 0.7,
+          marginBottom: 28,
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            fontSize: 28,
-            letterSpacing: 4,
-            textTransform: 'uppercase',
-            opacity: 0.7,
-            marginBottom: 28,
-          }}
-        >
-          Interactuar · Credencial verificable
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            fontSize: 64,
-            fontWeight: 700,
-            lineHeight: 1.15,
-            marginBottom: 20,
-          }}
-        >
-          {holderName}
-        </div>
-        <div style={{ display: 'flex', fontSize: 32, opacity: 0.85 }}>
-          {subtitle}
-        </div>
+        Interactuar · Credencial verificable
       </div>
-    ),
+      <div
+        style={{
+          display: 'flex',
+          fontSize: 64,
+          fontWeight: 700,
+          lineHeight: 1.15,
+          marginBottom: 20,
+        }}
+      >
+        {holderName}
+      </div>
+      <div style={{ display: 'flex', fontSize: 32, opacity: 0.85 }}>
+        {subtitle}
+      </div>
+    </div>,
     { ...size },
   );
 }

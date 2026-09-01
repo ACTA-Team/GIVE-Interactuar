@@ -2,7 +2,7 @@
 // from any file that has one.
 import { listWorksheetNames, getWorksheetData } from '@/lib/graph-sharepoint';
 
-export const DEFAULT_ATTENDANCE_THRESHOLD = 80;
+export const DEFAULT_ATTENDANCE_THRESHOLD = 67;
 
 const RULES_SHEET_NAME = 'reglas';
 const MIN_ATTENDANCE_LABEL = 'asistencia minima';

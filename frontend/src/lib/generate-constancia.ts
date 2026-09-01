@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb, type PDFFont } from 'pdf-lib';
 
 const MESES = [
   'enero',
@@ -46,6 +46,40 @@ const FIELD_POSITIONS: Record<keyof ConstanciaFields, FieldPosition> = {
 
 const TEXT_COLOR = rgb(2 / 255, 20 / 255, 66 / 255); // matches the app's navy brand color
 
+// Combining diacritical marks (U+0300–U+036F) — stripped from an NFD-
+// normalized string to fall back accented Latin letters to their plain
+// ASCII form, e.g. "ó" (o + U+0301) -> "o".
+const COMBINING_MARKS_RE = /[̀-ͯ]/g;
+
+// Last line of defense against unencodable text — the standard fonts use
+// WinAnsi, which throws on anything outside it (emoji, some scripts, and
+// notably U+FFFD, the replacement character an upstream encoding bug can
+// leave behind — see course-upload.ts's normalizeCsvEncoding). Rather
+// than let that exception take down the whole request (and with it, the
+// public credential page), degrade the text so the PDF still renders:
+// first try stripping accents (turns a mangled "ó" back into a plain
+// "o" — better than nothing when the accent itself is what didn't
+// survive), then replace whatever's still unencodable character-by-character.
+function sanitizeForFont(font: PDFFont, text: string): string {
+  const tryEncode = (candidate: string): boolean => {
+    try {
+      font.encodeText(candidate);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  if (tryEncode(text)) return text;
+
+  const stripped = text.normalize('NFD').replace(COMBINING_MARKS_RE, '');
+  if (tryEncode(stripped)) return stripped;
+
+  return Array.from(stripped)
+    .map((char) => (tryEncode(char) ? char : '?'))
+    .join('');
+}
+
 export async function generateConstanciaPdf(
   templateBytes: Buffer,
   fields: ConstanciaFields,
@@ -63,9 +97,9 @@ export async function generateConstanciaPdf(
   const pageHeight = page.getHeight();
 
   (Object.keys(fields) as (keyof ConstanciaFields)[]).forEach((key) => {
-    const text = fields[key];
     const position = FIELD_POSITIONS[key];
     const font = position.bold ? boldFont : regularFont;
+    const text = sanitizeForFont(font, fields[key]);
     const textWidth = font.widthOfTextAtSize(text, position.fontSize);
 
     const x = (position.xPercent / 100) * pageWidth - textWidth / 2;

@@ -86,6 +86,24 @@ function detectCsvDelimiter(buffer: Buffer): string {
   return semicolonCount > commaCount ? ';' : ',';
 }
 
+// Excel's "CSV" export (as opposed to "CSV UTF-8") writes Windows-1252
+// ("ANSI") under a Spanish/Latin American Windows locale, not UTF-8 — the
+// same regional-defaults trap as the delimiter above. Reading those bytes
+// as UTF-8 silently mangles every accented character (á é í ó ú ñ) into
+// U+FFFD, which then corrupts student names/course names in the parsed
+// roster and later crashes PDF generation (WinAnsi can't encode U+FFFD
+// either). Detect invalid UTF-8 and re-decode as Windows-1252 instead —
+// genuinely UTF-8 files (the common case) pass through untouched.
+function normalizeCsvEncoding(buffer: Buffer): Buffer {
+  try {
+    new TextDecoder('utf-8', { fatal: true }).decode(buffer);
+    return buffer;
+  } catch {
+    const text = new TextDecoder('windows-1252').decode(buffer);
+    return Buffer.from(text, 'utf-8');
+  }
+}
+
 export async function parseUploadedCourse(
   buffer: Buffer,
   filename: string,
@@ -96,12 +114,13 @@ export async function parseUploadedCourse(
 
   let mainSheet: ExcelJS.Worksheet;
   if (isCsv) {
+    const csvBuffer = normalizeCsvEncoding(buffer);
     // Readable.from([buffer]) — wrapping in an array makes the whole
     // buffer one chunk; Readable.from(buffer) directly would iterate it
     // byte-by-byte, since Buffer is itself iterable.
     mainSheet = await workbook.csv.read(
-      Readable.from([buffer]) as unknown as LegacyBuffer,
-      { parserOptions: { delimiter: detectCsvDelimiter(buffer) } },
+      Readable.from([csvBuffer]) as unknown as LegacyBuffer,
+      { parserOptions: { delimiter: detectCsvDelimiter(csvBuffer) } },
     );
   } else {
     await workbook.xlsx.load(buffer as LegacyBuffer);

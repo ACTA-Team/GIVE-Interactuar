@@ -19,5 +19,16 @@
   "signupSuccess": "Account created. Check your email to confirm before signing in.",
   "domainError": "Only {domain} emails are allowed.",
   "passwordTooShort": "Password must be at least 8 characters.",
-  "passwordMismatch": "Passwords don't match."
+  "passwordMismatch": "Passwords don't match.",
+  "forgotPasswordLink": "Forgot your password?",
+  "forgotPasswordTitle": "Reset password",
+  "forgotPasswordDescription": "We'll send you a link to create a new password",
+  "submitForgotPassword": "Send reset link",
+  "forgotPasswordSuccess": "If that email exists, we sent a link to reset your password. Check your inbox.",
+  "resetPasswordTitle": "Create new password",
+  "resetPasswordDescription": "Choose a new password for your account",
+  "newPasswordLabel": "New password",
+  "submitResetPassword": "Save password",
+  "resetPasswordError": "Couldn't update the password. Please try again.",
+  "resetPasswordLinkExpired": "This link is no longer valid. Request a new one from the sign-in screen."
 }

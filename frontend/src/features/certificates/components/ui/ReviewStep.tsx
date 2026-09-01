@@ -28,6 +28,23 @@ export function ReviewStep({
 }) {
   const t = useTranslations('certificados');
   const [courseName, setCourseName] = useState(course.folderName);
+  // Editable — a CSV upload can never carry a "Reglas" sheet (a CSV is a
+  // single flat sheet by definition, see course-upload.ts), so it always
+  // starts from DEFAULT_ATTENDANCE_THRESHOLD (67%) regardless of what the
+  // professor actually wants for this course. Even for .xlsx, the
+  // detected value should stay correctable by hand rather than trusted
+  // blindly. Stored as a string so the input can hold an empty/partial
+  // value while typing without fighting number coercion.
+  const [attendanceThresholdInput, setAttendanceThresholdInput] = useState(
+    String(course.attendanceThreshold),
+  );
+  // `|| fallback` would treat a deliberate 0% threshold as invalid (0 is
+  // falsy) — check numeric validity explicitly instead.
+  const parsedThreshold = Number(attendanceThresholdInput);
+  const attendanceThreshold =
+    attendanceThresholdInput.trim() !== '' && Number.isFinite(parsedThreshold)
+      ? parsedThreshold
+      : course.attendanceThreshold;
   // Stays true across the whole click→issue→send-emails→transition
   // sequence — batch.status alone flips to 'done' as soon as issuance
   // finishes, *before* emails are sent, which left a silent gap where the
@@ -48,12 +65,10 @@ export function ReviewStep({
           classesTotal: total,
           attendancePercent: percent,
           hasDocument: studentHasDocument(student),
-          eligible:
-            percent >= course.attendanceThreshold &&
-            studentHasDocument(student),
+          eligible: percent >= attendanceThreshold && studentHasDocument(student),
         };
       }),
-    [course],
+    [course, attendanceThreshold],
   );
 
   const eligibleCount = rows.filter((r) => r.eligible).length;
@@ -130,24 +145,40 @@ export function ReviewStep({
         attendancePercent: r.attendancePercent,
       }));
 
-    await batch.run(
-      courseName,
-      course.attendanceThreshold,
-      batchInputs,
-      templatePath,
-    );
+    await batch.run(courseName, attendanceThreshold, batchInputs, templatePath);
   };
 
   return (
     <Card>
       <CardContent className="space-y-5 pt-6">
-        <div className="grid gap-2 max-w-sm">
-          <Label htmlFor="course-name">{t('review.courseNameLabel')}</Label>
-          <Input
-            id="course-name"
-            value={courseName}
-            onChange={(e) => setCourseName(e.target.value)}
-          />
+        <div className="flex flex-wrap gap-4">
+          <div className="grid gap-2 max-w-sm flex-1">
+            <Label htmlFor="course-name">{t('review.courseNameLabel')}</Label>
+            <Input
+              id="course-name"
+              value={courseName}
+              onChange={(e) => setCourseName(e.target.value)}
+            />
+          </div>
+          <div className="grid gap-2 w-32">
+            <Label htmlFor="attendance-threshold">
+              {t('review.attendanceThresholdLabel')}
+            </Label>
+            <div className="relative">
+              <Input
+                id="attendance-threshold"
+                type="number"
+                min={0}
+                max={100}
+                value={attendanceThresholdInput}
+                onChange={(e) => setAttendanceThresholdInput(e.target.value)}
+                className="pr-6"
+              />
+              <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                %
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">

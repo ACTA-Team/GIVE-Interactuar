@@ -65,7 +65,8 @@ export function ReviewStep({
           classesTotal: total,
           attendancePercent: percent,
           hasDocument: studentHasDocument(student),
-          eligible: percent >= attendanceThreshold && studentHasDocument(student),
+          eligible:
+            percent >= attendanceThreshold && studentHasDocument(student),
         };
       }),
     [course, attendanceThreshold],

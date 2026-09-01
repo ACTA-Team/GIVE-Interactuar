@@ -92,9 +92,7 @@ export default function ResetPasswordPage() {
               <CardTitle className="text-xl">
                 {t('resetPasswordTitle')}
               </CardTitle>
-              <CardDescription>
-                {t('resetPasswordDescription')}
-              </CardDescription>
+              <CardDescription>{t('resetPasswordDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               {checkingSession ? (
@@ -126,9 +124,7 @@ export default function ResetPasswordPage() {
                   )}
 
                   <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="password">
-                      {t('newPasswordLabel')}
-                    </Label>
+                    <Label htmlFor="password">{t('newPasswordLabel')}</Label>
                     <Input
                       id="password"
                       type="password"

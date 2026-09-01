@@ -47,7 +47,15 @@ const manrope = localFont({
   display: 'swap',
 });
 
+// Required for og:image/twitter:image URLs to resolve as absolute — without
+// it Next.js falls back to inferring the host (localhost in dev, or
+// Vercel's internal *.vercel.app deployment URL in production), so
+// LinkedIn's/other crawlers' preview fetch either hits the wrong domain
+// or fails outright.
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(appUrl),
   title: 'Interactuar',
   description: 'Plataforma de credenciales verificables para emprendedores',
 };

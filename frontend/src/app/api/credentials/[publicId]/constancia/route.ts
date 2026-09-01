@@ -69,22 +69,35 @@ export async function GET(request: Request, { params }: RouteParams) {
     );
   }
 
-  const fecha = formatFechaLine(
-    new Date(claims.completedAt ?? credential.issuedAt ?? Date.now()),
-  );
+  // generateConstanciaPdf sanitizes unencodable text itself (see
+  // generate-constancia.ts), but this stays wrapped as a second layer —
+  // a malformed template (corrupt bytes, no pages) or any other
+  // unforeseen failure here must not crash the public credential page
+  // with an unhandled 500; the student should at least see a clear error.
+  try {
+    const fecha = formatFechaLine(
+      new Date(claims.completedAt ?? credential.issuedAt ?? Date.now()),
+    );
 
-  const pdfBytes = await generateConstanciaPdf(templateBytes, {
-    nombre: claims.holderName,
-    cedula: claims.studentDocument ?? '',
-    curso: claims.courseName,
-    fecha,
-  });
+    const pdfBytes = await generateConstanciaPdf(templateBytes, {
+      nombre: claims.holderName,
+      cedula: claims.studentDocument ?? '',
+      curso: claims.courseName,
+      fecha,
+    });
 
-  return new NextResponse(Buffer.from(pdfBytes), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `${download ? 'attachment' : 'inline'}; filename="constancia-${claims.holderName}.pdf"`,
-    },
-  });
+    return new NextResponse(Buffer.from(pdfBytes), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `${download ? 'attachment' : 'inline'}; filename="constancia-${claims.holderName}.pdf"`,
+      },
+    });
+  } catch (err) {
+    console.error(`[credentials/${publicId}/constancia] Error:`, err);
+    return NextResponse.json(
+      { error: 'No se pudo generar la constancia' },
+      { status: 500 },
+    );
+  }
 }
